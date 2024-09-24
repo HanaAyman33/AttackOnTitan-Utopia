@@ -1,0 +1,42 @@
+# Eclipse specific files
+/.settings/
+/.project
+/.classpath
+
+# MacOS specific files
+.DS_Store
+
+# Windows specific files
+Thumbs.db
+
+# Linux specific files
+*~
+
+# Eclipse working directory files
+.metadata/
+bin/
+tmp/
+
+# Ignore target build directories
+target/
+out/
+
+# Maven specific
+mvnw
+mvnw.cmd
+/.mvn/
+
+# Gradle specific
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE files
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Other
+local.properties
