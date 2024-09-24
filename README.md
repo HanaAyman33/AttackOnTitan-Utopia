@@ -48,15 +48,7 @@ Set in a war-torn world, **Attack on Titan: Utopia** unfolds in the Utopia Distr
 
 - **Danger Level System** ⚠️: 
   Each lane has a danger level calculated based on the types and number of titans present. Higher danger levels require more immediate attention and resources to mitigate the threat.
-
-### Game Flow
-
-- **Turn-Based Actions** 🔄: 
-  Each turn allows players to either purchase and deploy a weapon or pass their turn. After the player’s action, titans will move closer to the wall based on their speed, followed by weapon attacks, and then the titans will attack the wall segments.
-
-- **Titan Spawning Mechanics** 🧗‍♂️: 
-  A queue of approaching titans determines which titans will enter the lanes. If a queue is empty, it will refill with new titans based on the current battle phase, which influences the types and quantities of titans.
-
+ 
 ### Battle Phases 🔥
 The game progresses through three battle phases—Early, Intense, and Grumbling:
 - **Early Phase**: Fewer titans with lower danger levels.
