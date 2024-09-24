@@ -59,7 +59,7 @@ The game progresses through three battle phases—Early, Intense, and Grumbling:
 |--------------|--------------|------------------|-----------------------------      |
 | 0-15         | Early        | 1                | Pure, Abnormal, Armored, Colossal |
 | 16-30        | Intense      | 1                | Pure, Abnormal, Armored, Colossal |
-| 31+          | Grumbling    | 1 (increases)    | Colossa                           |
+| 31+          | Grumbling    | 1 (increases)    | Colossal                          |
 
 ---
 
