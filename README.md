@@ -55,11 +55,11 @@ The game progresses through three battle phases—Early, Intense, and Grumbling:
 - **Intense Phase**: Increased titan strength and frequency.
 - **Grumbling Phase**: Dominated by powerful titans, including multiple Colossal Titans.
 
-| Turns Passed | Battle Phase | Titans Per Turn | Approaching Titans Refill              |
-|--------------|--------------|------------------|-----------------------------------------|
-| 0-15         | Early        | 1                | Pure, Pure, Pure, Abnormal, Armored, Colossal |
-| 16-30        | Intense      | 1                | Abnormal, Abnormal, Pure, Armored, Colossal |
-| 31+          | Grumbling    | 1 (increases)    | Colossal x7                             |
+| Turns Passed | Battle Phase | Titans Per Turn | Titans Type           |
+|--------------|--------------|------------------|-----------------------------      |
+| 0-15         | Early        | 1                | Pure, Abnormal, Armored, Colossal |
+| 16-30        | Intense      | 1                | Pure, Abnormal, Armored, Colossal |
+| 31+          | Grumbling    | 1 (increases)    | Colossa                           |
 
 ---
 
