@@ -1,35 +1,125 @@
-# 🌟 Attack on Titan: Utopia 🌟
+# Attack on Titan: Utopia 🛡️👾
 
-**Attack on Titan: Utopia** is an exhilarating one-player, endless tower defense game inspired by the hit anime **Attack on Titan**. Step into a world where humanity’s survival hinges on your strategic prowess as you defend the Utopia District from relentless titan assaults!
+**Attack on Titan: Utopia** is a thrilling single-player, endless tower defense game inspired by the renowned anime series *Attack on Titan*. In this immersive experience, players must strategize and defend the Utopia District from the onslaught of titans that have breached Wall Maria, now threatening the very walls of Wall Rose. 🏰⚔️
 
-## 🔥 Game Features
+## Game Overview
 
-- **Endless Tower Defense Action:** Engage in an unending battle against waves of titans, testing your strategy and skills to their limits. How long can you withstand the onslaught?
+### Setting 🌍
+Set in a war-torn world, **Attack on Titan: Utopia** unfolds in the Utopia District, a vital stronghold on the northern border of Wall Rose. After the titans have breached Wall Maria, humanity's survival hangs by a thread. As the commander of the last line of defense, players are tasked with deploying various anti-titan weapons and strategies to prevent the titans from breaking through the walls and obliterating the last bastion of hope. 💪🛡️
 
-- **Multiple Lanes of Defense:** Defend various lanes leading to the walls of Wall Rose. Each lane has its own challenges, requiring careful planning and quick decision-making.
+### Gameplay Features
 
-- **Diverse Titan Threats:** Encounter a variety of titans with unique attributes, including:
-  - **Abnormal Titans**: Agile and unpredictable.
-  - **Armored Titans**: Tough and resilient.
-  - **Colossal Titans**: Massive threats that require special tactics.
+- **Endless Tower Defense Mechanics** 🏰: 
+  Engage in an endless battle against waves of titans. The game has no winning condition; instead, the objective is to survive for as long as possible while defeating as many titans as you can, with your score increasing based on resources collected from fallen foes. 📈
 
-- **Epic Arsenal of Weapons:** Deploy a wide array of anti-Titan weapons, including:
-  - **Piercing Cannons**: Attack multiple foes at once.
-  - **Sniper Cannons**: Deliver high damage to single targets.
-  - **Volley Spread Cannons**: Unleash devastating area attacks.
-  - **Wall Traps**: Defend against titans that reach your walls.
+- **Multi-Lane Battlefield** 🌌: 
+  The battlefield is divided into multiple lanes, each featuring a segment of the wall to protect. Players must strategically deploy weapons in these lanes, each with its own health points (HP). If a segment is destroyed, that lane becomes inactive, requiring players to manage their defenses across all active lanes. 🚧
 
-- **Dynamic Battle Phases:** Experience escalating intensity through **Early**, **Intense**, and **Grumbling** phases. Each phase increases the challenge, demanding sharper tactics and swift adaptations.
+- **Diverse Titan Types** 👹: 
+  Face various titans, each with unique attributes and abilities:
+    - **Pure Titan**: A basic titan with balanced stats.
+    - **Abnormal Titan**: Attacks twice per turn, posing a greater threat.
+    - **Armored Titan**: Highly resistant, taking only 25% damage from attacks.
+    - **Colossal Titan**: Starts with high HP and increases speed with each turn, becoming a significant danger if not dealt with quickly.
 
-- **Resource Management:** Collect resources by defeating titans and use them to strengthen your defenses. Make strategic choices on when to deploy weapons and when to save your resources for future challenges.
+| Titan Type      | HP  | Damage | Height | Speed | Resources Value | Danger Level |
+|------------------|-----|--------|--------|-------|-----------------|--------------|
+| Pure Titan       | 100 | 15     | 15     | 10    | 10              | 1            |
+| Abnormal Titan   | 100 | 20     | 10     | 15    | 15              | 2            |
+| Armored Titan    | 200 | 85     | 15     | 10    | 30              | 3            |
+| Colossal Titan   | 1000| 100    | 60     | 5     | 60              | 4            |
 
-- **No Winning Condition - Just Survival:** Keep fighting until every lane falls! Your final score reflects the number of titans defeated and the duration of your defense. Will you become the ultimate defender of humanity?
+- **Variety of Weapons** 🔫: 
+  Players can purchase and deploy an array of weapons, each with specific strengths and weaknesses. Weapons include:
+    - **Piercing Cannon**: Attacks the closest five titans within its range.
+    - **Sniper Cannon**: Deals heavy damage to the closest titan.
+    - **Volley Spread Cannon**: Affects all titans within a specified range.
+    - **Wall Trap**: Targets titans that reach the wall directly.
 
-## 🌍 Inspired by an Epic Saga
+| Weapon Name             | Price | Damage | Min Range | Max Range |
+|-------------------------|-------|--------|-----------|-----------|
+| Piercing Cannon         | 25    | 10     | -         | -         |
+| Sniper Cannon           | 25    | 35     | -         | -         |
+| Volley Spread Cannon     | 100   | 5      | 1         | 5         |
+| Wall Trap               | 75    | 100    | -         | -         |
 
-**Attack on Titan: Utopia** immerses you in a heart-pounding scenario where hope is fleeting. As titans breach Wall Maria and threaten Wall Rose, it’s up to you to deploy defenses and fight back against overwhelming odds. This game encapsulates the themes of survival, courage, and strategy that resonate with fans of the series.
+- **Resource Management** 💰: 
+  Collect resources by defeating titans, which can then be used to purchase weapons. Managing these resources effectively is crucial to maintaining defenses and ensuring the survival of the Utopia District. 
 
-## ⚔️ Join the Fight!
+- **Danger Level System** ⚠️: 
+  Each lane has a danger level calculated based on the types and number of titans present. Higher danger levels require more immediate attention and resources to mitigate the threat.
 
-Are you ready to defend humanity against the titan horde? Dive into **Attack on Titan: Utopia** and prove your mettle as a commander! Gather your resources, fortify your defenses, and embark on an endless battle for survival.
+### Game Flow
+
+- **Turn-Based Actions** 🔄: 
+  Each turn allows players to either purchase and deploy a weapon or pass their turn. After the player’s action, titans will move closer to the wall based on their speed, followed by weapon attacks, and then the titans will attack the wall segments.
+
+- **Titan Spawning Mechanics** 🧗‍♂️: 
+  A queue of approaching titans determines which titans will enter the lanes. If a queue is empty, it will refill with new titans based on the current battle phase, which influences the types and quantities of titans.
+
+### Battle Phases 🔥
+The game progresses through three battle phases—Early, Intense, and Grumbling:
+- **Early Phase**: Fewer titans with lower danger levels.
+- **Intense Phase**: Increased titan strength and frequency.
+- **Grumbling Phase**: Dominated by powerful titans, including multiple Colossal Titans.
+
+| Turns Passed | Battle Phase | Titans Per Turn | Approaching Titans Refill              |
+|--------------|--------------|------------------|-----------------------------------------|
+| 0-15         | Early        | 1                | Pure, Pure, Pure, Abnormal, Armored, Colossal |
+| 16-30        | Intense      | 1                | Abnormal, Abnormal, Pure, Armored, Colossal |
+| 31+          | Grumbling    | 1 (increases)    | Colossal x7                             |
+
+---
+
+**Join the fight for humanity's survival!** ⚔️
+
+## Game Screenshots 📸
+
+Check out some exciting moments from *Attack on Titan: Utopia* below!
+
+
+
+
+![Screenshot 2024-09-24 105239](https://github.com/user-attachments/assets/0d7c9328-1180-4d98-a0ca-8453db9096e3)
+
+
+
+
+![Screenshot 2024-09-24 104735](https://github.com/user-attachments/assets/60ff81bb-ad8b-4350-aef8-578e32f9fb3b)
+
+
+
+
+![Screenshot 2024-09-24 104807](https://github.com/user-attachments/assets/fa34ce92-bbe9-4963-b3d3-8613ac52f6a6)
+
+
+
+
+![Screenshot 2024-09-24 104852](https://github.com/user-attachments/assets/24b3c08b-b6f3-43f6-beff-dc5610c6ae45)
+
+
+
+
+![Screenshot 2024-09-24 104919](https://github.com/user-attachments/assets/f9106c56-786c-44b5-b263-934d66ae567d)
+
+
+
+
+![Screenshot 2024-09-24 105049](https://github.com/user-attachments/assets/042844dc-d2ea-4967-9cb1-086369f0edd6)
+
+
+
+
+![Screenshot 2024-09-24 105210](https://github.com/user-attachments/assets/2fa3b429-4ecd-49d3-a369-5e3364ceae53)
+
+
+
+
+![Screenshot 2024-09-24 105225](https://github.com/user-attachments/assets/5ea16da4-eda9-42af-b6ed-3136586f21c4)
+
+
+
+
+
+
 
