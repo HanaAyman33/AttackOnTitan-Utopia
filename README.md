@@ -63,7 +63,9 @@ The game progresses through three battle phases—Early, Intense, and Grumbling:
 
 ---
 
-**Join the fight for humanity's survival!** ⚔️
+#Join the fight for humanity's survival!⚔️
+
+
 
 ## Game Screenshots 📸
 
