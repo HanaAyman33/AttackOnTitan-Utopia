@@ -7,6 +7,7 @@
 ### Setting 🌍
 Set in a war-torn world, **Attack on Titan: Utopia** unfolds in the Utopia District, a vital stronghold on the northern border of Wall Rose. After the titans have breached Wall Maria, humanity's survival hangs by a thread. As the commander of the last line of defense, players are tasked with deploying various anti-titan weapons and strategies to prevent the titans from breaking through the walls and obliterating the last bastion of hope. 💪🛡️
 
+
 ### Gameplay Features
 
 - **Endless Tower Defense Mechanics** 🏰: 
