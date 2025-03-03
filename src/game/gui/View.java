@@ -4,6 +4,10 @@ package game.gui;
 import java.util.ArrayList;
 
 import game.engine.lanes.Lane;
+import game.engine.titans.AbnormalTitan;
+import game.engine.titans.ArmoredTitan;
+import game.engine.titans.PureTitan;
+import game.engine.titans.Titan;
 import javafx.animation.FadeTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
@@ -862,58 +866,77 @@ public class View {
         sequentialTransition.play();
 		
 	}
+	//here
 	public void performTurnTitans() {
-		if(Controller.getChoosenMode().equals("Easy")) {
-		}
-		for(ArrayList<TitanImageView> lane:this.allLanes) {
-			for(TitanImageView t:lane) {
-				t.healthLabel.setText("Health: "+t.titan.getCurrentHealth());
-				if(t.titan.isDefeated()) {
-					fade(t.titanImageView);
-					fade(t.healthLabel);
-				}
-				else {
-				if(!t.titan.hasReachedTarget()) {
-				translate(t.titanImageView,t.titan.getSpeed()*3);
-    			translate(t.healthLabel,t.titan.getSpeed()*3);
-				}
-				else {
-					titanAttack(t.titanImageView);
-					titanAttack(t.healthLabel);
-				}
-				}
-			}
-		}
-	}
-	@SuppressWarnings("static-access")
-	public void AddTurnTitans() {
-		int count=1;
-		AnchorPane s=Controller.getChoosenMode().equals("Easy")?EasyScene:HardScene;
-		if(Controller.getChoosenMode().equals("Easy"))count++;
-		for(ArrayList<TitanImageView> lane:this.allLanes) {
-			int y=0;
-			switch(count) {
-			case 1:y=60;break;
-			case 2:y=170;break;
-			case 3:y=310;break;
-			case 4:y=410;break;
-			case 5:y=510;break;
-			}
-			for(TitanImageView t:lane) {
-				ImageView ti=t.titanImageView;
-				if(!s.getChildren().contains(ti)) {
-				s.getChildren().addAll(ti,t.healthLabel);
-				s.setLeftAnchor(ti, (double)1200);
-				s.setTopAnchor(ti, (double)y);
-				s.setLeftAnchor(t.healthLabel, (double)1190);
-				s.setTopAnchor(t.healthLabel, (double)y-10);
-				translate(ti,60);
-				translate(t.healthLabel,60);
-				}
-			}
-			count++;
-		}
-	}
+        if (Controller.getChoosenMode().equals("Easy")) {
+        }
+        for (ArrayList<TitanImageView> lane : this.allLanes) {
+            for (TitanImageView t : lane) {
+                // Update progress bar based on current health
+                double maxHealth;
+                if (t.titan instanceof PureTitan || t.titan instanceof AbnormalTitan) maxHealth = 100;
+                else if (t.titan instanceof ArmoredTitan) maxHealth = 200;
+                else maxHealth = 1000;
+                
+                double healthFraction = t.titan.getCurrentHealth() / maxHealth;
+                t.healthBar.setProgress(healthFraction);
+                
+                // Change color to red when health is 25% or below
+                if (healthFraction <= 0.5) {
+                    t.healthBar.setStyle("-fx-accent: red;");
+                } else {
+                    t.healthBar.setStyle("-fx-accent: green;");
+                }
+                
+                if (t.titan.isDefeated()) {
+                    fade(t.titanImageView);
+                    fade(t.healthBar);
+                }
+                else {
+                    if (!t.titan.hasReachedTarget()) {
+                        translate(t.titanImageView, t.titan.getSpeed() * 3);
+                        translate(t.healthBar, t.titan.getSpeed() * 3);
+                    }
+                    else {
+                        titanAttack(t.titanImageView);
+                        titanAttack(t.healthBar);
+                    }
+                }
+            }
+        }
+    }
+    
+    @SuppressWarnings("static-access")
+    public void AddTurnTitans() {
+        int count = 1;
+        AnchorPane s = Controller.getChoosenMode().equals("Easy") ? EasyScene : HardScene;
+        if (Controller.getChoosenMode().equals("Easy")) count++;
+        for (ArrayList<TitanImageView> lane : this.allLanes) {
+            int y = 0;
+            switch (count) {
+                case 1: y = 60; break;
+                case 2: y = 170; break;
+                case 3: y = 310; break;
+                case 4: y = 410; break;
+                case 5: y = 510; break;
+            }
+            for (TitanImageView t : lane) {
+                ImageView ti = t.titanImageView;
+                if (!s.getChildren().contains(ti)) {
+                    s.getChildren().addAll(ti, t.healthBar);
+                    s.setLeftAnchor(ti, (double)1200);
+                    s.setTopAnchor(ti, (double)y);
+                    s.setLeftAnchor(t.healthBar, (double)1190);
+                    s.setTopAnchor(t.healthBar, (double)y-10);
+                    translate(ti, 60);
+                    translate(t.healthBar, 60);
+                }
+            }
+            count++;
+        }
+    }
+
+	//here
 	public void deployWeapon(int weaponCode, int lane) {
 	    Image i = null;
 	    switch (weaponCode) {

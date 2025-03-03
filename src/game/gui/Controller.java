@@ -22,6 +22,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
@@ -330,167 +331,135 @@ public class Controller extends Application{
     	 }
     }
     
- 
-    public ArrayList<TitanImageView> getImg(PriorityQueue<Titan> titans,ArrayList<TitanImageView> titanImages){
-    	
-    	ArrayList<TitanImageView> res=new ArrayList<TitanImageView> ();
-    	PriorityQueue<Titan> tmp=new PriorityQueue<Titan>();
-    	
-    	while(!titans.isEmpty()) {
-    		
-	    		Titan t=titans.remove();
-	    		boolean flag=false;
-	    		for(TitanImageView v:titanImages) {
-	    			if(v.titan==t) {
-	    				flag= true;
-	    				res.add(v);
-	    				tmp.add(t);
-	    				break;
-	    		}
-    		}
-    		
-    		if(flag)
-    			continue;
-    		
-    		ImageView v=null;
-    		Label health=new Label();
-    		
-    		if(t instanceof PureTitan) {
-    			
-	   			 Image Pure = new Image("pure.png");
-	   			 v= new ImageView(Pure);
-	   			 v.setPreserveRatio(true);
-	   			 v.setFitHeight(100);
-	   			health.setText("Health: "+100);
-	   			
-   			}
-    		
-   		else if(t instanceof AbnormalTitan) {
-   			
-	   			Image Abnormal = new Image("abnormal.png");
-	   			v = new ImageView(Abnormal);
-	            v.setPreserveRatio(true);
-	   			v.setFitHeight(80);
-	   			health.setText("Health: "+100);
-   			
-   			}
-    		
-   		else if(t instanceof ArmoredTitan) {
-   			
-	   			Image Armored = new Image("armored.png");
-	   			v= new ImageView(Armored);
-	   			v.setPreserveRatio(true);
-	   			v.setFitHeight(100);
-	   			health.setText("Health: "+200);
-	   			
-   			}
-    		
-   		else {
-   			
-	   			Image Colossal = new Image("colossal.png");
-	   			v = new ImageView(Colossal);
-	   			v.setPreserveRatio(true);
-	   			v.setFitHeight(150);
-	   			health.setText("Health: "+1000);
-	   			}
-	    		TitanImageView x=new TitanImageView(t,v,health);
-	    		health.setTextFill(Color.WHITE);
-	    		res.add(x);
-	    		tmp.add(t);
-	    		
-    	}
-    	
-    	
-    	titans.addAll(tmp);
-    	return res;
+    public ArrayList<TitanImageView> getImg(PriorityQueue<Titan> titans, ArrayList<TitanImageView> titanImages) {
+        ArrayList<TitanImageView> res = new ArrayList<TitanImageView>();
+        PriorityQueue<Titan> tmp = new PriorityQueue<Titan>();
+        
+        while (!titans.isEmpty()) {
+            Titan t = titans.remove();
+            boolean flag = false;
+            for (TitanImageView v : titanImages) {
+                if (v.titan == t) {
+                    flag = true;
+                    res.add(v);
+                    tmp.add(t);
+                    break;
+                }
+            }
+            
+            if (flag)
+                continue;
+            
+            ImageView v = null;
+            ProgressBar health = new ProgressBar(1.0);
+            health.setStyle("-fx-accent: green;");
+            health.setPrefWidth(75);
+            
+            if (t instanceof PureTitan) {
+                Image Pure = new Image("pure.png");
+                v = new ImageView(Pure);
+                v.setPreserveRatio(true);
+                v.setFitHeight(100);
+            }
+            else if (t instanceof AbnormalTitan) {
+                Image Abnormal = new Image("abnormal.png");
+                v = new ImageView(Abnormal);
+                v.setPreserveRatio(true);
+                v.setFitHeight(80);
+            }
+            else if (t instanceof ArmoredTitan) {
+                Image Armored = new Image("armored.png");
+                v = new ImageView(Armored);
+                v.setPreserveRatio(true);
+                v.setFitHeight(100);
+            }
+            else {
+                Image Colossal = new Image("colossal.png");
+                v = new ImageView(Colossal);
+                v.setPreserveRatio(true);
+                v.setFitHeight(150);
+            }
+            
+            TitanImageView x = new TitanImageView(t, v, health);
+            res.add(x);
+            tmp.add(t);
+        }
+        
+        titans.addAll(tmp);
+        return res;
     }
     
-    public ArrayList<TitanImageView> getImgInitilizer(PriorityQueue<Titan> titans){
-    	
-    	ArrayList<TitanImageView> res=new ArrayList<TitanImageView> ();
-    	PriorityQueue<Titan> tmp=new PriorityQueue<Titan>();
-    	
-    	while(!titans.isEmpty()) {
-    		
-	    		Titan t=titans.remove();
-	    		ImageView v=null;
-	    		Label health=new Label();
-	    		if(t instanceof PureTitan) {
-	   			 Image Pure = new Image("pure.png");
-	   			 v= new ImageView(Pure);
-	   			 v.setPreserveRatio(true);
-	   			 v.setFitHeight(100);
-	   			health.setText("Health: "+100);
-	   			
-   			}
-   		else if(t instanceof AbnormalTitan) {
-   			
-	   			Image Abnormal = new Image("abnormal.png");
-	   			v = new ImageView(Abnormal);
-	            v.setPreserveRatio(true);
-	   			v.setFitHeight(80);
-	   			health.setText("Health: "+100);
-	   			
-   			}
-   		else if(t instanceof ArmoredTitan) {
-   			
-	   			Image Armored = new Image("armored.png");
-	   			v= new ImageView(Armored);
-	   			v.setPreserveRatio(true);
-	   			v.setFitHeight(100);
-	   			health.setText("Health: "+200);
-	   			
-   			}
-   		else {
-   			
-	   			Image Colossal = new Image("colossal.png");
-	   			v = new ImageView(Colossal);
-	   			v.setPreserveRatio(true);
-	   			v.setFitHeight(180);
-	   			health.setText("Health: "+1000);
-	   			
-   			}
-	    		
-    		TitanImageView x=new TitanImageView(t,v,health);
-    		res.add(x);
-    		tmp.add(t);
-    		
-    	}
-    	
-    	titans.addAll(tmp);
-    	return res;
-    	
+    public ArrayList<TitanImageView> getImgInitilizer(PriorityQueue<Titan> titans) {
+        ArrayList<TitanImageView> res = new ArrayList<TitanImageView>();
+        PriorityQueue<Titan> tmp = new PriorityQueue<Titan>();
+        
+        while (!titans.isEmpty()) {
+            Titan t = titans.remove();
+            ImageView v = null;
+            ProgressBar health = new ProgressBar(1.0);
+            health.setStyle("-fx-accent: green;"); 
+            health.setPrefWidth(75);
+            
+            if (t instanceof PureTitan) {
+                Image Pure = new Image("pure.png");
+                v = new ImageView(Pure);
+                v.setPreserveRatio(true);
+                v.setFitHeight(100);
+            }
+            else if (t instanceof AbnormalTitan) {
+                Image Abnormal = new Image("abnormal.png");
+                v = new ImageView(Abnormal);
+                v.setPreserveRatio(true);
+                v.setFitHeight(80);
+            }
+            else if (t instanceof ArmoredTitan) {
+                Image Armored = new Image("armored.png");
+                v = new ImageView(Armored);
+                v.setPreserveRatio(true);
+                v.setFitHeight(100);
+            }
+            else {
+                Image Colossal = new Image("colossal.png");
+                v = new ImageView(Colossal);
+                v.setPreserveRatio(true);
+                v.setFitHeight(180);
+            }
+            
+            TitanImageView x = new TitanImageView(t, v, health);
+            res.add(x);
+            tmp.add(t);
+        }
+        
+        titans.addAll(tmp);
+        return res;
     }
     
-    public ArrayList<ArrayList<TitanImageView>> img(ArrayList<Lane> lanes){
-    	
-    	ArrayList<ArrayList<TitanImageView>> res=new ArrayList<ArrayList<TitanImageView>> ();
-    	int i=0;
-    	
-    	while(i<view.getAllLanes().size()) {
-    		Lane l=battle.getOriginalLanes().get(i);
-    		if(!battle.getOriginalLanes().get(i).isLaneLost())
-    		res.add(getImg(l.getTitans(),view.getAllLanes().get(i)));
-    		i++;
-    	}
-    	return res;
+    public ArrayList<ArrayList<TitanImageView>> img(ArrayList<Lane> lanes) {
+        ArrayList<ArrayList<TitanImageView>> res = new ArrayList<ArrayList<TitanImageView>>();
+        int i = 0;
+        
+        while (i < view.getAllLanes().size()) {
+            Lane l = battle.getOriginalLanes().get(i);
+            if (!battle.getOriginalLanes().get(i).isLaneLost())
+                res.add(getImg(l.getTitans(), view.getAllLanes().get(i)));
+            i++;
+        }
+        return res;
     }
     
-    public ArrayList<ArrayList<TitanImageView>> ImgIntializer(PriorityQueue<Lane> lanes){
-    	
-    	ArrayList<ArrayList<TitanImageView>> res=new ArrayList<ArrayList<TitanImageView>> ();
-    	PriorityQueue<Lane> tmp=new PriorityQueue<Lane>();
-    	
-    	while(!lanes.isEmpty()) {
-	    		Lane l=lanes.remove();
-	    		tmp.add(l);
-	    		res.add(getImgInitilizer(l.getTitans()));
-    		}
-    	
-    	lanes.addAll(tmp);
-    	return res;
+    public ArrayList<ArrayList<TitanImageView>> ImgIntializer(PriorityQueue<Lane> lanes) {
+        ArrayList<ArrayList<TitanImageView>> res = new ArrayList<ArrayList<TitanImageView>>();
+        PriorityQueue<Lane> tmp = new PriorityQueue<Lane>();
+        
+        while (!lanes.isEmpty()) {
+            Lane l = lanes.remove();
+            tmp.add(l);
+            res.add(getImgInitilizer(l.getTitans()));
+        }
+        
+        lanes.addAll(tmp);
+        return res;
     }
-    
     public void handleReturnButton(Event event){
     	
     	root=view.loadScene1();
