@@ -54,9 +54,13 @@ public class Controller extends Application{
 	public static String getChoosenMode() {
 		return ChoosenMode;
 	}
+	
+	
 	public static View getView() {
 		return view;
 	}
+	
+	
 	public void start(Stage stage) throws IOException {
 		MainStage=stage;
 	    view = new View();
@@ -117,6 +121,8 @@ public class Controller extends Application{
 		stage.show();
 	}
 	
+	
+	
 	public void handleButtonNext(Event event){//handles which mode the player chooses and if he did not a pop up will appear
     	 if(view.getMode()==null) {
     		 PopUpRoot=view.loadSelectModePopUp();
@@ -137,6 +143,8 @@ public class Controller extends Application{
     	    }
     	 ChoosenMode = view.getMode();
 	}
+	
+	
     public void handleButtonStart(Event event){
     	if(ChoosenMode.equals("Hard")){
 			 root=view.loadHardScene();
@@ -217,6 +225,8 @@ public class Controller extends Application{
 		     stage.setScene(scene);
 		     stage.show();
 		 }
+    
+    
     public void PassOrBuy(){
     	if(this.close==true)return;
              d1 = new ChoiceDialog<>("Pass", "Pass", "Buy");
@@ -236,6 +246,8 @@ public class Controller extends Application{
                  }
              });
     }
+    
+    
     public void OpenWeaponShop() {
     	if(this.close==true)return;
     	 d2 = new ChoiceDialog<>("Weapon", "Anti-Titan Shell"+"\n"+"Price: 25"+"\n"+"Damage: 10",
@@ -263,155 +275,198 @@ public class Controller extends Application{
                }
          });
     }
+    
+    
     public void deployWeapon() {
     	view.deployWeapon(weaponCode, LaneChoosen);
     }
+    
+    
   
     public void handleSelectedLane(){
     	if(this.close==true)return;
-    	 if(Controller.ChoosenMode=="Hard") {
-    		 d3=new ChoiceDialog<>("1","1","2","3","4","5");
-         d3.setTitle("Lanes");
-         d3.setHeaderText("Please select a Lane:");
-         d3.setContentText("Choose a lane");
-         d3.initOwner(MainStage);
-         d3.initModality(Modality.NONE);
-         Optional<String> result = d3.showAndWait();
-         result.ifPresent(choice -> {
-             if (choice.equals("1")) {
-                 Controller.LaneChoosen=1;
-             } else if (choice.equals("2")) {
-            	 Controller.LaneChoosen=2;
-             }
-             else if (choice.equals("3")) {
-            	 Controller.LaneChoosen=3;
-             }
-             else if (choice.equals("4")) {
-            	 Controller.LaneChoosen=4;
-             }
-             else if (choice.equals("5")) {
-            	 Controller.LaneChoosen=5;
-             }
-         });
+	    	 if(Controller.ChoosenMode=="Hard") {
+	    		 d3=new ChoiceDialog<>("1","1","2","3","4","5");
+		         d3.setTitle("Lanes");
+		         d3.setHeaderText("Please select a Lane:");
+		         d3.setContentText("Choose a lane");
+		         d3.initOwner(MainStage);
+		         d3.initModality(Modality.NONE);
+		         Optional<String> result = d3.showAndWait();
+		         result.ifPresent(choice -> {
+		             if (choice.equals("1")) {
+		                 Controller.LaneChoosen=1;
+		             } else if (choice.equals("2")) {
+		            	 Controller.LaneChoosen=2;
+		             }
+		             else if (choice.equals("3")) {
+		            	 Controller.LaneChoosen=3;
+		             }
+		             else if (choice.equals("4")) {
+		            	 Controller.LaneChoosen=4;
+		             }
+		             else if (choice.equals("5")) {
+		            	 Controller.LaneChoosen=5;
+		             }
+	         });
     	 }
+	    	 
     	 else {
-    		 d3=new ChoiceDialog<>("1","2","3");
-             d3.setTitle("Lanes");
-             d3.setHeaderText("Please select a Lane:");
-             d3.setContentText("Choose a lane");
-             Optional<String> result = d3.showAndWait();
-             result.ifPresent(choice -> {
-                 if (choice.equals("1")) {
-                	 Controller.LaneChoosen=1;
-                 } else if (choice.equals("2")) {
-                	 Controller.LaneChoosen=2;
-                 }
-                 else if (choice.equals("3")) {
-                	 Controller.LaneChoosen=3;
-                 }
-             });
+	    		 d3=new ChoiceDialog<>("1","2","3");
+	             d3.setTitle("Lanes");
+	             d3.setHeaderText("Please select a Lane:");
+	             d3.setContentText("Choose a lane");
+	             Optional<String> result = d3.showAndWait();
+	             result.ifPresent(choice -> {
+	                 if (choice.equals("1")) {
+	                	 Controller.LaneChoosen=1;
+	                 } else if (choice.equals("2")) {
+	                	 Controller.LaneChoosen=2;
+	                 }
+	                 else if (choice.equals("3")) {
+	                	 Controller.LaneChoosen=3;
+	                 }
+	             });
     	 }
     }
     
+ 
     public ArrayList<TitanImageView> getImg(PriorityQueue<Titan> titans,ArrayList<TitanImageView> titanImages){
+    	
     	ArrayList<TitanImageView> res=new ArrayList<TitanImageView> ();
     	PriorityQueue<Titan> tmp=new PriorityQueue<Titan>();
+    	
     	while(!titans.isEmpty()) {
-    		Titan t=titans.remove();
-    		boolean flag=false;
-    		for(TitanImageView v:titanImages) {
-    			if(v.t==t) {
-    				flag= true;
-    				res.add(v);
-    				tmp.add(t);
-    				break;
-    			}
+    		
+	    		Titan t=titans.remove();
+	    		boolean flag=false;
+	    		for(TitanImageView v:titanImages) {
+	    			if(v.titan==t) {
+	    				flag= true;
+	    				res.add(v);
+	    				tmp.add(t);
+	    				break;
+	    		}
     		}
+    		
     		if(flag)
     			continue;
+    		
     		ImageView v=null;
     		Label health=new Label();
+    		
     		if(t instanceof PureTitan) {
-   			 Image Pure = new Image("pure.png");
-   			 v= new ImageView(Pure);
-   			 v.setPreserveRatio(true);
-   			 v.setFitHeight(100);
-   			health.setText("Health: "+100);
+    			
+	   			 Image Pure = new Image("pure.png");
+	   			 v= new ImageView(Pure);
+	   			 v.setPreserveRatio(true);
+	   			 v.setFitHeight(100);
+	   			health.setText("Health: "+100);
+	   			
    			}
+    		
    		else if(t instanceof AbnormalTitan) {
-   			Image Abnormal = new Image("abnormal.png");
-   			v = new ImageView(Abnormal);
-            v.setPreserveRatio(true);
-   			v.setFitHeight(80);
-   			health.setText("Health: "+100);
+   			
+	   			Image Abnormal = new Image("abnormal.png");
+	   			v = new ImageView(Abnormal);
+	            v.setPreserveRatio(true);
+	   			v.setFitHeight(80);
+	   			health.setText("Health: "+100);
+   			
    			}
+    		
    		else if(t instanceof ArmoredTitan) {
-   			Image Armored = new Image("armored.png");
-   			v= new ImageView(Armored);
-   			v.setPreserveRatio(true);
-   			v.setFitHeight(100);
-   			health.setText("Health: "+200);
+   			
+	   			Image Armored = new Image("armored.png");
+	   			v= new ImageView(Armored);
+	   			v.setPreserveRatio(true);
+	   			v.setFitHeight(100);
+	   			health.setText("Health: "+200);
+	   			
    			}
+    		
    		else {
-   			Image Colossal = new Image("colossal.png");
-   			v = new ImageView(Colossal);
-   			v.setPreserveRatio(true);
-   			v.setFitHeight(150);
-   			health.setText("Health: "+1000);
-   			}
-    		TitanImageView x=new TitanImageView(t,v,health);
-    		health.setTextFill(Color.WHITE);
-    		res.add(x);
-    		tmp.add(t);
+   			
+	   			Image Colossal = new Image("colossal.png");
+	   			v = new ImageView(Colossal);
+	   			v.setPreserveRatio(true);
+	   			v.setFitHeight(150);
+	   			health.setText("Health: "+1000);
+	   			}
+	    		TitanImageView x=new TitanImageView(t,v,health);
+	    		health.setTextFill(Color.WHITE);
+	    		res.add(x);
+	    		tmp.add(t);
+	    		
     	}
+    	
+    	
     	titans.addAll(tmp);
     	return res;
     }
+    
     public ArrayList<TitanImageView> getImgInitilizer(PriorityQueue<Titan> titans){
+    	
     	ArrayList<TitanImageView> res=new ArrayList<TitanImageView> ();
     	PriorityQueue<Titan> tmp=new PriorityQueue<Titan>();
+    	
     	while(!titans.isEmpty()) {
-    		Titan t=titans.remove();
-    		ImageView v=null;
-    		Label health=new Label();
-    		if(t instanceof PureTitan) {
-   			 Image Pure = new Image("pure.png");
-   			 v= new ImageView(Pure);
-   			 v.setPreserveRatio(true);
-   			 v.setFitHeight(100);
-   			health.setText("Health: "+100);
+    		
+	    		Titan t=titans.remove();
+	    		ImageView v=null;
+	    		Label health=new Label();
+	    		if(t instanceof PureTitan) {
+	   			 Image Pure = new Image("pure.png");
+	   			 v= new ImageView(Pure);
+	   			 v.setPreserveRatio(true);
+	   			 v.setFitHeight(100);
+	   			health.setText("Health: "+100);
+	   			
    			}
    		else if(t instanceof AbnormalTitan) {
-   			Image Abnormal = new Image("abnormal.png");
-   			v = new ImageView(Abnormal);
-            v.setPreserveRatio(true);
-   			v.setFitHeight(80);
-   			health.setText("Health: "+100);
+   			
+	   			Image Abnormal = new Image("abnormal.png");
+	   			v = new ImageView(Abnormal);
+	            v.setPreserveRatio(true);
+	   			v.setFitHeight(80);
+	   			health.setText("Health: "+100);
+	   			
    			}
    		else if(t instanceof ArmoredTitan) {
-   			Image Armored = new Image("armored.png");
-   			v= new ImageView(Armored);
-   			v.setPreserveRatio(true);
-   			v.setFitHeight(100);
-   			health.setText("Health: "+200);
+   			
+	   			Image Armored = new Image("armored.png");
+	   			v= new ImageView(Armored);
+	   			v.setPreserveRatio(true);
+	   			v.setFitHeight(100);
+	   			health.setText("Health: "+200);
+	   			
    			}
    		else {
-   			Image Colossal = new Image("colossal.png");
-   			v = new ImageView(Colossal);
-   			v.setPreserveRatio(true);
-   			v.setFitHeight(180);
-   			health.setText("Health: "+1000);
+   			
+	   			Image Colossal = new Image("colossal.png");
+	   			v = new ImageView(Colossal);
+	   			v.setPreserveRatio(true);
+	   			v.setFitHeight(180);
+	   			health.setText("Health: "+1000);
+	   			
    			}
+	    		
     		TitanImageView x=new TitanImageView(t,v,health);
     		res.add(x);
     		tmp.add(t);
+    		
     	}
+    	
     	titans.addAll(tmp);
     	return res;
+    	
     }
+    
     public ArrayList<ArrayList<TitanImageView>> img(ArrayList<Lane> lanes){
+    	
     	ArrayList<ArrayList<TitanImageView>> res=new ArrayList<ArrayList<TitanImageView>> ();
     	int i=0;
+    	
     	while(i<view.getAllLanes().size()) {
     		Lane l=battle.getOriginalLanes().get(i);
     		if(!battle.getOriginalLanes().get(i).isLaneLost())
@@ -420,66 +475,93 @@ public class Controller extends Application{
     	}
     	return res;
     }
+    
     public ArrayList<ArrayList<TitanImageView>> ImgIntializer(PriorityQueue<Lane> lanes){
+    	
     	ArrayList<ArrayList<TitanImageView>> res=new ArrayList<ArrayList<TitanImageView>> ();
     	PriorityQueue<Lane> tmp=new PriorityQueue<Lane>();
+    	
     	while(!lanes.isEmpty()) {
-    		Lane l=lanes.remove();
-    		tmp.add(l);
-    		res.add(getImgInitilizer(l.getTitans()));
+	    		Lane l=lanes.remove();
+	    		tmp.add(l);
+	    		res.add(getImgInitilizer(l.getTitans()));
     		}
-    		lanes.addAll(tmp);
+    	
+    	lanes.addAll(tmp);
     	return res;
     }
     
     public void handleReturnButton(Event event){
+    	
     	root=view.loadScene1();
     	scene=new Scene(root);
     	Stage stage = MainStage;
     	stage.setScene(scene);
     	stage.show();
+    	
     }
+    
     public ArrayList<ImageView> approachingTitansImages(ArrayList<Titan> approachingTitans){//change the approachingTitans list to ImageView
+    	
     	ArrayList<ImageView> Images=new ArrayList<ImageView>();
     	int i=0;
+    	
     	while(i<approachingTitans.size()){
     		Titan t=approachingTitans.get(i);
     		if(t instanceof PureTitan) {
-    			 Image Pure = new Image("pure.png");
-    			ImageView P = new ImageView(Pure);
-    			P.setPreserveRatio(true);
-    			P.setFitHeight(100);
-    			Images.add(P);
+    			
+	    			Image Pure = new Image("pure.png");
+	    			ImageView P = new ImageView(Pure);
+	    			P.setPreserveRatio(true);
+	    			P.setFitHeight(100);
+	    			Images.add(P);
+    			
     			}
+    		
     		else if(t instanceof AbnormalTitan) {
-    			Image Abnormal = new Image("abnormal.png");
-    			ImageView abnormal = new ImageView(Abnormal);
-    			abnormal.setPreserveRatio(true);
-    			abnormal.setFitHeight(80);
-    			Images.add(abnormal);
+    			
+	    			Image Abnormal = new Image("abnormal.png");
+	    			ImageView abnormal = new ImageView(Abnormal);
+	    			abnormal.setPreserveRatio(true);
+	    			abnormal.setFitHeight(80);
+	    			Images.add(abnormal);
+    			
     			}
+    		
     		else if(t instanceof ArmoredTitan) {
-    			Image Armored = new Image("armored.png");
-    			ImageView armored = new ImageView(Armored);
-    			armored.setPreserveRatio(true);
-    			armored.setFitHeight(100);
-    			Images.add(armored);
+    			
+	    			Image Armored = new Image("armored.png");
+	    			ImageView armored = new ImageView(Armored);
+	    			armored.setPreserveRatio(true);
+	    			armored.setFitHeight(100);
+	    			Images.add(armored);
+	    			
     			}
+    		
     		else {
-    			Image Colossal = new Image("colossal.png");
-    			ImageView colossal = new ImageView(Colossal);
-    			colossal.setPreserveRatio(true);
-    			colossal.setFitHeight(210);
-    			Images.add(colossal);
+    			
+	    			Image Colossal = new Image("colossal.png");
+	    			ImageView colossal = new ImageView(Colossal);
+	    			colossal.setPreserveRatio(true);
+	    			colossal.setFitHeight(210);
+	    			Images.add(colossal);
+	    			
     			}
+    		
     		i++;
+    		
     	}
+    	
     	return Images;
+    	
     }
     public ArrayList<Label> approachingTitansHealth(ArrayList<Titan> approachingTitans){//change the approachingTitansHealth list to ImageView
+    	
     	ArrayList<Label> labels=new ArrayList<Label>();
     	int i=0;
+    	
     	while(i<approachingTitans.size()){
+    		
     		Titan t=approachingTitans.get(i);
     		Label health=new Label();
     		health.setText("Health: "+t.getBaseHealth());
@@ -487,10 +569,14 @@ public class Controller extends Application{
     		health.setTextFill(Color.WHITE);
     		labels.add(health);
     		i++;
+    		
     	}
+    	
     	return labels;
     }
+    
     public void updateViewInfo(){
+    	
     	 view.setApproachingTitans(approachingTitansImages(battle.getApproachingTitans()));
 		 view.setApproachingTitansHealth(approachingTitansHealth(battle.getApproachingTitans()));
 		 view.setNumberOfTitansPerTurn(battle.getNumberOfTitansPerTurn());
@@ -501,21 +587,33 @@ public class Controller extends Application{
 		 view.setAllLanes(img(battle.getOriginalLanes()));
 		 
     }
+    
     public ArrayList<Integer> lanes(PriorityQueue<Lane> lanes,ArrayList<Lane>originalLanes){//change the lanes list to int
+    	
     	ArrayList<Integer> codes=new ArrayList<Integer>();
     	PriorityQueue<Lane> tmp=new PriorityQueue<Lane>();
+    	
     	while(!lanes.isEmpty()){
+    		
     		tmp.offer(lanes.peek());
     		Lane l=lanes.remove();
     		codes.add(originalLanes.indexOf(l)+1);
+    		
     	}
-    	while(!tmp.isEmpty())
+    	
+    	while(!tmp.isEmpty()) {
+    		
     		lanes.offer(tmp.poll());
+    		
+    	}
+    		
     	return codes;
     }
 
 	public static void main(String[] args) {
+		
 		launch(args);
+		
 	}
 
 }

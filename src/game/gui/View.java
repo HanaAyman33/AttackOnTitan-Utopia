@@ -867,19 +867,19 @@ public class View {
 		}
 		for(ArrayList<TitanImageView> lane:this.allLanes) {
 			for(TitanImageView t:lane) {
-				t.l.setText("Health: "+t.t.getCurrentHealth());
-				if(t.t.isDefeated()) {
-					fade(t.v);
-					fade(t.l);
+				t.healthLabel.setText("Health: "+t.titan.getCurrentHealth());
+				if(t.titan.isDefeated()) {
+					fade(t.titanImageView);
+					fade(t.healthLabel);
 				}
 				else {
-				if(!t.t.hasReachedTarget()) {
-				translate(t.v,t.t.getSpeed()*3);
-    			translate(t.l,t.t.getSpeed()*3);
+				if(!t.titan.hasReachedTarget()) {
+				translate(t.titanImageView,t.titan.getSpeed()*3);
+    			translate(t.healthLabel,t.titan.getSpeed()*3);
 				}
 				else {
-					titanAttack(t.v);
-					titanAttack(t.l);
+					titanAttack(t.titanImageView);
+					titanAttack(t.healthLabel);
 				}
 				}
 			}
@@ -900,15 +900,15 @@ public class View {
 			case 5:y=510;break;
 			}
 			for(TitanImageView t:lane) {
-				ImageView ti=t.v;
+				ImageView ti=t.titanImageView;
 				if(!s.getChildren().contains(ti)) {
-				s.getChildren().addAll(ti,t.l);
+				s.getChildren().addAll(ti,t.healthLabel);
 				s.setLeftAnchor(ti, (double)1200);
 				s.setTopAnchor(ti, (double)y);
-				s.setLeftAnchor(t.l, (double)1190);
-				s.setTopAnchor(t.l, (double)y-10);
+				s.setLeftAnchor(t.healthLabel, (double)1190);
+				s.setTopAnchor(t.healthLabel, (double)y-10);
 				translate(ti,60);
-				translate(t.l,60);
+				translate(t.healthLabel,60);
 				}
 			}
 			count++;
