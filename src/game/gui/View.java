@@ -7,7 +7,6 @@ import game.engine.lanes.Lane;
 import game.engine.titans.AbnormalTitan;
 import game.engine.titans.ArmoredTitan;
 import game.engine.titans.PureTitan;
-import game.engine.titans.Titan;
 import javafx.animation.FadeTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
@@ -31,14 +30,13 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 public class View {
-	private AnchorPane Scene1;
+	private AnchorPane Scene1;  // Changed from AnchorPane to Pane
+    private MainMenuView mainMenuView;
 	private AnchorPane EasyScene;
 	private AnchorPane HardScene;
 	private AnchorPane GameInstructionScene;
@@ -267,13 +265,33 @@ public class View {
 	public ArrayList<ImageView> getApproachingTitans() {
 		return ApproachingTitans;
 	}
+	
+	public Group loadScene1(){
+        Group root = new Group();
+        root.getChildren().add(Scene1);
+        return root;
+    }
+
+    // Add getters for the new button names if needed elsewhere
+    public Button getNewGameButton() {
+        return mainMenuView.getNewGameButton();
+    }
+
+    public Button getGameRulesButton() {
+        return mainMenuView.getGameRulesButton();
+    }
+
+    public Button getExitButton() {
+        return mainMenuView.getExitButton();
+    }
+
 	public View(){
 		
 		//Intializing all Scenes
-
-		Scene1 = new AnchorPane();
-		Scene1.setPrefSize(1200, 700);
-		
+		mainMenuView = new MainMenuView();  // Initialize the FXML-based View
+        Scene1 = mainMenuView.getRoot();  // Get the root Pane from FXML View
+        Scene1.setPrefSize(1200, 700);
+        
 		EasyScene = new AnchorPane();
 		EasyScene.setPrefSize(1200, 700);
 		
@@ -332,59 +350,11 @@ public class View {
 	}
 	@SuppressWarnings("static-access")
 	public void addAllComponents(){
-		//Scene1 setup
-	      next = new Button();
-		  next.setText("Next");
-		  next.setPrefSize(70,40);
-		  next.setFont(new Font(22));
-		  next.setAlignment(Pos.CENTER);
-		
-	      Mode = new ComboBox<String>();
-		  Mode.setPromptText("Mode");
-		  Mode.getItems().add("Easy");
-		  Mode.getItems().add("Hard");
-		  Mode.setPrefSize(100,25);
-		
-		  Label label1 = new Label();
-		  label1.setText("Select a game mode");
-		  label1.setFont(new Font(30));
-		  label1.setTextFill(Color.WHITE);
-		  label1.setAlignment(Pos.CENTER);
-		  Media media = new Media(getClass().getResource("/backVid.mp4").toExternalForm());
-		  MediaPlayer mediaPlayer = new MediaPlayer(media);
-		  MediaView backgroundVideo = new MediaView(mediaPlayer);
-		  backgroundVideo.setPreserveRatio(false);
-		  backgroundVideo.fitWidthProperty().bind(Scene1.widthProperty());
-		  backgroundVideo.fitHeightProperty().bind(Scene1.heightProperty());
-		  mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-		  mediaPlayer.setAutoPlay(true);
-		  mediaPlayer.play();
-		  Label label9 = new Label();
-		  label9.setText("Select a game mode");
-		  label9.setFont(new Font(30));
-		  label9.setTextFill(Color.BLACK);
-		  label9.setAlignment(Pos.CENTER);
-		  SelectModePopUp.getChildren().add(label9);
-		  Scene1.getChildren().add(0, backgroundVideo);
-		  Scene1.getChildren().addAll(Mode,label1,next);
-		  Scene1.setTopAnchor(backgroundVideo, 0.0);
-		  Scene1.setBottomAnchor(backgroundVideo, 0.0);
-		  Scene1.setLeftAnchor(backgroundVideo, 0.0);
-		  Scene1.setRightAnchor(backgroundVideo, 0.0);
-
-
-		  Scene1.setLeftAnchor(label1, (double)400);
-		  Scene1.setRightAnchor(label1, (double) 430);
-		  Scene1.setTopAnchor(label1, (double) 200);
-		
-		  Scene1.setLeftAnchor(Mode, (double) 500);
-		  Scene1.setRightAnchor(Mode, (double) 530);
-		  Scene1.setTopAnchor(Mode, (double) 300);
-		
-		  Scene1.setLeftAnchor(next, (double) 500);
-		  Scene1.setRightAnchor(next, (double) 530);
-		  Scene1.setTopAnchor(next, (double) 500);
-
+		// Scene1 setup - Modified to use FXML-based components
+        next = mainMenuView.getNewGameButton();  // "Next" maps to "NewGame"
+        Start = mainMenuView.getGameRulesButton();  // "Start" maps to "GameRules"
+        returntoStart = mainMenuView.getExitButton();  // "returntoStart" maps to exit button
+        
 //----------------------------------------------------------------------------------------------------------
 		
 		//GameInstructionsScene set up
@@ -763,11 +733,6 @@ public class View {
 	public Group getInfo() {
 		Group root = new Group();
 		root.getChildren().add(info);
-		return root;
-	}
-	public Group loadScene1(){
-		Group root = new Group();
-		root.getChildren().add(Scene1);
 		return root;
 	}
 	public Group loadGameOverScene(){

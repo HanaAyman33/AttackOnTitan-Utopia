@@ -110,11 +110,7 @@ public class Controller extends Application{
             });
         });
 
-		Media media = new Media(getClass().getResource("/backSound.mp3").toExternalForm());
-		MediaPlayer mediaPlayer = new MediaPlayer(media);
-		mediaPlayer.setAutoPlay(true);
-		mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-		mediaPlayer.play();
+		
 	    stage.setScene(scene);
 		stage.setResizable(true);
 		stage.setTitle("Attack on Titan: Utopia");
