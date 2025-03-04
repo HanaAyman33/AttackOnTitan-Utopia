@@ -88,7 +88,7 @@ public class Controller extends Application{
 	    returntoStart.setOnMouseClicked(event->handleReturnButton(event));
 	    WeaponShop1.setOnMouseClicked(event->this.OpenWeaponShop());
 	    WeaponShop2.setOnMouseClicked(event->this.OpenWeaponShop());
-		icon = new Image("AOT.jpg");
+		icon = new Image("icon.png");
 		stage.setOnCloseRequest(event -> {
             event.consume();
             handleExitButton(); // Reuse the same exit logic
