@@ -37,6 +37,7 @@ import javafx.util.Duration;
 public class View {
 	private AnchorPane Scene1;  // Changed from AnchorPane to Pane
     private MainMenuView mainMenuView;
+    private GameRulesView gameRulesView;
 	private AnchorPane EasyScene;
 	private AnchorPane HardScene;
 	private AnchorPane GameInstructionScene;
@@ -59,7 +60,6 @@ public class View {
 	private ComboBox<String> EasyLanes;
 	private ComboBox<String> HardLanes;
 	private Button next;
-	private Button Start;
 	private Button pass;
 	private Button buy;
 	private Button returntoStart;
@@ -98,36 +98,6 @@ public class View {
 	private GridPane easy;
 	private Label scorefinal;
 	private ArrayList<ArrayList<TitanImageView>> allLanes;
-	private String instructions="1. Objective:\n" +
-    	    "   - Your goal is to defend the Utopia District Walls from incoming titan attacks for as long as possible.\n\n" +
-    	    "2. Game Setup:\n" +
-    	    "   - Titans are approaching the walls from multiple lanes.\n" +
-    	    "   - You have the option to purchase and deploy different types of weapons to defend the walls.\n\n" +
-    	    "3. Turn Actions:\n" +
-    	    "   - On each turn, you can either:\n" +
-    	    "   - Purchase and deploy a weapon.\n" +
-    	    "   - Pass your turn without taking any actions.\n" +
-    	    "   - After your action (or pass), titans will move closer to the walls, and weapons will attack them.\n" +
-    	    "   - Titans will then attack the walls.\n" +
-    	    "   - New titans may be added to the lanes based on the game phase and elapsed turns.\n\n" +
-    	    "4. Winning and Losing:\n" +
-    	    "   - There's no winning condition; your goal is to survive for as many turns as possible.\n" +
-    	    "   - You lose when all starting lanes have their wall parts destroyed.\n"+
-    	    "     Your final score is based on the number of defeated titans.\n\n" +
-    	    "5. Enemy Characters (Titans):\n" +
-    	    "   - Titans come in different types with varying stats and special traits.\n" +
-    	    "   - Defeat titans by reducing their health points to zero. Each defeated titan adds to your resources and score.\n\n" +
-    	    "6. Friendly Pieces (Weapons):\n" +
-    	    "   - Deploy various types of weapons to attack incoming titans.\n" +
-    	    "   - Each weapon type has different attack actions and ranges. Choose strategically based on the situation.\n\n" +
-    	    "7. Game Phases:\n" +
-    	    "   - The game progresses through three phases: Early, Intense, and Grumbling.\n"+
-    	    "   The number and types of titans added to lanes change based on the phase and elapsed turns.\n\n" +
-    	    "8. Resource Management:\n" +
-    	    "   - Manage your resources effectively to purchase and deploy weapons.\n" +
-    	    "   - Your resources are deducted when purchasing weapons and increased when defeating titans.\n\n" +
-    	    "Remember to strategize carefully, prioritize defending vulnerable lanes, and adapt your tactics as the game progresses.\n"+
-    	    "Good luck defending the walls of Utopia District!";
 	
 	
 	public ArrayList<ArrayList<TitanImageView>> getAllLanes() {
@@ -239,9 +209,6 @@ public class View {
 	public Button getBuy() {
 		return buy;
 	}
-	public Button getStart() {
-		return Start;
-	}
 	public Button getNext() {
 		return next;
 	}
@@ -266,6 +233,7 @@ public class View {
 		return ApproachingTitans;
 	}
 	
+	
 	public Group loadScene1(){
         Group root = new Group();
         root.getChildren().add(Scene1);
@@ -284,11 +252,21 @@ public class View {
     public Button getExitButton() {
         return mainMenuView.getExitButton();
     }
+    public Button getBack() {
+		return GameRulesView.getBack();
+	}
+
+	public MainMenuView getMainMenuView() {
+		return mainMenuView;
+	}
+	public GameRulesView getGameRulesView() {
+		return gameRulesView;
+	}
 
 	public View(){
 		
 		//Intializing all Scenes
-		mainMenuView = new MainMenuView();  // Initialize the FXML-based View
+		mainMenuView = new MainMenuView(); 
         Scene1 = mainMenuView.getRoot();  // Get the root Pane from FXML View
         Scene1.setPrefSize(1200, 700);
         
@@ -298,8 +276,9 @@ public class View {
 		HardScene = new AnchorPane();
 		HardScene.setPrefSize(1200, 700);
 		
-		GameInstructionScene = new AnchorPane();
-		GameInstructionScene.setPrefSize(1200,700);
+		gameRulesView = new GameRulesView();
+	    GameInstructionScene = gameRulesView.getRoot(); // FIX: Use gameRulesView.getRoot()
+	    GameInstructionScene.setPrefSize(1200, 700);
 		
 		WeaponShop = new BorderPane();
 		WeaponShop.setPrefSize(1200, 700);
@@ -350,40 +329,7 @@ public class View {
 	}
 	@SuppressWarnings("static-access")
 	public void addAllComponents(){
-		// Scene1 setup - Modified to use FXML-based components
-        next = mainMenuView.getNewGameButton();  // "Next" maps to "NewGame"
-        Start = mainMenuView.getGameRulesButton();  // "Start" maps to "GameRules"
-        returntoStart = mainMenuView.getExitButton();  // "returntoStart" maps to exit button
-        
-//----------------------------------------------------------------------------------------------------------
-		
-		//GameInstructionsScene set up
-		
-		  Start = new Button();
-		  Start.setText("Start");
-		  Start.setPrefSize(70,40);
-		  Start.setFont(new Font(22));
-		  Start.setAlignment(Pos.CENTER);
-			
-		  TextArea instructions = new TextArea();
-		  instructions.setEditable(false);
-		  instructions.setText(this.instructions);
-		  instructions.setFont(new Font(22));
-		  Image background2 = new Image("mainBackground.jpg");
-		  ImageView BackGround2 = new ImageView(background2);
-		  BackGround2.setFitHeight(700);
-		  BackGround2.setFitWidth(1200);
-		  GameInstructionScene.getChildren().add(0, BackGround2);
-		  GameInstructionScene.getChildren().addAll(Start,instructions);
-			
-	      GameInstructionScene.setLeftAnchor(Start, (double) 550);
-		  GameInstructionScene.setRightAnchor(Start, (double)550);
-		  GameInstructionScene.setBottomAnchor(Start, (double)100);
-		  
-		  GameInstructionScene.setLeftAnchor(instructions, (double)0);
-		  GameInstructionScene.setRightAnchor(instructions, (double) 0);
-		  GameInstructionScene.setTopAnchor(instructions, (double) 0);
-		  GameInstructionScene.setBottomAnchor(instructions, (double) 200);
+
 		  
 //----------------------------------------------------------------------------------------------------------
 	

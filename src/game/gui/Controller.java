@@ -74,40 +74,24 @@ public class Controller extends Application{
 		view.setTurn("0");
 		view.setPhase("EARLY");
 		view.setLanes("1,2,3,4,5");
-	    Button Next=view.getNext();
-	    Button Start=view.getStart();
+	    Button BackToMainMenu=GameRulesView.getBack();
 	    Button returntoStart=view.getReturntoStart();
 	    Button WeaponShop1=view.getWeaponShopButtonEasy();
 	    Button WeaponShop2=view.getWeaponShopButtonHard();
-	    Next.setOnMouseClicked(event->handleButtonNext(event));
-	    Start.setOnMouseClicked(event->handleButtonStart(event));
+		Button NewGame= MainMenuView.getNewGameButton();
+		Button GameRules=MainMenuView.getGameRulesButton();
+		Button Exit=MainMenuView.getExitButton();
+	    NewGame.setOnMouseClicked(event->this.handleNewGameButton(event));
+	    GameRules.setOnMouseClicked(event->this.handleButtonGameRules(event));
+        Exit.setOnMouseClicked(event->this.handleExitButton());
+	    BackToMainMenu.setOnMouseClicked(event->handleButtonBackToMainMenu(event));
 	    returntoStart.setOnMouseClicked(event->handleReturnButton(event));
 	    WeaponShop1.setOnMouseClicked(event->this.OpenWeaponShop());
 	    WeaponShop2.setOnMouseClicked(event->this.OpenWeaponShop());
 		icon = new Image("AOT.jpg");
 		stage.setOnCloseRequest(event -> {
             event.consume();
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setContentText("Are you sure you want to exit the game?");
-            alert.setTitle("Confirmation");
-            alert.setHeaderText(null);
-            alert.initOwner(stage); 
-            alert.showAndWait().ifPresent(response -> {
-                if (response == javafx.scene.control.ButtonType.OK) {
-                    close = true;
-                    if(d1!=null)
-                        d1.close();
-                    if(d2!=null)
-                        d2.close();
-                    if(d3!=null)
-                        d3.close();
-                    if(alert1!=null)
-                    	alert1.close();
-                    if(alert2!=null)
-                	    alert2.close();
-                    Platform.exit();
-                }
-            });
+            handleExitButton(); // Reuse the same exit logic
         });
 
 		
@@ -119,6 +103,41 @@ public class Controller extends Application{
 	}
 	
 	
+	public void handleNewGameButton(Event event) {
+		
+	}
+	
+	public void handleButtonGameRules(Event event) {
+		 root=view.loadGameInstructionScene();
+		 Stage stage=MainStage;
+		 scene=new Scene(root,1200,700);
+		 stage.setScene(scene);
+		 stage.setResizable(false);
+		 stage.show();
+	}
+	private void handleExitButton() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("Are you sure you want to exit the game?");
+        alert.setTitle("Confirmation");
+        alert.setHeaderText(null);
+        alert.initOwner(MainStage);
+        alert.showAndWait().ifPresent(response -> {
+            if (response == javafx.scene.control.ButtonType.OK) {
+                close = true;
+                if (d1 != null)
+                    d1.close();
+                if (d2 != null)
+                    d2.close();
+                if (d3 != null)
+                    d3.close();
+                if (alert1 != null)
+                    alert1.close();
+                if (alert2 != null)
+                    alert2.close();
+                Platform.exit();
+            }
+        });
+    }
 	
 	public void handleButtonNext(Event event){//handles which mode the player chooses and if he did not a pop up will appear
     	 if(view.getMode()==null) {
@@ -141,7 +160,14 @@ public class Controller extends Application{
     	 ChoosenMode = view.getMode();
 	}
 	
-	
+	public void handleButtonBackToMainMenu(Event event) {
+		 root=view.loadScene1();
+		 Stage stage=MainStage;
+		 scene=new Scene(root,1200,700);
+		 stage.setScene(scene);
+		 stage.setResizable(false);
+		 stage.show();
+	}
     public void handleButtonStart(Event event){
     	if(ChoosenMode.equals("Hard")){
 			 root=view.loadHardScene();

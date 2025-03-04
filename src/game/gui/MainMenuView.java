@@ -5,11 +5,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.effect.Blend;
-import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
-import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -24,13 +21,13 @@ import javafx.scene.text.Font;
 
 public class MainMenuView {
     private static AnchorPane root;
-    private Button NewGame;
-    private Button GameRules;
-    private Button exitButton;
+    private static Button NewGame;
+    private static Button GameRules;
+    private static Button exitButton;
     private Button soundButton;
     private Slider volumeSlider;
     private MediaPlayer backgroundMusic;
-    private double volumeLevel = 1.0;
+    private double volumeLevel = 0.8;
     
     public MainMenuView() {
         root = new AnchorPane();
@@ -226,15 +223,15 @@ public class MainMenuView {
         AnchorPane.setLeftAnchor(bgRect3, -10.0);
 
         // Labels
-        Label newGameLabel = createEnhancedLabel("New Game", 400.0, 90.0, bgRect1, hoverGradient, normalGradient);
-        Label gameRulesLabel = createEnhancedLabel("Game Rules", 470.0, 90.0, bgRect2, hoverGradient, normalGradient);
-        Label exitLabel = createEnhancedLabel("Exit", 540.0, 130.0, bgRect3, hoverGradient, normalGradient);
+        Label newGameLabel = createEnhancedLabel("New Game", 400.0, 90.0, bgRect1, hoverGradient, normalGradient,NewGame);
+        Label gameRulesLabel = createEnhancedLabel("Game Rules", 470.0, 90.0, bgRect2, hoverGradient, normalGradient,GameRules);
+        Label exitLabel = createEnhancedLabel("Exit", 540.0, 130.0, bgRect3, hoverGradient, normalGradient,exitButton);
 
         // Add elements to root
         root.getChildren().addAll(
             mediaView, labelImage,
-            NewGame, GameRules, exitButton, bgRect1, bgRect2, bgRect3,
-            newGameLabel, gameRulesLabel, exitLabel, soundButton, volumeSlider
+            bgRect1, bgRect2, bgRect3,
+            newGameLabel, gameRulesLabel, exitLabel, soundButton, volumeSlider,NewGame, GameRules, exitButton
         );
     }
 
@@ -270,7 +267,7 @@ public class MainMenuView {
 
     // Helper method to create enhanced labels with background rectangle
     private Label createEnhancedLabel(String text, double topAnchor, double leftAnchor, Rectangle bgRect, 
-                                      LinearGradient hoverGradient, LinearGradient normalGradient) {
+                                      LinearGradient hoverGradient, LinearGradient normalGradient,Button button) {
         Label label = new Label(text);
         label.setFont(new Font("Chiller", 40));
         label.setTextFill(Color.WHITE);
@@ -306,16 +303,14 @@ public class MainMenuView {
             bgRect.setFill(normalGradient);
         };
 
-        bgRect.setOnMouseEntered(event -> enterHandler.run());
-        bgRect.setOnMouseExited(event -> exitHandler.run());
-        label.setOnMouseEntered(event -> enterHandler.run());
-        label.setOnMouseExited(event -> exitHandler.run());
+        button.setOnMouseEntered(event -> enterHandler.run());
+        button.setOnMouseExited(event -> exitHandler.run());
 
         return label;
     }
 
-    public Button getNewGameButton() { return NewGame; }
-    public Button getGameRulesButton() { return GameRules; }
-    public Button getExitButton() { return exitButton; }
+    public static Button getNewGameButton() { return NewGame; }
+    public static Button getGameRulesButton() { return GameRules; }
+    public static Button getExitButton() { return exitButton; }
     public AnchorPane getRoot() { return root; }
 }
