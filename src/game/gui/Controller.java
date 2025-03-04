@@ -81,9 +81,11 @@ public class Controller extends Application{
 		Button NewGame= MainMenuView.getNewGameButton();
 		Button GameRules=MainMenuView.getGameRulesButton();
 		Button Exit=MainMenuView.getExitButton();
+		Button Start=ModeView.getStartButton();
 	    NewGame.setOnMouseClicked(event->this.handleNewGameButton(event));
 	    GameRules.setOnMouseClicked(event->this.handleButtonGameRules(event));
         Exit.setOnMouseClicked(event->this.handleExitButton());
+        Start.setOnMouseClicked(event->this.handleButtonStart(event));
 	    BackToMainMenu.setOnMouseClicked(event->handleButtonBackToMainMenu(event));
 	    returntoStart.setOnMouseClicked(event->handleReturnButton(event));
 	    WeaponShop1.setOnMouseClicked(event->this.OpenWeaponShop());
@@ -104,7 +106,12 @@ public class Controller extends Application{
 	
 	
 	public void handleNewGameButton(Event event) {
-		
+		 root=view.loadModeScene();
+		 Stage stage=MainStage;
+		 scene=new Scene(root,1200,700);
+		 stage.setScene(scene);
+		 stage.setResizable(false);
+		 stage.show();
 	}
 	
 	public void handleButtonGameRules(Event event) {
@@ -169,6 +176,8 @@ public class Controller extends Application{
 		 stage.show();
 	}
     public void handleButtonStart(Event event){
+    	 ChoosenMode = ModeView.getSelectedMode();
+
     	if(ChoosenMode.equals("Hard")){
 			 root=view.loadHardScene();
 			 Stage stage=MainStage;

@@ -38,10 +38,12 @@ public class View {
 	private AnchorPane Scene1;  // Changed from AnchorPane to Pane
     private MainMenuView mainMenuView;
     private GameRulesView gameRulesView;
+    private ModeView modeView;
 	private AnchorPane EasyScene;
 	private AnchorPane HardScene;
 	private AnchorPane GameInstructionScene;
 	private AnchorPane GameOverScene;
+	private AnchorPane ModeScene;
 	private BorderPane WeaponShop; 
 	private HBox info;	
 	private String Score;
@@ -262,6 +264,9 @@ public class View {
 	public GameRulesView getGameRulesView() {
 		return gameRulesView;
 	}
+	public ModeView getModeView() {
+		return modeView;
+	}
 
 	public View(){
 		
@@ -269,6 +274,10 @@ public class View {
 		mainMenuView = new MainMenuView(); 
         Scene1 = mainMenuView.getRoot();  // Get the root Pane from FXML View
         Scene1.setPrefSize(1200, 700);
+        
+        modeView = new ModeView();
+	    ModeScene = modeView.getRoot(); // FIX: Use gameRulesView.getRoot()
+	    ModeScene.setPrefSize(1200, 700);
         
 		EasyScene = new AnchorPane();
 		EasyScene.setPrefSize(1200, 700);
@@ -714,6 +723,11 @@ public class View {
 	public Group GameOverScene(){
 		Group root = new Group();
 		root.getChildren().add(GameOverScene);
+		return root;
+	}
+	public Group loadModeScene(){
+		Group root = new Group();
+		root.getChildren().add(ModeScene);
 		return root;
 	}
 	public void updateInfo(String phase,String resources,String lanes,String turn,String score,String ChoosenMode,ArrayList<Lane> l){
