@@ -74,12 +74,12 @@ Check out some exciting moments from *Attack on Titan: Utopia* below!
 
 
 
-![Screenshot 2024-09-24 105239](https://github.com/user-attachments/assets/0d7c9328-1180-4d98-a0ca-8453db9096e3)
+![image](https://github.com/user-attachments/assets/c42c57c6-5970-4b69-86f6-09877f034133)
 
 
 
 
-![Screenshot 2024-09-24 104735](https://github.com/user-attachments/assets/60ff81bb-ad8b-4350-aef8-578e32f9fb3b)
+![image](https://github.com/user-attachments/assets/47544e29-2518-4c5e-8f77-f31ab6c28f5c)
 
 
 
