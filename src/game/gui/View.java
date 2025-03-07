@@ -18,6 +18,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.effect.Blend;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.ColorInput;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -30,7 +33,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
@@ -383,41 +391,71 @@ public class View {
 //----------------------------------------------------------------------------------------------------------
 
 			//EasyScene setup
+		  String videoPath = getClass().getResource("/InGameClouds.mp4").toExternalForm();
+		  Media media = new Media(videoPath);
+		  MediaPlayer mediaPlayer = new MediaPlayer(media);
+		  mediaPlayer.setAutoPlay(true);
+		  mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+		  MediaView mediaView = new MediaView(mediaPlayer);
+		  mediaView.setFitWidth(1200);
+		  mediaView.setFitHeight(700);
+		  mediaView.setPreserveRatio(false);
+		  AnchorPane.setTopAnchor(mediaView, 0.0);
+		  AnchorPane.setBottomAnchor(mediaView, 0.0);
+		  AnchorPane.setLeftAnchor(mediaView, 0.0);
+		  AnchorPane.setRightAnchor(mediaView, 0.0);
+
 		  weaponShopButtonEasy = new Button();
 		  weaponShopButtonEasy.setText("Weapon Shop");
-		  weaponShopButtonEasy.setPrefSize(300,25);
-		  weaponShopButtonEasy.setMaxSize(300,25);
-		  weaponShopButtonEasy.setMinSize(300,25);
+		  weaponShopButtonEasy.setPrefSize(300, 25);
+		  weaponShopButtonEasy.setMaxSize(300, 25);
+		  weaponShopButtonEasy.setMinSize(300, 25);
 		  weaponShopButtonEasy.setFont(new Font(13));
 		  weaponShopButtonEasy.setAlignment(Pos.CENTER);
-		  easy= new GridPane();
+
+		  easy = new GridPane();
 		  easy.setPadding(new Insets(30));
 		  easy.setStyle("-fx-background-color: transparent;");
 		  for (int i = 0; i < 10; i++) {
-	            RowConstraints row = new RowConstraints();
-	            row.setPercentHeight(33); 
-	            easy.getRowConstraints().add(row);
+		      RowConstraints row = new RowConstraints();
+		      row.setPercentHeight(33);
+		      easy.getRowConstraints().add(row);
 
-	            ColumnConstraints column = new ColumnConstraints();
-	            column.setPercentWidth(10); 
-	            easy.getColumnConstraints().add(column);
-	        }
-		  easy.setVgap(100); 
-		  easy.setHgap(0); 
+		      ColumnConstraints column = new ColumnConstraints();
+		      column.setPercentWidth(10);
+		      easy.getColumnConstraints().add(column);
+		  }
+		  easy.setVgap(100);
+		  easy.setHgap(0);
 		  easy.setPrefSize(100, 700);
+
 		  Image background3 = new Image("3lanes.png");
 		  ImageView BackGround3 = new ImageView(background3);
-		  BackGround3.setFitHeight(700);
+		  BackGround3.setFitHeight(620);
 		  BackGround3.setFitWidth(1200);
+		  BackGround3.setLayoutY(80);
+
+		  // Create a clip with gradient: opaque at 30 pixels, transparent at 10 pixels to top
+		  Rectangle clip = new Rectangle(BackGround3.getFitWidth(), BackGround3.getFitHeight());
+		  clip.setFill(new LinearGradient(
+		      0, 35 / BackGround3.getFitHeight(), 0,0 / BackGround3.getFitHeight(), // 30px to 10px
+		      true,
+		      null,
+		      new Stop(0.0, Color.WHITE),       // Opaque at 30 pixels from top
+		      new Stop(1.0, Color.TRANSPARENT)  // Transparent at 10 pixels from top
+		  ));
+		  BackGround3.setClip(clip);
+
 		  EasyScene.getChildren().add(0, BackGround3);
-		  EasyScene.getChildren().addAll(weaponShopButtonEasy,easy);
+		  EasyScene.getChildren().addAll(weaponShopButtonEasy, easy);
 		  weaponShopButtonEasy.setTranslateX(700);
-		  EasyScene.setLeftAnchor(easy, (double)0);
+		  EasyScene.setLeftAnchor(easy, (double) 0);
 		  EasyScene.setRightAnchor(easy, (double) 850);
 		  EasyScene.setBottomAnchor(easy, (double) 100);
 		  EasyScene.setTopAnchor(easy, (double) 200);
 		  easy.setTranslateY(-165);
 		  BackGround3.toBack();
+		  EasyScene.getChildren().add(0, mediaView);
 //----------------------------------------------------------------------------------------------------------
 
 		 		  
