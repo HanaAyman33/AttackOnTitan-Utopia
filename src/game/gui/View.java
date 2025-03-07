@@ -17,6 +17,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.BlendMode;
@@ -38,6 +40,7 @@ import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -47,6 +50,8 @@ public class View {
     private MainMenuView mainMenuView;
     private GameRulesView gameRulesView;
     private ModeView modeView;
+    private EasyView easyView;  // New field
+    private HardView hardView;
 	private AnchorPane EasyScene;
 	private AnchorPane HardScene;
 	private AnchorPane GameInstructionScene;
@@ -276,27 +281,28 @@ public class View {
 		return modeView;
 	}
 
-	public View(){
-		
-		//Intializing all Scenes
-		mainMenuView = new MainMenuView(); 
-        Scene1 = mainMenuView.getRoot();  // Get the root Pane from FXML View
+	public View() {
+        // Initializing all Scenes
+        mainMenuView = new MainMenuView();
+        Scene1 = mainMenuView.getRoot();
         Scene1.setPrefSize(1200, 700);
-        
+
         modeView = new ModeView();
-	    ModeScene = modeView.getRoot(); // FIX: Use gameRulesView.getRoot()
-	    ModeScene.setPrefSize(1200, 700);
+        ModeScene = modeView.getRoot();
+        ModeScene.setPrefSize(1200, 700);
+
+        easyView = new EasyView();  
+        EasyScene = easyView.getRoot();
+        EasyScene.setPrefSize(1200, 700);
+
+        hardView = new HardView();  
+        HardScene = hardView.getRoot();
+        HardScene.setPrefSize(1200, 700);
+
+        gameRulesView = new GameRulesView();
+        GameInstructionScene = gameRulesView.getRoot();
+        GameInstructionScene.setPrefSize(1200, 700);
         
-		EasyScene = new AnchorPane();
-		EasyScene.setPrefSize(1200, 700);
-		
-		HardScene = new AnchorPane();
-		HardScene.setPrefSize(1200, 700);
-		
-		gameRulesView = new GameRulesView();
-	    GameInstructionScene = gameRulesView.getRoot(); // FIX: Use gameRulesView.getRoot()
-	    GameInstructionScene.setPrefSize(1200, 700);
-		
 		WeaponShop = new BorderPane();
 		WeaponShop.setPrefSize(1200, 700);
 		
@@ -327,402 +333,86 @@ public class View {
 		
 		//Intializing Titan Images
 		Image Abnormal = new Image("abnormal.png");
-		Image Armored = new Image("armored.png");
-	    Image Colossal = new Image("colossal.png");
-		Image Pure = new Image("pure.png");
-		abnormal = new ImageView(Abnormal);
-		armored = new ImageView(Armored);       
-		colossal = new ImageView(Colossal);
-		pure = new ImageView(Pure);
-		pure.setPreserveRatio(true);
-		abnormal.setPreserveRatio(true);
-		armored.setPreserveRatio(true);
-		colossal.setPreserveRatio(true);
-		pure.setFitHeight(100);
-		abnormal.setFitHeight(80);
-		armored.setFitHeight(100);
-		colossal.setFitHeight(210);
+        Image Armored = new Image("armored.png");
+        Image Colossal = new Image("colossal.png");
+        Image Pure = new Image("pure.png");
+        abnormal = new ImageView(Abnormal);
+        armored = new ImageView(Armored);
+        colossal = new ImageView(Colossal);
+        pure = new ImageView(Pure);
+        pure.setPreserveRatio(true);
+        abnormal.setPreserveRatio(true);
+        armored.setPreserveRatio(true);
+        colossal.setPreserveRatio(true);
+        pure.setFitHeight(100);
+        abnormal.setFitHeight(80);
+        armored.setFitHeight(100);
+        colossal.setFitHeight(210);
 	
 	}
 	@SuppressWarnings("static-access")
-	public void addAllComponents(){
+    public void addAllComponents() {
+        // Removed info bar and wall health/danger level setup from here
+        // Now managed by EasyView and HardView
 
-		  
-//----------------------------------------------------------------------------------------------------------
-	
-		//HardScene setup
-		  weaponShopButtonHard = new Button();
-		  weaponShopButtonHard.setText("Weapon Shop");
-		  weaponShopButtonHard.setPrefSize(300,25);
-		  weaponShopButtonHard.setMaxSize(300,25);
-		  weaponShopButtonHard.setMinSize(300,25);
-		  weaponShopButtonHard.setFont(new Font(13));
-		  weaponShopButtonHard.setAlignment(Pos.CENTER);
-		  hard= new GridPane();
-		  hard.setPadding(new Insets(50));
-		  hard.setStyle("-fx-background-color: transparent;");
-		  for (int i = 0; i < 10; i++) {
-	            RowConstraints row = new RowConstraints();
-	            row.setPercentHeight(20); 
-	            hard.getRowConstraints().add(row);
+        // Initialize remaining components
+        weaponShopButtonEasy = easyView.getWeaponShopButton();
+        weaponShopButtonHard = hardView.getWeaponShopButton();
+        easy = easyView.getEasyGrid();
+        hard = hardView.getHardGrid();
 
-	            ColumnConstraints column = new ColumnConstraints();
-	            column.setPercentWidth(10); 
-	            hard.getColumnConstraints().add(column);
-	        }
-		  hard.setVgap(100); 
-		  hard.setHgap(0);
-		  hard.setPrefSize(100, 700);
-		  Image background = new Image("lane5.png");
-		  ImageView BackGround = new ImageView(background);
-		  BackGround.setFitHeight(700);
-		  BackGround.setFitWidth(1200);
-		  HardScene.getChildren().add(0, BackGround);
-		  HardScene.getChildren().addAll(weaponShopButtonHard,hard);
-		  weaponShopButtonHard.setTranslateX(700);
-		  HardScene.setLeftAnchor(hard, (double)0);
-		  HardScene.setRightAnchor(hard, (double) 1050);
-		  HardScene.setBottomAnchor(hard, (double) 100);
-		  HardScene.setTopAnchor(hard, (double) 100);
-		  hard.setTranslateX(-20);
-		  hard.setTranslateY(-165);
-		  BackGround.toBack();
+        // Game Over Scene (unchanged)
+        returntoStart = new Button();
+        returntoStart.setText("Main menu");
+        returntoStart.setPrefSize(200, 40);
+        returntoStart.setFont(new Font(22));
+        returntoStart.setAlignment(Pos.CENTER);
 
-//----------------------------------------------------------------------------------------------------------
+        Label label10 = new Label();
+        label10.setText("Game Over");
+        label10.setFont(new Font(30));
+        label10.setVisible(true);
+        label10.setAlignment(Pos.CENTER);
 
-			//EasyScene setup
-		  String videoPath = getClass().getResource("/InGameClouds.mp4").toExternalForm();
-		  Media media = new Media(videoPath);
-		  MediaPlayer mediaPlayer = new MediaPlayer(media);
-		  mediaPlayer.setAutoPlay(true);
-		  mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-		  MediaView mediaView = new MediaView(mediaPlayer);
-		  mediaView.setFitWidth(1200);
-		  mediaView.setFitHeight(700);
-		  mediaView.setPreserveRatio(false);
-		  AnchorPane.setTopAnchor(mediaView, 0.0);
-		  AnchorPane.setBottomAnchor(mediaView, 0.0);
-		  AnchorPane.setLeftAnchor(mediaView, 0.0);
-		  AnchorPane.setRightAnchor(mediaView, 0.0);
+        scorefinal = new Label();
+        scorefinal.setText("your Score is " + Score);
+        scorefinal.setFont(new Font(30));
+        scorefinal.setAlignment(Pos.CENTER);
+        Image background4 = new Image("Snk.jpeg");
+        ImageView BackGround4 = new ImageView(background4);
+        BackGround4.setFitHeight(700);
+        BackGround4.setFitWidth(1200);
+        GameOverScene.getChildren().add(0, BackGround4);
+        GameOverScene.getChildren().addAll(returntoStart, label10, scorefinal);
 
-		  weaponShopButtonEasy = new Button();
-		  weaponShopButtonEasy.setText("Weapon Shop");
-		  weaponShopButtonEasy.setPrefSize(300, 25);
-		  weaponShopButtonEasy.setMaxSize(300, 25);
-		  weaponShopButtonEasy.setMinSize(300, 25);
-		  weaponShopButtonEasy.setFont(new Font(13));
-		  weaponShopButtonEasy.setAlignment(Pos.CENTER);
+        GameOverScene.setLeftAnchor(label10, 400.0);
+        GameOverScene.setRightAnchor(label10, 400.0);
+        GameOverScene.setTopAnchor(label10, 100.0);
+        GameOverScene.setLeftAnchor(scorefinal, 400.0);
+        GameOverScene.setRightAnchor(scorefinal, 400.0);
+        GameOverScene.setTopAnchor(scorefinal, 300.0);
+        GameOverScene.setLeftAnchor(returntoStart, 400.0);
+        GameOverScene.setRightAnchor(returntoStart, 400.0);
+        GameOverScene.setTopAnchor(returntoStart, 500.0);
 
-		  easy = new GridPane();
-		  easy.setPadding(new Insets(30));
-		  easy.setStyle("-fx-background-color: transparent;");
-		  for (int i = 0; i < 10; i++) {
-		      RowConstraints row = new RowConstraints();
-		      row.setPercentHeight(33);
-		      easy.getRowConstraints().add(row);
-
-		      ColumnConstraints column = new ColumnConstraints();
-		      column.setPercentWidth(10);
-		      easy.getColumnConstraints().add(column);
-		  }
-		  easy.setVgap(100);
-		  easy.setHgap(0);
-		  easy.setPrefSize(100, 700);
-
-		  Image background3 = new Image("3lanes.png");
-		  ImageView BackGround3 = new ImageView(background3);
-		  BackGround3.setFitHeight(620);
-		  BackGround3.setFitWidth(1200);
-		  BackGround3.setLayoutY(80);
-
-		  // Create a clip with gradient: opaque at 30 pixels, transparent at 10 pixels to top
-		  Rectangle clip = new Rectangle(BackGround3.getFitWidth(), BackGround3.getFitHeight());
-		  clip.setFill(new LinearGradient(
-		      0, 35 / BackGround3.getFitHeight(), 0,0 / BackGround3.getFitHeight(), // 30px to 10px
-		      true,
-		      null,
-		      new Stop(0.0, Color.WHITE),       // Opaque at 30 pixels from top
-		      new Stop(1.0, Color.TRANSPARENT)  // Transparent at 10 pixels from top
-		  ));
-		  BackGround3.setClip(clip);
-
-		  EasyScene.getChildren().add(0, BackGround3);
-		  EasyScene.getChildren().addAll(weaponShopButtonEasy, easy);
-		  weaponShopButtonEasy.setTranslateX(700);
-		  EasyScene.setLeftAnchor(easy, (double) 0);
-		  EasyScene.setRightAnchor(easy, (double) 850);
-		  EasyScene.setBottomAnchor(easy, (double) 100);
-		  EasyScene.setTopAnchor(easy, (double) 200);
-		  easy.setTranslateY(-165);
-		  BackGround3.toBack();
-		  EasyScene.getChildren().add(0, mediaView);
-//----------------------------------------------------------------------------------------------------------
-
-		 		  
-  //Player's score,health,turn,resources,weapons,lanes and wall health
-
-		  WallHealthEasy=new ArrayList<Label>();
-		  WallHealthHard=new ArrayList<Label>();
-		  WallDangerLevelEasy=new ArrayList<Label>();
-		  WallDangerLevelHard=new ArrayList<Label>();
-		  
-		  
-		  score = new Label();
-		  score.setText("Score: "+Score);
-		  score.setTextFill(Color.WHITE);
-		  score.setFont(new Font(13));
-		  turn = new Label();
-		  turn.setText("Turn: "+Turn);
-		  turn.setFont(new Font(13));
-		  turn.setTextFill(Color.WHITE);
-		  phase = new Label();
-		  phase.setText("Phase: "+Phase);
-		  phase.setFont(new Font(13));
-		  phase.setTextFill(Color.WHITE);
-		  resources = new Label();
-		  resources.setText("Resources: "+Resources);
-		  resources.setFont(new Font(13));
-		  resources.setTextFill(Color.WHITE);
-		  lanes = new Label();
-		  lanes.setText("Lanes: "+Lanes);
-		  lanes.setTextFill(Color.WHITE);
-		  lanes.setFont(new Font(13));
-		  info = new HBox(score,turn,phase,resources,lanes);
-		  info.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
-		  info.setSpacing(40);
-		  info.setPrefSize(500,25);
-		  info.setMinWidth(700);
-		  info.setMaxWidth(700);
-		  info.setMinHeight(25);
-		  info.setMaxHeight(25);
-		  info.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, javafx.geometry.Insets.EMPTY)));
-		  HardScene.getChildren().add(info);
-		  HardScene.setLeftAnchor(info, (double)0);
-		  HardScene.setRightAnchor(info, (double)700);
-		  HardScene.setTopAnchor(info, (double) 0);
-		  HardScene.setBottomAnchor(info, (double) 1000);
-		  
-		  score2 = new Label();
-		  score2.setText("Score: "+Score);
-		  score2.setTextFill(Color.WHITE);
-		  score2.setFont(new Font(13));
-		  turn2 = new Label();
-		  turn2.setText("Turn: "+Turn);
-		  turn2.setFont(new Font(13));
-		  turn2.setTextFill(Color.WHITE);
-		  phase2 = new Label();
-		  phase2.setText("Phase: "+Phase);
-		  phase2.setFont(new Font(13));
-		  phase2.setTextFill(Color.WHITE);
-		  resources2 = new Label();
-		  resources2.setText("Resources: "+Resources);
-		  resources2.setFont(new Font(13));
-		  resources2.setTextFill(Color.WHITE);
-		  lanes2 = new Label();
-		  lanes2.setText("Lanes: "+Lanes);
-		  lanes2.setTextFill(Color.WHITE);
-		  lanes2.setFont(new Font(13));
-		  HBox info2=new HBox(score2,turn2,phase2,resources2,lanes2);
-		  info2.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
-		  info2.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, javafx.geometry.Insets.EMPTY)));
-		  info2.setSpacing(40);
-		  EasyScene.getChildren().add(info2);
-		  EasyScene.setLeftAnchor(info2, (double)0);
-		  EasyScene.setRightAnchor(info2, (double)700);
-		  EasyScene.setTopAnchor(info2, (double) 0);
-		  EasyScene.setBottomAnchor(info2, (double) 975);
-		  Label wall1 = new Label();
-		  wall1.setText("Health: 10000");
-		  wall1.setFont(new Font(16));
-		  wall1.setTextFill(Color.WHITE);
-		  Label wall2 = new Label();
-		  wall2.setText("Health: 10000");
-		  wall2.setFont(new Font(16));
-		  wall2.setTextFill(Color.WHITE);
-		  Label wall3 = new Label();
-		  wall3.setText("Health: 10000");
-		  wall3.setFont(new Font(16));
-		  wall3.setTextFill(Color.WHITE);
-		  Label wall4 = new Label();
-		  wall4.setText("Health: 10000");
-		  wall4.setFont(new Font(16));
-		  wall4.setTextFill(Color.WHITE);
-		  Label wall5 = new Label();
-		  wall5.setText("Health: 10000");
-		  wall5.setFont(new Font(16));
-		  wall5.setTextFill(Color.WHITE);
-		  
-		  WallHealthHard.add(wall1);
-		  WallHealthHard.add(wall2);
-		  WallHealthHard.add(wall3);
-		  WallHealthHard.add(wall4);
-		  WallHealthHard.add(wall5);
-
-		  HardScene.getChildren().addAll(wall1,wall2,wall3,wall4,wall5);
-		  HardScene.setLeftAnchor(wall1, (double)100);
-		  HardScene.setTopAnchor(wall1, (double)50);
-		  HardScene.setLeftAnchor(wall2, (double)100);
-		  HardScene.setTopAnchor(wall2, (double)160);
-		  HardScene.setLeftAnchor(wall3, (double)100);
-		  HardScene.setTopAnchor(wall3, (double)290);
-		  HardScene.setLeftAnchor(wall4, (double)100);
-		  HardScene.setTopAnchor(wall4, (double)400);
-		  HardScene.setLeftAnchor(wall5, (double)100);
-		  HardScene.setTopAnchor(wall5, (double)510);
-		  Label Wall1 = new Label();
-		  Wall1.setText("Health: 10000");
-		  Wall1.setFont(new Font(20));
-		  Wall1.setTextFill(Color.WHITE);
-		  Label Wall2 = new Label();
-		  Wall2.setText("Health: 10000");
-		  Wall2.setFont(new Font(20));
-		  Wall2.setTextFill(Color.WHITE);
-		  Label Wall3 = new Label();
-		  Wall3.setText("Health: 10000");
-		  Wall3.setFont(new Font(20));
-		  Wall3.setTextFill(Color.WHITE);
-		  
-		  
-		  WallHealthEasy.add(Wall1);
-		  WallHealthEasy.add(Wall2);
-		  WallHealthEasy.add(Wall3);
-		  
-		  EasyScene.getChildren().addAll(Wall1,Wall2,Wall3);
-		  EasyScene.setLeftAnchor(Wall1, (double) 100);
-		  EasyScene.setTopAnchor(Wall1, (double) 100);
-		  EasyScene.setLeftAnchor(Wall2, (double) 100);
-		  EasyScene.setTopAnchor(Wall2, (double) 300);
-		  EasyScene.setLeftAnchor(Wall3, (double)100);
-		  EasyScene.setTopAnchor(Wall3, (double) 500);
-		  Label Lane1DL = new Label();
-		  Lane1DL.setText("Danger level:");
-		  Lane1DL.setFont(new Font(16));
-		  Lane1DL.setTextFill(Color.WHITE);
-		  Label Lane2DL = new Label();
-		  Lane2DL.setText("Danger level: ");
-		  Lane2DL.setFont(new Font(16));
-		  Lane2DL.setTextFill(Color.WHITE);
-		  Label Lane3DL = new Label();
-		  Lane3DL.setText("Danger level: ");
-		  Lane3DL.setFont(new Font(16));
-		  Lane3DL.setTextFill(Color.WHITE);
-		  Label Lane4DL = new Label();
-		  Lane4DL.setText("Danger level: ");
-		  Lane4DL.setFont(new Font(16));
-		  Lane4DL.setTextFill(Color.WHITE);
-		  Label Lane5DL = new Label();
-		  Lane5DL.setText("Danger level: ");
-		  Lane5DL.setFont(new Font(16));
-		  Lane5DL.setTextFill(Color.WHITE);
-		  
-		  WallDangerLevelHard.add(Lane1DL);
-		  WallDangerLevelHard.add(Lane2DL);
-		  WallDangerLevelHard.add(Lane3DL);
-		  WallDangerLevelHard.add(Lane4DL);
-		  WallDangerLevelHard.add(Lane5DL);
-		  
-		  HardScene.getChildren().addAll(Lane1DL,Lane2DL,Lane3DL,Lane4DL,Lane5DL);
-		  HardScene.setLeftAnchor(Lane1DL, (double)100);
-		  HardScene.setTopAnchor(Lane1DL,(double)110);
-		  HardScene.setLeftAnchor(Lane2DL, (double)100);
-		  HardScene.setTopAnchor(Lane2DL,(double)210);
-		  HardScene.setLeftAnchor(Lane3DL, (double)100);
-		  HardScene.setTopAnchor(Lane3DL,(double)340);
-		  HardScene.setLeftAnchor(Lane4DL, (double)100);
-		  HardScene.setTopAnchor(Lane4DL,(double)450);
-		  HardScene.setLeftAnchor(Lane5DL, (double)100);
-		  HardScene.setTopAnchor(Lane5DL,(double)565);
-		  Label lane1DL = new Label();
-		  lane1DL.setText("Danger level: ");
-		  lane1DL.setFont(new Font(20));
-		  lane1DL.setTextFill(Color.WHITE);
-		  Label lane2DL = new Label();
-		  lane2DL.setText("Danger level: ");
-		  lane2DL.setFont(new Font(20));
-		  lane2DL.setTextFill(Color.WHITE);
-		  Label lane3DL = new Label();
-		  lane3DL.setText("Danger level: ");
-		  lane3DL.setFont(new Font(20));
-		  lane3DL.setTextFill(Color.WHITE);
-		  
-		  WallDangerLevelEasy.add(lane1DL);
-		  WallDangerLevelEasy.add(lane2DL);
-		  WallDangerLevelEasy.add(lane3DL);
-		  
-		  EasyScene.getChildren().addAll(lane1DL,lane2DL,lane3DL);
-		  EasyScene.setLeftAnchor(lane1DL,(double) 100);
-		  EasyScene.setTopAnchor(lane1DL,(double) 120);
-		  EasyScene.setLeftAnchor(lane2DL,(double) 100);
-		  EasyScene.setTopAnchor(lane2DL,(double) 320);
-		  EasyScene.setLeftAnchor(lane3DL,(double) 100);
-		  EasyScene.setTopAnchor(lane3DL,(double) 520);
-		  
-//----------------------------------------------------------------------------------------------------------
-		  // characters
-		  
-		  Image Abnormal = new Image("abnormal.png");
-		  Image Armored = new Image("armored.png");
-		  Image Colossal = new Image("colossal.png");
-		  Image Pure = new Image("pure.png");
-		  abnormal = new ImageView(Abnormal);
-		  armored = new ImageView(Armored);
-		  colossal = new ImageView(Colossal);
-		  pure = new ImageView(Pure);
-		  pure.setPreserveRatio(true);
-		  abnormal.setPreserveRatio(true);
-		  armored.setPreserveRatio(true);
-		  colossal.setPreserveRatio(true);
-		  pure.setFitHeight(52.5);
-		  abnormal.setFitHeight(35);
-		  armored.setFitHeight(52.5);
-		  colossal.setFitHeight(210);
-		  
-//----------------------------------------------------------------------------------------------------------
-		  
-		  // Game Over Scene
-		  returntoStart=new Button();
-		  returntoStart.setText("Main menu");
-		  returntoStart.setPrefSize(200,40);
-		  returntoStart.setFont(new Font(22));
-		  returntoStart.setAlignment(Pos.CENTER);
-		  
-		  Label label10=new Label();
-		  label10.setText("Game Over");
-		  label10.setFont(new Font(30));
-		  label10.setVisible(true);
-		  label10.setAlignment(Pos.CENTER);
-		  
-		  scorefinal=new Label();
-		  scorefinal.setText("your Score is "+Score);
-		  scorefinal.setFont(new Font(30));
-		  scorefinal.setAlignment(Pos.CENTER);
-		  Image background4 = new Image("Snk.jpeg");
-		  ImageView BackGround4 = new ImageView(background4);
-		  BackGround4.setFitHeight(700);
-		  BackGround4.setFitWidth(1200);
-		  GameOverScene.getChildren().add(0, BackGround4);
-		  GameOverScene.getChildren().addAll(returntoStart,label10,scorefinal);
-		  
-		  GameOverScene.setLeftAnchor(label10, (double)400);
-		  GameOverScene.setRightAnchor(label10, (double)400);
-		  GameOverScene.setTopAnchor(label10, (double) 100);
-		
-		  GameOverScene.setLeftAnchor(scorefinal, (double) 400);
-		  GameOverScene.setRightAnchor(scorefinal, (double) 400);
-		  GameOverScene.setTopAnchor(scorefinal, (double) 300);
-		
-		  GameOverScene.setLeftAnchor(returntoStart, (double) 400);
-		  GameOverScene.setRightAnchor(returntoStart, (double) 400);
-		  GameOverScene.setTopAnchor(returntoStart, (double) 500);
-		  
-	}
-	
-	public Button getWeaponShopButtonEasy() {
-		return weaponShopButtonEasy;
-	}
-	public Button getWeaponShopButtonHard() {
-		return weaponShopButtonHard;
-	}
+        // Characters (unchanged)
+        Image Abnormal = new Image("abnormal.png");
+        Image Armored = new Image("armored.png");
+        Image Colossal = new Image("colossal.png");
+        Image Pure = new Image("pure.png");
+        abnormal = new ImageView(Abnormal);
+        armored = new ImageView(Armored);
+        colossal = new ImageView(Colossal);
+        pure = new ImageView(Pure);
+        pure.setPreserveRatio(true);
+        abnormal.setPreserveRatio(true);
+        armored.setPreserveRatio(true);
+        colossal.setPreserveRatio(true);
+        pure.setFitHeight(52.5);
+        abnormal.setFitHeight(35);
+        armored.setFitHeight(52.5);
+        colossal.setFitHeight(210);
+    }
 	public Group getInfo() {
 		Group root = new Group();
 		root.getChildren().add(info);
@@ -738,16 +428,6 @@ public class View {
 		root.getChildren().add(GameInstructionScene);
 		return root;
 	}
-	public Group loadHardScene(){
-		Group root = new Group();
-		root.getChildren().add(HardScene);
-		return root;
-	}
-	public Group loadEasyScene(){
-		Group root = new Group();
-		root.getChildren().add(EasyScene);
-		return root;
-	}	
 	public Group loadSelectModePopUp(){
 		Group root = new Group();
 		root.getChildren().add(SelectModePopUp);
@@ -768,36 +448,91 @@ public class View {
 		root.getChildren().add(ModeScene);
 		return root;
 	}
-	public void updateInfo(String phase,String resources,String lanes,String turn,String score,String ChoosenMode,ArrayList<Lane> l){
-		this.Score=score;
-		this.Phase=phase;
-		this.Resources=resources;
-		this.Lanes=lanes;
-		this.Turn=turn;
-		if(ChoosenMode=="Hard"){
-		this.score.setText("Score: "+Score);
-	    this.turn.setText("Turn: "+Turn);
-		this.phase.setText("Phase: "+Phase);
-		this.resources.setText("Resources: "+Resources);
-		this.lanes.setText("Lanes: "+Lanes);
-		for(int i=0;i<WallHealthHard.size();i++) {
-			WallHealthHard.get(i).setText("Helath: "+l.get(i).getLaneWall().getCurrentHealth());
-			WallDangerLevelHard.get(i).setText("Danger Level: "+l.get(i).getDangerLevel());
-		}
-		}
-		else{
-			this.score2.setText("Score: "+Score);
-		    this.turn2.setText("Turn: "+Turn);
-			this.phase2.setText("Phase: "+Phase);
-			this.resources2.setText("Resources: "+Resources);
-			this.lanes2.setText("Lanes: "+Lanes);
-			for(int i=0;i<WallHealthEasy.size();i++) {
-				WallHealthEasy.get(i).setText("Health: "+l.get(i).getLaneWall().getCurrentHealth());
-				WallDangerLevelEasy.get(i).setText("Danger Level: "+l.get(i).getDangerLevel());
-			}
-		}
-	}
+	public Button getWeaponShopButtonEasy() {
+        return easyView.getWeaponShopButton();
+    }
 
+    public Button getWeaponShopButtonHard() {
+        return hardView.getWeaponShopButton();
+    }
+
+    public Group loadEasyScene() {
+        Group root = new Group();
+        root.getChildren().add(EasyScene);
+        return root;
+    }
+
+    public Group loadHardScene() {
+        Group root = new Group();
+        root.getChildren().add(HardScene);
+        return root;
+    }
+ 
+    public void updateInfo(String phase, String resources, String lanes, String turn, String score, String choosenMode, ArrayList<Lane> l) {
+        this.Score = score;
+        this.Phase = phase;
+        this.Resources = resources;
+        this.Lanes = lanes;
+        this.Turn = turn;
+
+        if ("Hard".equals(choosenMode)) {
+            // Update info labels directly
+            hardView.getScore().setText("Score: " + Score);
+            hardView.getTurn().setText("Turn: " + Turn);
+            hardView.getPhase().setText("Phase: " + Phase);
+            hardView.getResources().setText("Resources: " + Resources);
+            hardView.getLanes().setText("Lanes: " + Lanes);
+
+            // Update wall health (ProgressBar) and danger level (Label)
+            ArrayList<ProgressBar> wallHealth = hardView.getWallHealthHard();
+            ArrayList<Label> dangerLevel = hardView.getWallDangerLevelHard(); // Changed to Label
+            for (int i = 0; i < wallHealth.size() && i < l.size(); i++) {
+                double maxHealth = 10000.0; // Assuming max wall health is 10000, adjust if different
+                double currentHealth = l.get(i).getLaneWall().getCurrentHealth();
+                double healthFraction = currentHealth / maxHealth;
+                wallHealth.get(i).setProgress(healthFraction);
+                // Dynamic color change
+                if (healthFraction <= 0.25) {
+                    wallHealth.get(i).setStyle("-fx-accent: red;");
+                } else if (healthFraction <= 0.5) {
+                    wallHealth.get(i).setStyle("-fx-accent: orange;");
+                } else {
+                    wallHealth.get(i).setStyle("-fx-accent: green;");
+                }
+
+                // Update danger level (simple text)
+                dangerLevel.get(i).setText("Danger: " + l.get(i).getDangerLevel());
+            }
+        } else {
+            // Update info labels directly
+            easyView.getScore().setText("Score: " + Score);
+            easyView.getTurn().setText("Turn: " + Turn);
+            easyView.getPhase().setText("Phase: " + Phase);
+            easyView.getResources().setText("Resources: " + Resources);
+            easyView.getLanes().setText("Lanes: " + Lanes);
+
+            // Update wall health (ProgressBar) and danger level (Label)
+            ArrayList<ProgressBar> wallHealth = easyView.getWallHealthEasy();
+            ArrayList<Label> dangerLevel = easyView.getWallDangerLevelEasy(); // Changed to Label
+            for (int i = 0; i < wallHealth.size() && i < l.size(); i++) {
+                double maxHealth = 10000.0; // Assuming max wall health is 10000, adjust if different
+                double currentHealth = l.get(i).getLaneWall().getCurrentHealth();
+                double healthFraction = currentHealth / maxHealth;
+                wallHealth.get(i).setProgress(healthFraction);
+                // Dynamic color change
+                if (healthFraction <= 0.25) {
+                    wallHealth.get(i).setStyle("-fx-accent: red;");
+                } else if (healthFraction <= 0.5) {
+                    wallHealth.get(i).setStyle("-fx-accent: orange;");
+                } else {
+                    wallHealth.get(i).setStyle("-fx-accent: green;");
+                }
+
+                // Update danger level (simple text)
+                dangerLevel.get(i).setText("Danger: " + l.get(i).getDangerLevel());
+            }
+        }
+    }
 	
 	public boolean sameImg(ImageView imageView1, ImageView imageView2) {
 		if (imageView1 == null || imageView2 == null) {
@@ -845,11 +580,14 @@ public class View {
                 t.healthBar.setProgress(healthFraction);
                 
                 // Change color to red when health is 25% or below
-                if (healthFraction <= 0.5) {
-                    t.healthBar.setStyle("-fx-accent: red;");
+                if (healthFraction <= 0.25) {
+                	 t.healthBar.setStyle("-fx-accent: red;");
+                } else if (healthFraction <= 0.5) {
+                	 t.healthBar.setStyle("-fx-accent: orange;");
                 } else {
-                    t.healthBar.setStyle("-fx-accent: green;");
+                	 t.healthBar.setStyle("-fx-accent: green;");
                 }
+
                 
                 if (t.titan.isDefeated()) {
                     fade(t.titanImageView);

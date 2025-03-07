@@ -1,0 +1,244 @@
+package game.gui;
+
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Glow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
+
+import java.util.ArrayList;
+
+public class EasyView {
+
+    private final AnchorPane root;
+    private static Button weaponShopButtonEasy;
+    private GridPane easyGrid;
+    private Label score;
+    private Label turn;
+    private Label phase;
+    private Label resources;
+    private Label lanes;
+    private ArrayList<ProgressBar> wallHealthEasy;
+    private ArrayList<Label> wallDangerLevelEasy; // Changed to Label
+
+    public EasyView() {
+        root = new AnchorPane();
+        root.setPrefSize(1200, 700);
+
+        // Media Background (Video)
+        String videoPath = getClass().getResource("/InGameClouds.mp4").toExternalForm();
+        Media media = new Media(videoPath);
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setAutoPlay(true);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        MediaView mediaView = new MediaView(mediaPlayer);
+        mediaView.setFitWidth(1200);
+        mediaView.setFitHeight(700);
+        mediaView.setPreserveRatio(false);
+        AnchorPane.setTopAnchor(mediaView, 0.0);
+        AnchorPane.setBottomAnchor(mediaView, 0.0);
+        AnchorPane.setLeftAnchor(mediaView, 0.0);
+        AnchorPane.setRightAnchor(mediaView, 0.0);
+        root.getChildren().add(mediaView);
+
+        // Lane Image (3lanes.png)
+        String imagePath = getClass().getResource("/3lanes.png").toExternalForm();
+        Image background3 = new Image(imagePath);
+        ImageView backGround3 = new ImageView(background3);
+        backGround3.setFitHeight(620);
+        backGround3.setFitWidth(1200);
+        backGround3.setLayoutY(80);
+        Rectangle clip = new Rectangle(backGround3.getFitWidth(), backGround3.getFitHeight());
+        clip.setFill(new LinearGradient(
+            0, 35 / backGround3.getFitHeight(), 0, 0,
+            true, null,
+            new Stop(0.0, Color.WHITE),
+            new Stop(1.0, Color.TRANSPARENT)
+        ));
+        backGround3.setClip(clip);
+        root.getChildren().add(backGround3);
+        backGround3.toFront();
+
+        // GridPane
+        easyGrid = new GridPane();
+        easyGrid.setPadding(new Insets(30));
+        easyGrid.setStyle("-fx-background-color: transparent;");
+        easyGrid.setPrefSize(100, 700);
+        easyGrid.setVgap(100);
+        easyGrid.setHgap(0);
+        for (int i = 0; i < 3; i++) {
+            RowConstraints row = new RowConstraints();
+            row.setPercentHeight(33);
+            easyGrid.getRowConstraints().add(row);
+        }
+        for (int i = 0; i < 10; i++) {
+            ColumnConstraints column = new ColumnConstraints();
+            column.setPercentWidth(10);
+            easyGrid.getColumnConstraints().add(column);
+        }
+        AnchorPane.setLeftAnchor(easyGrid, 0.0);
+        AnchorPane.setRightAnchor(easyGrid, 850.0);
+        AnchorPane.setBottomAnchor(easyGrid, 100.0);
+        AnchorPane.setTopAnchor(easyGrid, 200.0);
+        root.getChildren().add(easyGrid);
+        easyGrid.toFront();
+
+        // Info Circles (Closer Together)
+        double[] xOffsets = {50, 150, 250, 350, 450}; // Reduced spacing
+        score = createInfoCircle("Score: 0", xOffsets[0], Color.SADDLEBROWN);
+        turn = createInfoCircle("Turn: 1", xOffsets[1], Color.SIENNA);
+        phase = createInfoCircle("Phase: Initial", xOffsets[2], Color.PERU);
+        resources = createInfoCircle("Resources: 0", xOffsets[3], Color.BURLYWOOD);
+        lanes = createInfoCircle("Lanes: 3", xOffsets[4], Color.TAN);
+        root.getChildren().addAll(score, turn, phase, resources, lanes);
+        score.toFront();
+        turn.toFront();
+        phase.toFront();
+        resources.toFront();
+        lanes.toFront();
+
+        
+        wallHealthEasy = new ArrayList<>();
+        wallDangerLevelEasy = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            ProgressBar wallHealth = new ProgressBar(1.0); 
+            wallHealth.setPrefSize(20, 150); 
+            wallHealth.setRotate(90); 
+            wallHealth.setStyle("-fx-accent: green; -fx-control-inner-background: #333333;");
+            wallHealthEasy.add(wallHealth);
+
+            // Danger Level Label
+            Label dangerLevel = new Label("Danger: 0");
+            dangerLevel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+            dangerLevel.setTextFill(Color.ORANGE);
+            wallDangerLevelEasy.add(dangerLevel);
+
+            double topOffset = 200 + i * 200; 
+            root.getChildren().addAll(wallHealth, dangerLevel);
+            AnchorPane.setLeftAnchor(wallHealth, 110.0); 
+            AnchorPane.setTopAnchor(wallHealth, topOffset - 65); 
+            AnchorPane.setLeftAnchor(dangerLevel, 150.0); 
+            AnchorPane.setTopAnchor(dangerLevel, topOffset);
+            wallHealth.toFront();
+            dangerLevel.toFront();
+        }
+
+        // Weapon Shop Button
+        weaponShopButtonEasy = new Button("Weapon Shop");
+        weaponShopButtonEasy.setPrefSize(300, 25);
+        weaponShopButtonEasy.setFont(Font.font("Chiller", FontWeight.BOLD, 13));
+        weaponShopButtonEasy.setTextFill(Color.WHITE);
+        weaponShopButtonEasy.setAlignment(Pos.CENTER);
+        weaponShopButtonEasy.setStyle("-fx-background-color: rgb(50, 50, 50); -fx-background-radius: 5;");
+        DropShadow shadow = new DropShadow();
+        shadow.setColor(Color.BLACK);
+        shadow.setRadius(10);
+        shadow.setSpread(0.6);
+        Glow glow = new Glow();
+        glow.setLevel(0.7);
+        weaponShopButtonEasy.setOnMouseEntered(event -> {
+            weaponShopButtonEasy.setScaleX(1.1);
+            weaponShopButtonEasy.setScaleY(1.1);
+            weaponShopButtonEasy.setTextFill(Color.rgb(255, 255, 150));
+            weaponShopButtonEasy.setStyle("-fx-background-color: rgb(80, 80, 80); -fx-background-radius: 5;");
+            weaponShopButtonEasy.setEffect(glow);
+        });
+        weaponShopButtonEasy.setOnMouseExited(event -> {
+            weaponShopButtonEasy.setScaleX(1.0);
+            weaponShopButtonEasy.setScaleY(1.0);
+            weaponShopButtonEasy.setTextFill(Color.WHITE);
+            weaponShopButtonEasy.setStyle("-fx-background-color: rgb(50, 50, 50); -fx-background-radius: 5;");
+            weaponShopButtonEasy.setEffect(shadow);
+        });
+        AnchorPane.setTopAnchor(weaponShopButtonEasy, 10.0);
+        AnchorPane.setLeftAnchor(weaponShopButtonEasy, 900.0);
+        root.getChildren().add(weaponShopButtonEasy);
+        weaponShopButtonEasy.toFront();
+    }
+
+    // Helper method to create circular info badges
+    private Label createInfoCircle(String text, double xOffset, Color fillColor) {
+        Circle circle = new Circle(40, fillColor);
+        circle.setStroke(Color.BROWN);
+        circle.setStrokeWidth(2);
+        DropShadow shadow = new DropShadow();
+        shadow.setColor(Color.BLACK);
+        shadow.setRadius(5);
+        circle.setEffect(shadow);
+
+        Label label = new Label(text);
+        label.setTextFill(Color.WHITE);
+        label.setFont(Font.font("Arial", FontWeight.BOLD, 12));
+        label.setAlignment(Pos.CENTER);
+        label.setTextAlignment(TextAlignment.CENTER);
+        label.setPrefSize(80, 80);
+        label.setWrapText(true);
+
+        AnchorPane.setLeftAnchor(circle, xOffset);
+        AnchorPane.setTopAnchor(circle, 10.0);
+        AnchorPane.setLeftAnchor(label, xOffset);
+        AnchorPane.setTopAnchor(label, 10.0);
+
+        root.getChildren().add(circle);
+        return label;
+    }
+
+    public AnchorPane getRoot() {
+        return root;
+    }
+
+    public static Button getWeaponShopButton() {
+        return weaponShopButtonEasy;
+    }
+
+    public GridPane getEasyGrid() {
+        return easyGrid;
+    }
+
+    public Label getScore() {
+        return score;
+    }
+
+    public Label getTurn() {
+        return turn;
+    }
+
+    public Label getPhase() {
+        return phase;
+    }
+
+    public Label getResources() {
+        return resources;
+    }
+
+    public Label getLanes() {
+        return lanes;
+    }
+
+    public ArrayList<ProgressBar> getWallHealthEasy() {
+        return wallHealthEasy;
+    }
+
+    public ArrayList<Label> getWallDangerLevelEasy() { 
+        return wallDangerLevelEasy;
+    }
+}
