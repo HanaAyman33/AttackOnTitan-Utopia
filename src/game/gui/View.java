@@ -33,6 +33,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -368,6 +369,19 @@ public class View {
         returntoStart.setFont(new Font(22));
         returntoStart.setAlignment(Pos.CENTER);
 
+        String videoPath = getClass().getResource("/GameOverVideo.mp4").toExternalForm();
+        Media media = new Media(videoPath);
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setAutoPlay(true);
+        mediaPlayer.setCycleCount(1);
+        MediaView mediaView = new MediaView(mediaPlayer);
+        mediaView.setFitWidth(1200);
+        mediaView.setFitHeight(700);
+        mediaView.setPreserveRatio(false);
+        AnchorPane.setTopAnchor(mediaView, 0.0);
+        AnchorPane.setBottomAnchor(mediaView, 0.0);
+        AnchorPane.setLeftAnchor(mediaView, 0.0);
+        AnchorPane.setRightAnchor(mediaView, 0.0);
         Label label10 = new Label();
         label10.setText("Game Over");
         label10.setFont(new Font(30));
@@ -378,11 +392,8 @@ public class View {
         scorefinal.setText("your Score is " + Score);
         scorefinal.setFont(new Font(30));
         scorefinal.setAlignment(Pos.CENTER);
-        Image background4 = new Image("Snk.jpeg");
-        ImageView BackGround4 = new ImageView(background4);
-        BackGround4.setFitHeight(700);
-        BackGround4.setFitWidth(1200);
-        GameOverScene.getChildren().add(0, BackGround4);
+     
+        GameOverScene.getChildren().add(0, mediaView);
         GameOverScene.getChildren().addAll(returntoStart, label10, scorefinal);
 
         GameOverScene.setLeftAnchor(label10, 400.0);
@@ -681,11 +692,18 @@ public class View {
 		translate.setByX(distance);
 		translate.play();
 	}
-	private void fade(Node Titan){		//used when titan dies
-			FadeTransition fadeTitan = new FadeTransition();
-			fadeTitan.setDuration(Duration.millis(1000));
-			fadeTitan.setNode(Titan);
-			fadeTitan.setToValue(0);
-			fadeTitan.play();
+	private void fade(Node Titan) { // Used when Titan dies
+	    FadeTransition fadeTitan = new FadeTransition();
+	    fadeTitan.setDuration(Duration.millis(1000));
+	    fadeTitan.setNode(Titan);
+	    fadeTitan.setToValue(0);
+
+	    // Remove the node after fade transition is complete
+	    fadeTitan.setOnFinished(event -> {
+	        ((Pane) Titan.getParent()).getChildren().remove(Titan);
+	    });
+
+	    fadeTitan.play();
 	}
+
 }
