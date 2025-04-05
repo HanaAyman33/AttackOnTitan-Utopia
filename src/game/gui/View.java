@@ -53,6 +53,7 @@ public class View {
     private ModeView modeView;
     private EasyView easyView;  // New field
     private HardView hardView;
+    private GameOverView gameOverView;
 	private AnchorPane EasyScene;
 	private AnchorPane HardScene;
 	private AnchorPane GameInstructionScene;
@@ -193,8 +194,9 @@ public class View {
 		return Score;
 	}
 	public void setScore(String score) {
-		Score = score;
-	}
+        this.Score = score;
+        gameOverView.setScore(score); // Update GameOverView when Score changes
+    }
 	public String getTurn() {
 		return Turn;
 	}
@@ -281,6 +283,9 @@ public class View {
 	public ModeView getModeView() {
 		return modeView;
 	}
+	public GameOverView getGameOverView() {
+		return gameOverView;
+	}
 
 	public View() {
         // Initializing all Scenes
@@ -303,33 +308,10 @@ public class View {
         gameRulesView = new GameRulesView();
         GameInstructionScene = gameRulesView.getRoot();
         GameInstructionScene.setPrefSize(1200, 700);
-        
-		WeaponShop = new BorderPane();
-		WeaponShop.setPrefSize(1200, 700);
-		
-		InsufficientResourcesPopUp = new AnchorPane();
-		InsufficientResourcesPopUp.setPrefSize(600, 200);
-		
-		InvalidLanePopUp=new AnchorPane();
-		InvalidLanePopUp.setPrefSize(600, 200);
-		
-		PassOrBuyPopUp=new AnchorPane();
-		PassOrBuyPopUp.setPrefSize(600, 200);
-		
-		SelectLanePopUpEasy=new AnchorPane();
-		SelectLanePopUpEasy.setPrefSize(600, 300);
-		
-		SelectLanePopUpHard=new AnchorPane();
-		SelectLanePopUpHard.setPrefSize(600, 300);
-		
-		SelectModePopUp=new AnchorPane();
-		SelectModePopUp.setPrefSize(600, 200);
-		
-		SelectWeaponPopUp=new AnchorPane();
-		SelectWeaponPopUp.setPrefSize(600, 200);
-		
-		GameOverScene=new AnchorPane();
-		GameOverScene.setPrefSize(1200,700);
+
+        gameOverView = new GameOverView(Score);  
+        GameOverScene = gameOverView.getRoot();
+        HardScene.setPrefSize(1200, 700);
 //----------------------------------------------------------------------------------------------------------
 		
 		//Intializing Titan Images
@@ -353,58 +335,15 @@ public class View {
 	}
 	@SuppressWarnings("static-access")
     public void addAllComponents() {
-        // Removed info bar and wall health/danger level setup from here
-        // Now managed by EasyView and HardView
-
+     
         // Initialize remaining components
         weaponShopButtonEasy = easyView.getWeaponShopButton();
         weaponShopButtonHard = hardView.getWeaponShopButton();
         easy = easyView.getEasyGrid();
         hard = hardView.getHardGrid();
 
-        // Game Over Scene (unchanged)
-        returntoStart = new Button();
-        returntoStart.setText("Main menu");
-        returntoStart.setPrefSize(200, 40);
-        returntoStart.setFont(new Font(22));
-        returntoStart.setAlignment(Pos.CENTER);
-
-        String videoPath = getClass().getResource("/GameOverVideo.mp4").toExternalForm();
-        Media media = new Media(videoPath);
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setAutoPlay(true);
-        mediaPlayer.setCycleCount(1);
-        MediaView mediaView = new MediaView(mediaPlayer);
-        mediaView.setFitWidth(1200);
-        mediaView.setFitHeight(700);
-        mediaView.setPreserveRatio(false);
-        AnchorPane.setTopAnchor(mediaView, 0.0);
-        AnchorPane.setBottomAnchor(mediaView, 0.0);
-        AnchorPane.setLeftAnchor(mediaView, 0.0);
-        AnchorPane.setRightAnchor(mediaView, 0.0);
-        Label label10 = new Label();
-        label10.setText("Game Over");
-        label10.setFont(new Font(30));
-        label10.setVisible(true);
-        label10.setAlignment(Pos.CENTER);
-
-        scorefinal = new Label();
-        scorefinal.setText("your Score is " + Score);
-        scorefinal.setFont(new Font(30));
-        scorefinal.setAlignment(Pos.CENTER);
-     
-        GameOverScene.getChildren().add(0, mediaView);
-        GameOverScene.getChildren().addAll(returntoStart, label10, scorefinal);
-
-        GameOverScene.setLeftAnchor(label10, 400.0);
-        GameOverScene.setRightAnchor(label10, 400.0);
-        GameOverScene.setTopAnchor(label10, 100.0);
-        GameOverScene.setLeftAnchor(scorefinal, 400.0);
-        GameOverScene.setRightAnchor(scorefinal, 400.0);
-        GameOverScene.setTopAnchor(scorefinal, 300.0);
-        GameOverScene.setLeftAnchor(returntoStart, 400.0);
-        GameOverScene.setRightAnchor(returntoStart, 400.0);
-        GameOverScene.setTopAnchor(returntoStart, 500.0);
+        // Game Over button
+        returntoStart = gameOverView.getReturnToStartButton();
 
         // Characters (unchanged)
         Image Abnormal = new Image("abnormal.png");
@@ -481,6 +420,7 @@ public class View {
  
     public void updateInfo(String phase, String resources, String lanes, String turn, String score, String choosenMode, ArrayList<Lane> l) {
         this.Score = score;
+        setScore(score);
         this.Phase = phase;
         this.Resources = resources;
         this.Lanes = lanes;
@@ -496,9 +436,9 @@ public class View {
 
             // Update wall health (ProgressBar) and danger level (Label)
             ArrayList<ProgressBar> wallHealth = hardView.getWallHealthHard();
-            ArrayList<Label> dangerLevel = hardView.getWallDangerLevelHard(); // Changed to Label
+            ArrayList<Label> dangerLevel = hardView.getWallDangerLevelHard();
             for (int i = 0; i < wallHealth.size() && i < l.size(); i++) {
-                double maxHealth = 10000.0; // Assuming max wall health is 10000, adjust if different
+                double maxHealth = 10000.0; 
                 double currentHealth = l.get(i).getLaneWall().getCurrentHealth();
                 double healthFraction = currentHealth / maxHealth;
                 wallHealth.get(i).setProgress(healthFraction);
@@ -511,7 +451,7 @@ public class View {
                     wallHealth.get(i).setStyle("-fx-accent: green;");
                 }
 
-                // Update danger level (simple text)
+                // Update danger level 
                 dangerLevel.get(i).setText("Danger: " + l.get(i).getDangerLevel());
             }
         } else {
@@ -524,9 +464,9 @@ public class View {
 
             // Update wall health (ProgressBar) and danger level (Label)
             ArrayList<ProgressBar> wallHealth = easyView.getWallHealthEasy();
-            ArrayList<Label> dangerLevel = easyView.getWallDangerLevelEasy(); // Changed to Label
+            ArrayList<Label> dangerLevel = easyView.getWallDangerLevelEasy(); 
             for (int i = 0; i < wallHealth.size() && i < l.size(); i++) {
-                double maxHealth = 10000.0; // Assuming max wall health is 10000, adjust if different
+                double maxHealth = 10000.0; 
                 double currentHealth = l.get(i).getLaneWall().getCurrentHealth();
                 double healthFraction = currentHealth / maxHealth;
                 wallHealth.get(i).setProgress(healthFraction);
@@ -539,7 +479,7 @@ public class View {
                     wallHealth.get(i).setStyle("-fx-accent: green;");
                 }
 
-                // Update danger level (simple text)
+                // Update danger level 
                 dangerLevel.get(i).setText("Danger: " + l.get(i).getDangerLevel());
             }
         }
