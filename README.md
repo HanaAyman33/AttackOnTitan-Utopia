@@ -65,54 +65,25 @@ The game progresses through three battle phases—Early, Intense, and Grumbling:
 
 ## Join the fight for humanity's survival!!⚔️
 
+## Setup and Installation
 
+### Prerequisites
+- Java Development Kit (JDK) 11 or later  
+- JavaFX SDK 22.0.1 or later  
 
-## Game Screenshots 📸
+### Running the Game
+
+1. **Set Up JavaFX**  
+   - Grab the JavaFX SDK from [Gluon](https://gluonhq.com/products/javafx/).  
+   - Unzip it and note the path to the `lib` folder.  
+
+2. **Build and Run**  
+   - Add JavaFX to your IDE’s module path.  
+   - Use these VM options to include JavaFX modules: --module-path "path/to/javafx-sdk/lib" --add-modules javafx.controls,javafx.fxml,javafx.media
+
+## Game Video 📸
 
 Check out some exciting moments from *Attack on Titan: Utopia* below!
-
-
-
-
-![image](https://github.com/user-attachments/assets/c42c57c6-5970-4b69-86f6-09877f034133)
-
-
-
-
-![image](https://github.com/user-attachments/assets/47544e29-2518-4c5e-8f77-f31ab6c28f5c)
-
-
-
-
-![Screenshot 2024-09-24 104807](https://github.com/user-attachments/assets/fa34ce92-bbe9-4963-b3d3-8613ac52f6a6)
-
-
-
-
-![Screenshot 2024-09-24 104852](https://github.com/user-attachments/assets/24b3c08b-b6f3-43f6-beff-dc5610c6ae45)
-
-
-
-
-![Screenshot 2024-09-24 104919](https://github.com/user-attachments/assets/f9106c56-786c-44b5-b263-934d66ae567d)
-
-
-
-
-![Screenshot 2024-09-24 105049](https://github.com/user-attachments/assets/042844dc-d2ea-4967-9cb1-086369f0edd6)
-
-
-
-
-![Screenshot 2024-09-24 105210](https://github.com/user-attachments/assets/2fa3b429-4ecd-49d3-a369-5e3364ceae53)
-
-
-
-
-![Screenshot 2024-09-24 105225](https://github.com/user-attachments/assets/5ea16da4-eda9-42af-b6ed-3136586f21c4)
-
-
-
 
 
 
