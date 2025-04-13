@@ -6,44 +6,24 @@ import java.util.ArrayList;
 import game.engine.lanes.Lane;
 import game.engine.titans.AbnormalTitan;
 import game.engine.titans.ArmoredTitan;
+import game.engine.titans.ColossalTitan;
 import game.engine.titans.PureTitan;
 import javafx.animation.FadeTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextArea;
-import javafx.scene.effect.Blend;
-import javafx.scene.effect.BlendMode;
-import javafx.scene.effect.ColorInput;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Stop;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 public class View {
@@ -66,13 +46,7 @@ public class View {
 	private String Resources;
 	private String Phase;
 	private String Lanes;
-	private AnchorPane InsufficientResourcesPopUp;
-	private AnchorPane InvalidLanePopUp;
-	private AnchorPane PassOrBuyPopUp;
-	private AnchorPane SelectLanePopUpEasy;
-	private AnchorPane SelectLanePopUpHard;
 	private AnchorPane SelectModePopUp;
-	private AnchorPane SelectWeaponPopUp;
 	private ComboBox<String> Mode;
 	private ComboBox<String> EasyLanes;
 	private ComboBox<String> HardLanes;
@@ -90,25 +64,11 @@ public class View {
 	private static ImageView armored;
 	private static ImageView colossal;
 	private static ImageView pure;
-	private Label score;
-	private Label turn;
-	private Label phase;
-	private Label resources;
-	private Label lanes;
-	private Label score2;
-	private Label turn2;
-	private Label phase2;
-	private Label resources2;
-	private Label lanes2;
 	private Label selectALane1;
 	private Label selectALane2;
 	private Button weaponShopButtonEasy;
 	private Button weaponShopButtonHard;
 	private ArrayList <ImageView> ApproachingTitans;
-	private ArrayList <Label> WallHealthEasy;
-	private ArrayList <Label> WallHealthHard;
-	private ArrayList <Label> WallDangerLevelEasy;
-	private ArrayList <Label> WallDangerLevelHard;
 	private ArrayList<Integer> laneCode;
 	private int numberOfTitansPerTurn;
 	private GridPane hard;
@@ -498,7 +458,7 @@ public class View {
         if (imageView == null || imageView.getImage() == null) {
             return null;
         }
-        String imagePath = imageView.getImage().getUrl();
+		String imagePath = imageView.getImage().impl_getUrl(); // Use private API
         return imagePath;
     }
 
@@ -566,19 +526,25 @@ public class View {
         for (ArrayList<TitanImageView> lane : this.allLanes) {
             int y = 0;
             switch (count) {
-                case 1: y = 60; break;
-                case 2: y = 170; break;
-                case 3: y = 310; break;
-                case 4: y = 410; break;
-                case 5: y = 510; break;
+                case 1: y = 170; break;
+                case 2: y = 190; break;
+                case 3: y = 330; break;
+                case 4: y = 430; break;
+                case 5: y = 530; break;
             }
+			int dis=1200;
+			int temp=y;
             for (TitanImageView t : lane) {
+				if(t.titan instanceof ColossalTitan){
+					dis=1255;
+					y=temp-20;
+				}
                 ImageView ti = t.titanImageView;
                 if (!s.getChildren().contains(ti)) {
                     s.getChildren().addAll(ti, t.healthBar);
-                    s.setLeftAnchor(ti, (double)1200);
+                    s.setLeftAnchor(ti, (double)dis);
                     s.setTopAnchor(ti, (double)y);
-                    s.setLeftAnchor(t.healthBar, (double)1190);
+                    s.setLeftAnchor(t.healthBar, (double)dis-10);
                     s.setTopAnchor(t.healthBar, (double)y-10);
                     translate(ti, 60);
                     translate(t.healthBar, 60);
@@ -590,38 +556,38 @@ public class View {
 
 	//here
 	public void deployWeapon(int weaponCode, int lane) {
-	    Image i = null;
-	    switch (weaponCode) {
-	        case 1:i = new Image("canon.png");break;
-	        case 2:i = new Image("sniper.png");break;
-	        case 3:i = new Image("volly.png");break;
-	        case 4:i = new Image("wallTrap.png");break;
-	    }
-
-	        ImageView v = new ImageView(i);
-	        v.setPreserveRatio(true);
-   			v.setFitHeight(45);
-	        GridPane p = Controller.getChoosenMode().equals("Hard") ? hard : easy;
-	        for (int col = 0; col < 10; col++) {
-	            boolean cellFree = true;
-
-	            for (Node node : p.getChildren()) {
-	                Integer Row = GridPane.getRowIndex(node);
-	                Integer Col = GridPane.getColumnIndex(node);
-	                if (Row == null) Row = 0;
-	                if (Col == null) Col = 0;
-
-	                if (Row == lane && Col == col) {
-	                    cellFree = false;
-	                    break;
-	                }
-	            }
-	            if (cellFree) {
-	                p.add(v, col, lane);
-	                break;
-	            }
-	        }
-	    }
+		Image i = null;
+		switch (weaponCode) {
+			case 1: i = new Image("canon.png"); break;
+			case 2: i = new Image("sniper.png"); break;
+			case 3: i = new Image("volly.png"); break;
+			case 4: i = new Image("wallTrap.png"); break;
+		}
+	
+		ImageView v = new ImageView(i);
+		v.setPreserveRatio(true);
+		v.setFitHeight(45);
+		GridPane p = Controller.getChoosenMode().equals("Hard") ? hard : easy;
+		for (int col = 0; col < 10; col++) {
+			boolean cellFree = true;
+	
+			for (Node node : p.getChildren()) {
+				Integer Row = GridPane.getRowIndex(node);
+				Integer Col = GridPane.getColumnIndex(node);
+				if (Row == null) Row = 0;
+				if (Col == null) Col = 0;
+	
+				if (Row == lane - 1 && Col == col) { 
+					cellFree = false;
+					break;
+				}
+			}
+			if (cellFree) {
+				p.add(v, col, lane - 1);
+				break;
+			}
+		}
+	}
 
 
 	private void translate(Node Titan,int distance){	//used to move the titan

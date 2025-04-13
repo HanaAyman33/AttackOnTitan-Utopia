@@ -1,7 +1,6 @@
 package game.gui;
 
 import game.engine.titans.Titan;
-import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.ImageView;
 

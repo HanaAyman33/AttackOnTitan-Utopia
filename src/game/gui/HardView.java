@@ -122,9 +122,9 @@ public class HardView {
         for (int i = 0; i < 5; i++) {
             // Vertical Health ProgressBar
             ProgressBar wallHealth = new ProgressBar(1.0); // Full health
-            wallHealth.setPrefSize(20, 100); // Width 20, Height 100 for vertical
-            wallHealth.setRotate(90); // Rotate 90 degrees for vertical orientation
-            wallHealth.setStyle("-fx-accent: green; -fx-control-inner-background: #333333;");
+            wallHealth.setPrefWidth(200); 
+            wallHealth.setStyle("-fx-accent: green;");
+            wallHealthHard.add(wallHealth);
             wallHealthHard.add(wallHealth);
 
             // Danger Level Label
@@ -135,7 +135,7 @@ public class HardView {
 
             double topOffset = 100 + i * 110; // Align with lane rows
             root.getChildren().addAll(wallHealth, dangerLevel);
-            AnchorPane.setLeftAnchor(wallHealth, 110.0); // Right of grid
+            AnchorPane.setLeftAnchor(wallHealth, 90.0); // Right of grid
             AnchorPane.setTopAnchor(wallHealth, topOffset - 40); // Adjusted for vertical height
             AnchorPane.setLeftAnchor(dangerLevel, 150.0); // Next to progress bar
             AnchorPane.setTopAnchor(dangerLevel, topOffset);

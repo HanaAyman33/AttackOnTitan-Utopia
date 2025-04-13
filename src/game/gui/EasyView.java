@@ -38,7 +38,7 @@ public class EasyView {
     private Label resources;
     private Label lanes;
     private ArrayList<ProgressBar> wallHealthEasy;
-    private ArrayList<Label> wallDangerLevelEasy; // Changed to Label
+    private ArrayList<Label> wallDangerLevelEasy; 
 
     public EasyView() {
         root = new AnchorPane();
@@ -82,12 +82,13 @@ public class EasyView {
         easyGrid = new GridPane();
         easyGrid.setPadding(new Insets(30));
         easyGrid.setStyle("-fx-background-color: transparent;");
-        easyGrid.setPrefSize(100, 700);
-        easyGrid.setVgap(100);
+        easyGrid.setPrefSize(100, 320); 
+        easyGrid.setVgap(80); 
         easyGrid.setHgap(0);
         for (int i = 0; i < 3; i++) {
             RowConstraints row = new RowConstraints();
-            row.setPercentHeight(33);
+            row.setPrefHeight(50); 
+            row.setPercentHeight(-1);
             easyGrid.getRowConstraints().add(row);
         }
         for (int i = 0; i < 10; i++) {
@@ -97,10 +98,12 @@ public class EasyView {
         }
         AnchorPane.setLeftAnchor(easyGrid, 0.0);
         AnchorPane.setRightAnchor(easyGrid, 850.0);
-        AnchorPane.setBottomAnchor(easyGrid, 100.0);
         AnchorPane.setTopAnchor(easyGrid, 200.0);
+        AnchorPane.setBottomAnchor(easyGrid, 180.0); // Adjusted to make GridPane 320 pixels tall
         root.getChildren().add(easyGrid);
         easyGrid.toFront();
+        easyGrid.setVisible(true);
+       
 
         // Info Circles (Closer Together)
         double[] xOffsets = {50, 150, 250, 350, 450}; // Reduced spacing
@@ -121,9 +124,8 @@ public class EasyView {
         wallDangerLevelEasy = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             ProgressBar wallHealth = new ProgressBar(1.0); 
-            wallHealth.setPrefSize(20, 150); 
-            wallHealth.setRotate(90); 
-            wallHealth.setStyle("-fx-accent: green; -fx-control-inner-background: #333333;");
+            wallHealth.setPrefWidth(200); 
+            wallHealth.setStyle("-fx-accent: green;");
             wallHealthEasy.add(wallHealth);
 
             // Danger Level Label
@@ -134,7 +136,7 @@ public class EasyView {
 
             double topOffset = 200 + i * 200; 
             root.getChildren().addAll(wallHealth, dangerLevel);
-            AnchorPane.setLeftAnchor(wallHealth, 110.0); 
+            AnchorPane.setLeftAnchor(wallHealth, 90.0); 
             AnchorPane.setTopAnchor(wallHealth, topOffset - 65); 
             AnchorPane.setLeftAnchor(dangerLevel, 150.0); 
             AnchorPane.setTopAnchor(dangerLevel, topOffset);
