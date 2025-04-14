@@ -25,8 +25,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
@@ -175,147 +173,88 @@ public class Controller extends Application{
 		 stage.setResizable(false);
 		 stage.show();
 	}
-	public void handleButtonStart(Event event) {
-		ChoosenMode = ModeView.getSelectedMode();
-	
-		if (ChoosenMode.equals("Hard")) {
-			root = view.loadHardScene();
-			Stage stage = MainStage;
-			scene = new Scene(root, 1200, 700);
-			stage.setScene(scene);
-			stage.show();
-		} else {
-			root = view.loadEasyScene();
-			Stage stage = MainStage;
-			scene = new Scene(root, 1200, 700);
-			stage.setScene(scene);
-			stage.show();
+    public void handleButtonStart(Event event){
+    	 ChoosenMode = ModeView.getSelectedMode();
+
+    	if(ChoosenMode.equals("Hard")){
+			 root=view.loadHardScene();
+			 Stage stage=MainStage;
+		     scene=new Scene(root,1200,700);
+		     stage.setScene(scene);
+		     stage.show();
+		     }
+		 else{
+			 root=view.loadEasyScene();
+			 Stage stage=MainStage;
+		     scene=new Scene(root,1200,700);
+		     stage.setScene(scene);
+		     stage.show();
+		     }
+    	 int initialNumOfLanes = ChoosenMode=="Easy"?3:5;
+		 int initialResourcesPerLane = ChoosenMode=="Easy"?250:125;
+		 try {
+			battle = new Battle( 1, 0, 291, initialNumOfLanes ,initialResourcesPerLane);
 		}
-	
-		int initialNumOfLanes = ChoosenMode.equals("Easy") ? 3 : 5;
-		int initialResourcesPerLane = ChoosenMode.equals("Easy") ? 250 : 125;
-		try {
-			battle = new Battle(1, 0, 292, initialNumOfLanes, initialResourcesPerLane);
-		} catch (IOException e) {
+		 catch (IOException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
-	
-		battle.refillApproachingTitans();
-		String Lane = ChoosenMode.equals("Hard") ? "1,2,3,4,5" : "1,2,3";
-		view.updateInfo("" + battle.getBattlePhase(), "" + battle.getResourcesGathered(),
-				Lane, "" + battle.getNumberOfTurns(), "" + battle.getScore(), ChoosenMode, battle.getOriginalLanes());
-		view.setApproachingTitans(approachingTitansImages(battle.getApproachingTitans()));
-		view.setApproachingTitansHealth(approachingTitansHealth(battle.getApproachingTitans()));
-		view.setNumberOfTitansPerTurn(battle.getNumberOfTitansPerTurn());
-		view.setLaneCode(lanes(battle.getLanes(), battle.getOriginalLanes()));
-		view.setAllLanes(ImgIntializer(battle.getLanes()));
-		Controller.passOrBuy = "Pass";
-	
-		// Run the game loop in a separate thread
-		new Thread(() -> {
-			while (!battle.isGameOver()) {
-				if (this.close) {
-					return; // Exit the thread if the application is closing
-				}
-	
-				// Run UI-related operations on the JavaFX Application Thread
-				Platform.runLater(() -> {
-					if (!this.close) {
-						PassOrBuy();
-					}
-				});
-	
-				// Wait for the user to make a choice (synchronize with the UI thread)
-				while (!this.close && passOrBuy.equals("Pass")) {
-					try {
-						Thread.sleep(100); // Wait for the user to make a choice
-					} catch (InterruptedException e) {
-						Thread.currentThread().interrupt();
-						return;
-					}
-				}
-	
-				if (this.close) {
-					return;
-				}
-	
-				if (Controller.passOrBuy.equals("Pass")) {
-					battle.passTurn();
-					Platform.runLater(() -> {
+		 battle.refillApproachingTitans();
+		 String Lane=ChoosenMode=="Hard"?"1,2,3,4,5":"1,2,3";
+		 view.updateInfo(""+battle.getBattlePhase(), ""+battle.getResourcesGathered()
+		 ,Lane, ""+battle.getNumberOfTurns(), ""+battle.getScore(),ChoosenMode,battle.getOriginalLanes());
+		 view.setApproachingTitans(approachingTitansImages(battle.getApproachingTitans()));
+		 view.setApproachingTitansHealth(approachingTitansHealth(battle.getApproachingTitans()));
+		 view.setNumberOfTitansPerTurn(battle.getNumberOfTitansPerTurn());
+		 view.setLaneCode(lanes(battle.getLanes(),battle.getOriginalLanes()));
+		 view.setAllLanes(ImgIntializer(battle.getLanes()));
+		 Controller.passOrBuy="Pass";
+			 while(!battle.isGameOver()){
+				 if(this.close==true)
+					 break;
+				 PassOrBuy();
+				 if(Controller.passOrBuy.equals("Pass")){
+					 battle.passTurn();
+					 view.AddTurnTitans();
+					 view.performTurnTitans();
+					 this.updateViewInfo();
+				 }
+				 else{
+					 try {
+						this.OpenWeaponShop();
+						this.handleSelectedLane();
+						battle.purchaseWeapon(weaponCode,battle.getOriginalLanes().get(Controller.LaneChoosen-1));
+						deployWeapon();
 						view.AddTurnTitans();
 						view.performTurnTitans();
-						updateViewInfo();
-					});
-				} else {
-					try {
-						Platform.runLater(() -> {
-							if (!this.close) {
-								OpenWeaponShop();
-								handleSelectedLane();
-							}
-						});
-	
-						// Wait for weapon and lane selection
-						while (!this.close && (weaponCode == 0 || LaneChoosen == 0)) {
-							try {
-								Thread.sleep(100);
-							} catch (InterruptedException e) {
-								Thread.currentThread().interrupt();
-								return;
-							}
-						}
-	
-						if (this.close) {
-							return;
-						}
-	
-						battle.purchaseWeapon(weaponCode, battle.getOriginalLanes().get(Controller.LaneChoosen - 1));
-						Platform.runLater(() -> {
-							deployWeapon();
-							view.AddTurnTitans();
-							view.performTurnTitans();
-							updateViewInfo();
-						});
-					} catch (InsufficientResourcesException e) {
-						Platform.runLater(() -> {
-							alert2 = new Alert(Alert.AlertType.INFORMATION);
-							alert2.setContentText("You do not have enough resources to buy this weapon");
-							alert2.setTitle("NO RESOURCES");
-							alert2.setHeaderText(null);
-							alert2.initOwner(MainStage);
-							alert2.showAndWait();
-						});
-					} catch (InvalidLaneException e) {
-						Platform.runLater(() -> {
-							alert1 = new Alert(Alert.AlertType.INFORMATION);
-							alert1.setContentText("You cannot buy a Weapon in this Lane");
-							alert1.setTitle("INVALID LANE");
-							alert1.setHeaderText(null);
-							alert1.initOwner(MainStage);
-							alert1.showAndWait();
-						});
-					}
-				}
-	
-				Controller.passOrBuy = "Pass";
-				weaponCode = 0; // Reset for the next turn
-				LaneChoosen = 0;
-			}
-	
-			// Game is over, load the game over scene on the JavaFX Application Thread
-			Platform.runLater(() -> {
-				if (!this.close) {
-					view.getScorefinal().setText("Your Score is: " + battle.getScore());
-					root = view.loadGameOverScene();
-					Stage stage = MainStage;
-					scene = new Scene(root, 1200, 700);
-					stage.setScene(scene);
-					stage.show();
-				}
-			});
-		}).start();
-	}
+					    this.updateViewInfo();
+					  } 
+					 catch (InsufficientResourcesException e) {
+						    alert2 = new Alert(Alert.AlertType.INFORMATION);
+						    alert2.setContentText("You do not have enough resources to buy this weapon");
+				            alert2.setTitle("NO RESOURCES");
+				            alert2.setHeaderText(null);
+				            alert2.initOwner(MainStage); 
+				            alert2.showAndWait();
+					 }
+					 catch( InvalidLaneException e){
+						    alert1 = new Alert(Alert.AlertType.INFORMATION);
+				            alert1.setContentText("You cannot by a Weapon in this Lane");
+				            alert1.setTitle("INVALID LANE");
+				            alert1.setHeaderText(null);
+				            alert1.initOwner(MainStage); 
+				            alert1.showAndWait();
+					 }
+				 }
+				 Controller.passOrBuy="Pass";
+			 }
+			 view.getScorefinal().setText("Your Score is: "+battle.getScore());
+			 root=view.loadGameOverScene();
+			 Stage stage=MainStage;
+		     scene=new Scene(root,1200,700);
+		     stage.setScene(scene);
+		     stage.show();
+		 }
     
     
     public void PassOrBuy(){

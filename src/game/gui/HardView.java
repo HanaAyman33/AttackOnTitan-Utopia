@@ -77,17 +77,17 @@ public class HardView {
         backGround.setClip(clip);
         root.getChildren().add(backGround);
         backGround.toFront();
-
         // GridPane
         hardGrid = new GridPane();
-        hardGrid.setPadding(new Insets(50));
+        hardGrid.setPadding(new Insets(10));
         hardGrid.setStyle("-fx-background-color: transparent;");
-        hardGrid.setPrefSize(100, 700);
-        hardGrid.setVgap(100);
+        hardGrid.setPrefSize(100, 550); 
+        hardGrid.setVgap(40);
         hardGrid.setHgap(0);
         for (int i = 0; i < 5; i++) {
             RowConstraints row = new RowConstraints();
-            row.setPercentHeight(20);
+            row.setPrefHeight(50);
+            row.setPercentHeight(-1);
             hardGrid.getRowConstraints().add(row);
         }
         for (int i = 0; i < 10; i++) {
@@ -97,11 +97,11 @@ public class HardView {
         }
         AnchorPane.setLeftAnchor(hardGrid, 0.0);
         AnchorPane.setRightAnchor(hardGrid, 1050.0);
-        AnchorPane.setBottomAnchor(hardGrid, 100.0);
-        AnchorPane.setTopAnchor(hardGrid, 100.0);
+        AnchorPane.setTopAnchor(hardGrid, 130.0); 
+        AnchorPane.setBottomAnchor(hardGrid, 85.0); 
         root.getChildren().add(hardGrid);
         hardGrid.toFront();
-
+        hardGrid.setVisible(true);
         // Info Circles (Closer Together)
         double[] xOffsets = {50, 150, 250, 350, 450}; // Reduced spacing
         score = createInfoCircle("Score: 0", xOffsets[0], Color.SADDLEBROWN);
@@ -116,16 +116,15 @@ public class HardView {
         resources.toFront();
         lanes.toFront();
 
-        // Wall Health (Vertical ProgressBar) and Danger Level (Label)
+      // Wall Health (Vertical ProgressBar) and Danger Level (Label)
         wallHealthHard = new ArrayList<>();
         wallDangerLevelHard = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             // Vertical Health ProgressBar
             ProgressBar wallHealth = new ProgressBar(1.0); // Full health
-            wallHealth.setPrefWidth(200); 
+            wallHealth.setPrefWidth(150); 
             wallHealth.setStyle("-fx-accent: green;");
-            wallHealthHard.add(wallHealth);
-            wallHealthHard.add(wallHealth);
+            wallHealthHard.add(wallHealth); // Add only once
 
             // Danger Level Label
             Label dangerLevel = new Label("Danger: 0");
@@ -133,10 +132,10 @@ public class HardView {
             dangerLevel.setTextFill(Color.ORANGE);
             wallDangerLevelHard.add(dangerLevel);
 
-            double topOffset = 100 + i * 110; // Align with lane rows
+            double topOffset = 165 + i * 100; // Align with lane rows
             root.getChildren().addAll(wallHealth, dangerLevel);
             AnchorPane.setLeftAnchor(wallHealth, 90.0); // Right of grid
-            AnchorPane.setTopAnchor(wallHealth, topOffset - 40); // Adjusted for vertical height
+            AnchorPane.setTopAnchor(wallHealth, topOffset - 30); // Adjusted for vertical height
             AnchorPane.setLeftAnchor(dangerLevel, 150.0); // Next to progress bar
             AnchorPane.setTopAnchor(dangerLevel, topOffset);
             wallHealth.toFront();

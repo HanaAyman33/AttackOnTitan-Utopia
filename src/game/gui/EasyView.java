@@ -134,10 +134,10 @@ public class EasyView {
             dangerLevel.setTextFill(Color.ORANGE);
             wallDangerLevelEasy.add(dangerLevel);
 
-            double topOffset = 200 + i * 200; 
+            double topOffset = 250 + i * 150; 
             root.getChildren().addAll(wallHealth, dangerLevel);
             AnchorPane.setLeftAnchor(wallHealth, 90.0); 
-            AnchorPane.setTopAnchor(wallHealth, topOffset - 65); 
+            AnchorPane.setTopAnchor(wallHealth, topOffset - 45); 
             AnchorPane.setLeftAnchor(dangerLevel, 150.0); 
             AnchorPane.setTopAnchor(dangerLevel, topOffset);
             wallHealth.toFront();

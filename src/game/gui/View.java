@@ -66,14 +66,15 @@ public class View {
 	private static ImageView pure;
 	private Label selectALane1;
 	private Label selectALane2;
+	@SuppressWarnings("unused")
 	private Button weaponShopButtonEasy;
+	@SuppressWarnings("unused")
 	private Button weaponShopButtonHard;
 	private ArrayList <ImageView> ApproachingTitans;
 	private ArrayList<Integer> laneCode;
 	private int numberOfTitansPerTurn;
 	private GridPane hard;
 	private GridPane easy;
-	private Label scorefinal;
 	private ArrayList<ArrayList<TitanImageView>> allLanes;
 	
 	
@@ -82,9 +83,6 @@ public class View {
 	}
 	public void setAllLanes(ArrayList<ArrayList<TitanImageView>> allLanes) {
 		this.allLanes = allLanes;
-	}
-	public Label getScorefinal() {
-		return scorefinal;
 	}
 	public Label getSelectALane1() {
 		return selectALane1;
@@ -150,8 +148,8 @@ public class View {
 	public void setPure(ImageView pure) {
 		View.pure = pure;
 	}
-	public String getScore() {
-		return Score;
+	public Label getScorefinal() {
+		return GameOverView.getScoreLabel();
 	}
 	public void setScore(String score) {
         this.Score = score;
@@ -220,15 +218,15 @@ public class View {
 
     // Add getters for the new button names if needed elsewhere
     public Button getNewGameButton() {
-        return mainMenuView.getNewGameButton();
+        return MainMenuView.getNewGameButton();
     }
 
     public Button getGameRulesButton() {
-        return mainMenuView.getGameRulesButton();
+        return MainMenuView.getGameRulesButton();
     }
 
     public Button getExitButton() {
-        return mainMenuView.getExitButton();
+        return MainMenuView.getExitButton();
     }
     public Button getBack() {
 		return GameRulesView.getBack();
@@ -359,11 +357,11 @@ public class View {
 		return root;
 	}
 	public Button getWeaponShopButtonEasy() {
-        return easyView.getWeaponShopButton();
+        return EasyView.getWeaponShopButton();
     }
 
     public Button getWeaponShopButtonHard() {
-        return hardView.getWeaponShopButton();
+        return HardView.getWeaponShopButton();
     }
 
     public Group loadEasyScene() {
@@ -378,89 +376,63 @@ public class View {
         return root;
     }
  
-    public void updateInfo(String phase, String resources, String lanes, String turn, String score, String choosenMode, ArrayList<Lane> l) {
-        this.Score = score;
-        setScore(score);
-        this.Phase = phase;
-        this.Resources = resources;
-        this.Lanes = lanes;
-        this.Turn = turn;
-
-        if ("Hard".equals(choosenMode)) {
-            // Update info labels directly
-            hardView.getScore().setText("Score: " + Score);
-            hardView.getTurn().setText("Turn: " + Turn);
-            hardView.getPhase().setText("Phase: " + Phase);
-            hardView.getResources().setText("Resources: " + Resources);
-            hardView.getLanes().setText("Lanes: " + Lanes);
-
-            // Update wall health (ProgressBar) and danger level (Label)
-            ArrayList<ProgressBar> wallHealth = hardView.getWallHealthHard();
-            ArrayList<Label> dangerLevel = hardView.getWallDangerLevelHard();
-            for (int i = 0; i < wallHealth.size() && i < l.size(); i++) {
-                double maxHealth = 10000.0; 
-                double currentHealth = l.get(i).getLaneWall().getCurrentHealth();
-                double healthFraction = currentHealth / maxHealth;
-                wallHealth.get(i).setProgress(healthFraction);
-                // Dynamic color change
-                if (healthFraction <= 0.25) {
-                    wallHealth.get(i).setStyle("-fx-accent: red;");
-                } else if (healthFraction <= 0.5) {
-                    wallHealth.get(i).setStyle("-fx-accent: orange;");
-                } else {
-                    wallHealth.get(i).setStyle("-fx-accent: green;");
-                }
-
-                // Update danger level 
-                dangerLevel.get(i).setText("Danger: " + l.get(i).getDangerLevel());
-            }
-        } else {
-            // Update info labels directly
-            easyView.getScore().setText("Score: " + Score);
-            easyView.getTurn().setText("Turn: " + Turn);
-            easyView.getPhase().setText("Phase: " + Phase);
-            easyView.getResources().setText("Resources: " + Resources);
-            easyView.getLanes().setText("Lanes: " + Lanes);
-
-            // Update wall health (ProgressBar) and danger level (Label)
-            ArrayList<ProgressBar> wallHealth = easyView.getWallHealthEasy();
-            ArrayList<Label> dangerLevel = easyView.getWallDangerLevelEasy(); 
-            for (int i = 0; i < wallHealth.size() && i < l.size(); i++) {
-                double maxHealth = 10000.0; 
-                double currentHealth = l.get(i).getLaneWall().getCurrentHealth();
-                double healthFraction = currentHealth / maxHealth;
-                wallHealth.get(i).setProgress(healthFraction);
-                // Dynamic color change
-                if (healthFraction <= 0.25) {
-                    wallHealth.get(i).setStyle("-fx-accent: red;");
-                } else if (healthFraction <= 0.5) {
-                    wallHealth.get(i).setStyle("-fx-accent: orange;");
-                } else {
-                    wallHealth.get(i).setStyle("-fx-accent: green;");
-                }
-
-                // Update danger level 
-                dangerLevel.get(i).setText("Danger: " + l.get(i).getDangerLevel());
-            }
-        }
-    }
+	public void updateInfo(String phase, String resources, String lanes, String turn, String score, String choosenMode, ArrayList<Lane> l) {
+		this.Score = score;
+		setScore(score);
+		this.Phase = phase;
+		this.Resources = resources;
+		this.Lanes = lanes;
+		this.Turn = turn;
 	
-	public boolean sameImg(ImageView imageView1, ImageView imageView2) {
-		if (imageView1 == null || imageView2 == null) {
-            return false;
-        }
-        String imagePath1 = getImagePath(imageView1);
-        String imagePath2 = getImagePath(imageView2);
-
-        return imagePath1 != null && imagePath1.equals(imagePath2);
-    }
-    private static String getImagePath(ImageView imageView) {
-        if (imageView == null || imageView.getImage() == null) {
-            return null;
-        }
-		String imagePath = imageView.getImage().impl_getUrl(); // Use private API
-        return imagePath;
-    }
+		updateLabels(choosenMode, score, turn, phase, resources, lanes);
+		updateWallHealthAndDanger(choosenMode, l);
+	}
+	
+	private void updateLabels(String choosenMode, String score, String turn, String phase, String resources, String lanes) {
+		if ("Hard".equals(choosenMode)) {
+			hardView.getScore().setText("Score: " + score);
+			hardView.getTurn().setText("Turn: " + turn);
+			hardView.getPhase().setText("Phase: " + phase);
+			hardView.getResources().setText("Resources: " + resources);
+			hardView.getLanes().setText("Lanes: " + lanes);
+		} else {
+			easyView.getScore().setText("Score: " + score);
+			easyView.getTurn().setText("Turn: " + turn);
+			easyView.getPhase().setText("Phase: " + phase);
+			easyView.getResources().setText("Resources: " + resources);
+			easyView.getLanes().setText("Lanes: " + lanes);
+		}
+	}
+	
+	private void updateWallHealthAndDanger(String choosenMode, ArrayList<Lane> l) {
+		ArrayList<ProgressBar> wallHealth = "Hard".equals(choosenMode) ? hardView.getWallHealthHard() : easyView.getWallHealthEasy();
+		ArrayList<Label> dangerLevel = "Hard".equals(choosenMode) ? hardView.getWallDangerLevelHard() : easyView.getWallDangerLevelEasy();
+	
+		int expectedLanes = "Hard".equals(choosenMode) ? 5 : 3;
+		if (wallHealth.size() < expectedLanes || dangerLevel.size() < expectedLanes) {
+			System.err.println("Warning: Insufficient UI elements for " + choosenMode + " mode. Expected " + expectedLanes + 
+							   ", got " + wallHealth.size() + " health bars, " + dangerLevel.size() + " danger labels.");
+		}
+	
+		for (int i = 0; i < l.size() && i < wallHealth.size() && i < dangerLevel.size(); i++) {
+			double maxHealth = 10000.0;
+			double currentHealth = l.get(i).getLaneWall().getCurrentHealth();
+			double healthFraction = currentHealth / maxHealth;
+			wallHealth.get(i).setProgress(healthFraction);
+	
+			// Dynamic color change
+			if (healthFraction <= 0.25) {
+				wallHealth.get(i).setStyle("-fx-accent: red;");
+			} else if (healthFraction <= 0.5) {
+				wallHealth.get(i).setStyle("-fx-accent: orange;");
+			} else {
+				wallHealth.get(i).setStyle("-fx-accent: green;");
+			}
+	
+			// Update danger level
+			dangerLevel.get(i).setText("Danger: " + l.get(i).getDangerLevel());
+		}
+	}
 
 	public void titanAttack(Node Titan){
 		TranslateTransition translate = new TranslateTransition();//backward
@@ -518,43 +490,66 @@ public class View {
         }
     }
     
-    @SuppressWarnings("static-access")
-    public void AddTurnTitans() {
-        int count = 1;
-        AnchorPane s = Controller.getChoosenMode().equals("Easy") ? EasyScene : HardScene;
-        if (Controller.getChoosenMode().equals("Easy")) count++;
-        for (ArrayList<TitanImageView> lane : this.allLanes) {
-            int y = 0;
-            switch (count) {
-                case 1: y = 170; break;
-                case 2: y = 190; break;
-                case 3: y = 330; break;
-                case 4: y = 430; break;
-                case 5: y = 530; break;
-            }
-			int dis=1200;
-			int temp=y;
-            for (TitanImageView t : lane) {
-				if(t.titan instanceof ColossalTitan){
-					dis=1255;
-					y=temp-20;
-				}
-                ImageView ti = t.titanImageView;
-                if (!s.getChildren().contains(ti)) {
-                    s.getChildren().addAll(ti, t.healthBar);
-                    s.setLeftAnchor(ti, (double)dis);
-                    s.setTopAnchor(ti, (double)y);
-                    s.setLeftAnchor(t.healthBar, (double)dis-10);
-                    s.setTopAnchor(t.healthBar, (double)y-10);
-                    translate(ti, 60);
-                    translate(t.healthBar, 60);
-                }
-            }
-            count++;
-        }
-    }
-
-	//here
+	public void AddTurnTitans() {
+		int count = 1;
+		AnchorPane s = getS();
+		for (ArrayList<TitanImageView> lane : this.allLanes) {
+			int y = getY(count);
+			addTitansInLane(lane, s, y);
+			count++;
+		}
+	}
+	
+	private AnchorPane getS() {
+		return Controller.getChoosenMode().equals("Easy") ? EasyScene : HardScene;
+	}
+	
+	private int getY(int count) {
+		int y = 0;
+		if (Controller.getChoosenMode().equals("Easy")) {
+			switch (count) {
+				case 1: y = 210; break;
+				case 2: y = 330; break;
+				case 3: y = 430; break;
+			}
+		} else {
+			switch (count) {
+				case 1: y = 150; break;
+				case 2: y = 225; break;
+				case 3: y = 330; break;
+				case 4: y = 400; break;
+				case 5: y = 480; break;
+			}
+		}
+		return y;
+	}
+	
+	private void addTitansInLane(ArrayList<TitanImageView> lane, AnchorPane s, int y) {
+		int dis = Controller.getChoosenMode().equals("Easy")?1200:1150;
+		int temp = y;
+		for (TitanImageView t : lane) {
+			int currentDis = dis;
+			int currentY = y;
+			if (t.titan instanceof ColossalTitan) {
+				currentDis = Controller.getChoosenMode().equals("Easy")?1265:1215;
+				currentY = temp - 20;
+			}
+			addTitan(t, s, currentDis, currentY);
+		}
+	}
+	
+	private void addTitan(TitanImageView t, AnchorPane s, int dis, int y) {
+		ImageView ti = t.titanImageView;
+		if (!s.getChildren().contains(ti)) {
+			s.getChildren().addAll(ti, t.healthBar);
+			AnchorPane.setLeftAnchor(ti, (double) dis);
+			AnchorPane.setTopAnchor(ti, (double) y);
+			AnchorPane.setLeftAnchor(t.healthBar, (double) (dis - 10));
+			AnchorPane.setTopAnchor(t.healthBar, (double) (y - 10));
+			translate(ti, 60);
+			translate(t.healthBar, 60);
+		}
+	}
 	public void deployWeapon(int weaponCode, int lane) {
 		Image i = null;
 		switch (weaponCode) {

@@ -119,8 +119,8 @@ public class ModeView {
         root.setBackground(overlayBackground);
 
         // Store radio buttons for later access
-        this.easyModeRadio = easyModeRadio;
-        this.hardModeRadio = hardModeRadio;
+        ModeView.easyModeRadio = easyModeRadio;
+        ModeView.hardModeRadio = hardModeRadio;
     }
 
     // Hover Effect for Buttons
