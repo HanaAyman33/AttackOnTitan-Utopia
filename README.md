@@ -65,6 +65,12 @@ The game progresses through three battle phases—Early, Intense, and Grumbling:
 
 ## Join the fight for humanity's survival!!⚔️
 
+## Game Video 📸
+
+Check out some exciting moments from *Attack on Titan: Utopia* below!
+
+https://github.com/user-attachments/assets/4d554793-6271-43ca-904e-8f183b0eb352
+
 ## Setup and Installation
 
 ### Prerequisites
@@ -80,10 +86,6 @@ The game progresses through three battle phases—Early, Intense, and Grumbling:
 2. **Build and Run**  
    - Add JavaFX to your IDE’s module path.  
    - Use these VM options to include JavaFX modules: --module-path "path/to/javafx-sdk/lib" --add-modules javafx.controls,javafx.fxml,javafx.media
-
-## Game Video 📸
-
-Check out some exciting moments from *Attack on Titan: Utopia* below!
 
 
 
