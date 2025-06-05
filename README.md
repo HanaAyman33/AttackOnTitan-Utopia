@@ -2,6 +2,26 @@
 
 **Attack on Titan: Utopia** is a thrilling single-player, endless tower defense game inspired by the renowned anime series *Attack on Titan*. In this immersive experience, players must strategize and defend the Utopia District from the onslaught of titans that have breached Wall Maria, now threatening the very walls of Wall Rose. 🏰⚔️
 
+## Table of Contents
+- [Game Overview](#game-overview)
+  - [Setting](#setting)
+  - [Gameplay Features](#gameplay-features)
+    - [Endless Tower Defense Mechanics](#endless-tower-defense-mechanics)
+    - [Multi-Lane Battlefield](#multi-lane-battlefield)
+    - [Diverse Titan Types](#diverse-titan-types)
+    - [Variety of Weapons](#variety-of-weapons)
+    - [Resource Management](#resource-management)
+    - [Danger Level System](#danger-level-system)
+  - [Battle Phases](#battle-phases)
+- [Game Video](#game-video)
+- [Technologies Used](#technologies-used)
+- [Setup and Installation Guide](#setup-and-installation-guide)
+  - [Requirements](#requirements)
+  - [How to Run the Game](#how-to-run-the-game)
+- [Collaborators](#collaborators)
+
+---
+
 ## Game Overview
 
 ### Setting 🌍
@@ -10,18 +30,18 @@ Set in a war-torn world, **Attack on Titan: Utopia** unfolds in the Utopia Distr
 
 ### Gameplay Features
 
-- **Endless Tower Defense Mechanics** 🏰: 
-  Engage in an endless battle against waves of titans. The game has no winning condition; instead, the objective is to survive for as long as possible while defeating as many titans as you can, with your score increasing based on resources collected from fallen foes. 📈
+#### Endless Tower Defense Mechanics 🏰  
+Engage in an endless battle against waves of titans. The game has no winning condition; instead, the objective is to survive for as long as possible while defeating as many titans as you can, with your score increasing based on resources collected from fallen foes. 📈
 
-- **Multi-Lane Battlefield** 🌌: 
-  The battlefield is divided into multiple lanes, each featuring a segment of the wall to protect. Players must strategically deploy weapons in these lanes, each with its own health points (HP). If a segment is destroyed, that lane becomes inactive, requiring players to manage their defenses across all active lanes. 🚧
+#### Multi-Lane Battlefield 🌌  
+The battlefield is divided into multiple lanes, each featuring a segment of the wall to protect. Players must strategically deploy weapons in these lanes, each with its own health points (HP). If a segment is destroyed, that lane becomes inactive, requiring players to manage their defenses across all active lanes. 🚧
 
-- **Diverse Titan Types** 👹: 
-  Face various titans, each with unique attributes and abilities:
-    - **Pure Titan**: A basic titan with balanced stats.
-    - **Abnormal Titan**: Attacks twice per turn, posing a greater threat.
-    - **Armored Titan**: Highly resistant, taking only 25% damage from attacks.
-    - **Colossal Titan**: Starts with high HP and increases speed with each turn, becoming a significant danger if not dealt with quickly.
+#### Diverse Titan Types 👹  
+Face various titans, each with unique attributes and abilities:
+  - **Pure Titan**: A basic titan with balanced stats.
+  - **Abnormal Titan**: Attacks twice per turn, posing a greater threat.
+  - **Armored Titan**: Highly resistant, taking only 25% damage from attacks.
+  - **Colossal Titan**: Starts with high HP and increases speed with each turn, becoming a significant danger if not dealt with quickly.
 
 | Titan Type      | HP  | Damage | Height | Speed | Resources Value | Danger Level |
 |------------------|-----|--------|--------|-------|-----------------|--------------|
@@ -30,12 +50,12 @@ Set in a war-torn world, **Attack on Titan: Utopia** unfolds in the Utopia Distr
 | Armored Titan    | 200 | 85     | 15     | 10    | 30              | 3            |
 | Colossal Titan   | 1000| 100    | 60     | 5     | 60              | 4            |
 
-- **Variety of Weapons** 🔫: 
-  Players can purchase and deploy an array of weapons, each with specific strengths and weaknesses. Weapons include:
-    - **Piercing Cannon**: Attacks the closest five titans within its range.
-    - **Sniper Cannon**: Deals heavy damage to the closest titan.
-    - **Volley Spread Cannon**: Affects all titans within a specified range.
-    - **Wall Trap**: Targets titans that reach the wall directly.
+#### Variety of Weapons 🔫  
+Players can purchase and deploy an array of weapons, each with specific strengths and weaknesses. Weapons include:
+  - **Piercing Cannon**: Attacks the closest five titans within its range.
+  - **Sniper Cannon**: Deals heavy damage to the closest titan.
+  - **Volley Spread Cannon**: Affects all titans within a specified range.
+  - **Wall Trap**: Targets titans that reach the wall directly.
 
 | Weapon Name             | Price | Damage | Min Range | Max Range |
 |-------------------------|-------|--------|-----------|-----------|
@@ -44,11 +64,11 @@ Set in a war-torn world, **Attack on Titan: Utopia** unfolds in the Utopia Distr
 | Volley Spread Cannon     | 100   | 5      | 1         | 5         |
 | Wall Trap               | 75    | 100    | -         | -         |
 
-- **Resource Management** 💰: 
-  Collect resources by defeating titans, which can then be used to purchase weapons. Managing these resources effectively is crucial to maintaining defenses and ensuring the survival of the Utopia District. 
+#### Resource Management 💰  
+Collect resources by defeating titans, which can then be used to purchase weapons. Managing these resources effectively is crucial to maintaining defenses and ensuring the survival of the Utopia District. 
 
-- **Danger Level System** ⚠️: 
-  Each lane has a danger level calculated based on the types and number of titans present. Higher danger levels require more immediate attention and resources to mitigate the threat.
+#### Danger Level System ⚠️  
+Each lane has a danger level calculated based on the types and number of titans present. Higher danger levels require more immediate attention and resources to mitigate the threat.
  
 ### Battle Phases 🔥
 The game progresses through three battle phases—Early, Intense, and Grumbling:
@@ -66,55 +86,38 @@ The game progresses through three battle phases—Early, Intense, and Grumbling:
 
 ## Join the fight for humanity's survival!!⚔️
 
-
-
-## Game Screenshots 📸
+## Game Video 📸
 
 Check out some exciting moments from *Attack on Titan: Utopia* below!
 
+[Video Link](https://github.com/user-attachments/assets/b6b6e8eb-7d3a-4fc5-82b2-d100563c33ad)
 
+## Technologies Used  
+- **Programming Language**: Java  
+- **Framework**: JavaFX   
+- **Architecture**: MVC (Model-View-Controller)  
+- **Programming Paradigm**: Object-Oriented Programming (OOP)
 
+## Setup and Installation Guide
 
-![Screenshot 2024-09-24 105239](https://github.com/user-attachments/assets/0d7c9328-1180-4d98-a0ca-8453db9096e3)
+### Requirements  
+- **Java Development Kit (JDK)** version 11 or higher  
+- **JavaFX SDK** version 22.0.1 or newer  
 
+### How to Run the Game
 
+1. **Configure JavaFX**  
+   - Download the latest JavaFX SDK from [Gluon’s official site](https://gluonhq.com/products/javafx/).  
+   - Extract the contents and make a note of the `lib` directory path inside the SDK folder.  
 
-
-![Screenshot 2024-09-24 104735](https://github.com/user-attachments/assets/60ff81bb-ad8b-4350-aef8-578e32f9fb3b)
-
-
-
-
-![Screenshot 2024-09-24 104807](https://github.com/user-attachments/assets/fa34ce92-bbe9-4963-b3d3-8613ac52f6a6)
-
-
-
-
-![Screenshot 2024-09-24 104852](https://github.com/user-attachments/assets/24b3c08b-b6f3-43f6-beff-dc5610c6ae45)
-
-
-
-
-![Screenshot 2024-09-24 104919](https://github.com/user-attachments/assets/f9106c56-786c-44b5-b263-934d66ae567d)
-
-
-
-
-![Screenshot 2024-09-24 105049](https://github.com/user-attachments/assets/042844dc-d2ea-4967-9cb1-086369f0edd6)
-
-
-
-
-![Screenshot 2024-09-24 105210](https://github.com/user-attachments/assets/2fa3b429-4ecd-49d3-a369-5e3364ceae53)
-
-
-
-
-![Screenshot 2024-09-24 105225](https://github.com/user-attachments/assets/5ea16da4-eda9-42af-b6ed-3136586f21c4)
-
-
-
-
-
-
-
+2. **Compile and Launch**  
+   - In your IDE, make sure to set the JavaFX `lib` folder as the module path.  
+   - When running the application, provide the following VM arguments:
+     ```  
+      --module-path "path/to/javafx-sdk/lib" --add-modules javafx.controls,javafx.fxml,javafx.media
+     ```
+  
+## Collaborators  
+- **[Mai Hazem]** - [@maihazem607](https://github.com/maihazem607)
+- **[Esraa Tarek]** - [@EsraaTarek382](https://github.com/EsraaTarek382) 
+- **[Hana Ayman]** - [@HanaAyman33](https://github.com/HanaAyman33)
