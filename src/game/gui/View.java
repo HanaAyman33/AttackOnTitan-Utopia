@@ -662,9 +662,17 @@ public class View {
 		v.setPreserveRatio(true);
 		v.setFitHeight(45);
 		GridPane p = Controller.getChoosenMode().equals("Hard") ? hard : easy;
-		for (int col = 0; col < 10; col++) {
-			boolean cellFree = true;
 
+		// Calculate which rows correspond to this lane (2 rows per lane)
+		int topRow = (lane - 1) * 2; // First row for this lane
+		int bottomRow = (lane - 1) * 2 + 1; // Second row for this lane
+
+		// Try to place in top row first (columns 0-4), then bottom row (columns 0-4)
+		boolean placed = false;
+
+		// First try top row (first 5 positions)
+		for (int col = 0; col < 5 && !placed; col++) {
+			boolean cellFree = true;
 			for (Node node : p.getChildren()) {
 				Integer Row = GridPane.getRowIndex(node);
 				Integer Col = GridPane.getColumnIndex(node);
@@ -673,14 +681,38 @@ public class View {
 				if (Col == null)
 					Col = 0;
 
-				if (Row == lane - 1 && Col == col) {
+				if (Row == topRow && Col == col) {
 					cellFree = false;
 					break;
 				}
 			}
 			if (cellFree) {
-				p.add(v, col, lane - 1);
-				break;
+				p.add(v, col, topRow);
+				placed = true;
+			}
+		}
+
+		// If top row is full, try bottom row (next 5 positions)
+		if (!placed) {
+			for (int col = 0; col < 5 && !placed; col++) {
+				boolean cellFree = true;
+				for (Node node : p.getChildren()) {
+					Integer Row = GridPane.getRowIndex(node);
+					Integer Col = GridPane.getColumnIndex(node);
+					if (Row == null)
+						Row = 0;
+					if (Col == null)
+						Col = 0;
+
+					if (Row == bottomRow && Col == col) {
+						cellFree = false;
+						break;
+					}
+				}
+				if (cellFree) {
+					p.add(v, col, bottomRow);
+					placed = true;
+				}
 			}
 		}
 	}

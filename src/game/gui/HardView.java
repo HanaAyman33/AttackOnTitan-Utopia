@@ -32,11 +32,11 @@ public class HardView extends BaseGameView {
                 10, // padding
                 100, // width
                 550, // height
-                40, // vgap
-                5, // rows
+                0, // vgap (reduced to fit 2 rows per lane)
+                10, // rows (doubled to 10 for 2 rows per 5 lanes)
                 0.0, // leftAnchor
                 1050.0, // rightAnchor
-                130.0, // topAnchor
+                125.0, // topAnchor
                 85.0 // bottomAnchor
         );
     }
@@ -45,9 +45,9 @@ public class HardView extends BaseGameView {
     protected WallConfig getWallConfig() {
         return new WallConfig(
                 100, // progressBarWidth
-                165.0, // baseTopOffset
+                170.0, // baseTopOffset
                 100.0, // spacing
-                90.0, // progressBarLeftAnchor
+                140.0, // progressBarLeftAnchor
                 30.0, // progressBarTopOffset
                 150.0 // labelLeftAnchor
         );
@@ -64,7 +64,8 @@ public class HardView extends BaseGameView {
 
     public ArrayList<Label> getWallDangerLevelHard() {
         return wallDangerLevels;
-    }    // Static weapon card accessor methods for Controller compatibility
+    } // Static weapon card accessor methods for Controller compatibility
+
     public static Button getAntiTitanShellCard() {
         return instance != null ? instance.antiTitanShellCard : null;
     }

@@ -26,7 +26,6 @@ public class ModeView {
     private static String selectedMode = "Easy"; // Default selection
     private Button easyModeCard;
     private Button hardModeCard;
-    private Label accessTokensLabel;
     private static Button startButton; // Add a static start button
 
     public ModeView() {

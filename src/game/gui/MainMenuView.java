@@ -27,8 +27,9 @@ public class MainMenuView {
     private Button soundButton;
     private Slider volumeSlider;
     private MediaPlayer backgroundMusic;
+    private static MediaPlayer startupMusic;
     private double volumeLevel = 0.8;
-    
+
     public MainMenuView() {
         root = new AnchorPane();
         root.setPrefSize(1200, 700);
@@ -54,7 +55,7 @@ public class MainMenuView {
         labelImage.setPreserveRatio(true);
         AnchorPane.setTopAnchor(labelImage, -260.0);
         AnchorPane.setLeftAnchor(labelImage, (1200 - labelImage.getFitWidth()) / 2);
-        
+
         DropShadow textShadow = new DropShadow();
         textShadow.setColor(Color.BLACK);
         textShadow.setRadius(5);
@@ -78,16 +79,15 @@ public class MainMenuView {
         volumeSlider.setShowTickMarks(false);
         volumeSlider.setShowTickLabels(false);
         volumeSlider.setStyle(
-            "-fx-background-color: transparent; " +
-            "-fx-background-insets: 0 0 -1 0, 0, 1; " +
-            "-fx-background-radius: 10; " +
-            "-fx-padding: 5 0 5 0; " +
-            "-fx-accent: #FFFFFF; " +
-            "-fx-focus-color: rgba(255, 255, 255, 0.3); " +
-            "-fx-faint-focus-color: transparent; " +
-            "-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0.2, 1, 1); " +
-            "-fx-opacity: 1.0;"
-        );
+                "-fx-background-color: transparent; " +
+                        "-fx-background-insets: 0 0 -1 0, 0, 1; " +
+                        "-fx-background-radius: 10; " +
+                        "-fx-padding: 5 0 5 0; " +
+                        "-fx-accent: #FFFFFF; " +
+                        "-fx-focus-color: rgba(255, 255, 255, 0.3); " +
+                        "-fx-faint-focus-color: transparent; " +
+                        "-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0.2, 1, 1); " +
+                        "-fx-opacity: 1.0;");
         AnchorPane.setTopAnchor(volumeSlider, 80.0);
         AnchorPane.setRightAnchor(volumeSlider, 10.0);
 
@@ -95,38 +95,33 @@ public class MainMenuView {
         Platform.runLater(() -> {
             // Track styling with LinearGradient
             LinearGradient trackGradient = new LinearGradient(
-                0, 0, 1, 0, true,
-                null,
-                new Stop(0.0, Color.web("#4A4A4A")),
-                new Stop(1.0, Color.web("#6A6A6A"))
-            );
+                    0, 0, 1, 0, true,
+                    null,
+                    new Stop(0.0, Color.web("#4A4A4A")),
+                    new Stop(1.0, Color.web("#6A6A6A")));
             volumeSlider.lookup(".track").setStyle(
-                "-fx-background-color: " + toCssString(trackGradient) + "; " +
-                "-fx-background-radius: 10;"
-            );
+                    "-fx-background-color: " + toCssString(trackGradient) + "; " +
+                            "-fx-background-radius: 10;");
 
             // Thumb styling
             volumeSlider.lookup(".thumb").setStyle(
-                "-fx-background-color: #FFFFFF; " +
-                "-fx-background-radius: 12; " +
-                "-fx-pref-width: 16; " +
-                "-fx-pref-height: 16;"
-            );
+                    "-fx-background-color: #FFFFFF; " +
+                            "-fx-background-radius: 12; " +
+                            "-fx-pref-width: 16; " +
+                            "-fx-pref-height: 16;");
             volumeSlider.lookup(".thumb").hoverProperty().addListener((obs, oldVal, newVal) -> {
                 if (newVal) {
                     volumeSlider.lookup(".thumb").setStyle(
-                        "-fx-background-color: #FFD700; " +
-                        "-fx-background-radius: 12; " +
-                        "-fx-pref-width: 18; " +
-                        "-fx-pref-height: 18;"
-                    );
+                            "-fx-background-color: #FFD700; " +
+                                    "-fx-background-radius: 12; " +
+                                    "-fx-pref-width: 18; " +
+                                    "-fx-pref-height: 18;");
                 } else {
                     volumeSlider.lookup(".thumb").setStyle(
-                        "-fx-background-color: #FFFFFF; " +
-                        "-fx-background-radius: 12; " +
-                        "-fx-pref-width: 16; " +
-                        "-fx-pref-height: 16;"
-                    );
+                            "-fx-background-color: #FFFFFF; " +
+                                    "-fx-background-radius: 12; " +
+                                    "-fx-pref-width: 16; " +
+                                    "-fx-pref-height: 16;");
                 }
             });
         });
@@ -181,24 +176,22 @@ public class MainMenuView {
 
         // LinearGradient for right-edge fade
         Stop[] normalStops = new Stop[] {
-            new Stop(0.0, Color.rgb(30, 30, 30, 0.2)),
-            new Stop(0.8, Color.rgb(30, 30, 30, 0.2)),
-            new Stop(1.0, Color.rgb(30, 30, 30, 0.0))
+                new Stop(0.0, Color.rgb(30, 30, 30, 0.2)),
+                new Stop(0.8, Color.rgb(30, 30, 30, 0.2)),
+                new Stop(1.0, Color.rgb(30, 30, 30, 0.0))
         };
         LinearGradient normalGradient = new LinearGradient(
-            0, 0, 1, 0, true,
-            null, normalStops
-        );
+                0, 0, 1, 0, true,
+                null, normalStops);
 
         Stop[] hoverStops = new Stop[] {
-            new Stop(0.0, Color.rgb(10, 10, 10, 0.3)),
-            new Stop(0.8, Color.rgb(10, 10, 10, 0.3)),
-            new Stop(1.0, Color.rgb(10, 10, 10, 0.0))
+                new Stop(0.0, Color.rgb(10, 10, 10, 0.3)),
+                new Stop(0.8, Color.rgb(10, 10, 10, 0.3)),
+                new Stop(1.0, Color.rgb(10, 10, 10, 0.0))
         };
         LinearGradient hoverGradient = new LinearGradient(
-            0, 0, 1, 0, true,
-            null, hoverStops
-        );
+                0, 0, 1, 0, true,
+                null, hoverStops);
 
         // Rectangles with gradient
         Rectangle bgRect1 = new Rectangle(500, 50);
@@ -207,14 +200,14 @@ public class MainMenuView {
         bgRect1.setArcHeight(20);
         AnchorPane.setTopAnchor(bgRect1, 405.0);
         AnchorPane.setLeftAnchor(bgRect1, -10.0);
-        
+
         Rectangle bgRect2 = new Rectangle(500, 50);
         bgRect2.setFill(normalGradient);
         bgRect2.setArcWidth(20);
         bgRect2.setArcHeight(20);
         AnchorPane.setTopAnchor(bgRect2, 475.0);
         AnchorPane.setLeftAnchor(bgRect2, -10.0);
-        
+
         Rectangle bgRect3 = new Rectangle(500, 50);
         bgRect3.setFill(normalGradient);
         bgRect3.setArcWidth(20);
@@ -223,16 +216,17 @@ public class MainMenuView {
         AnchorPane.setLeftAnchor(bgRect3, -10.0);
 
         // Labels
-        Label newGameLabel = createEnhancedLabel("New Game", 400.0, 90.0, bgRect1, hoverGradient, normalGradient,NewGame);
-        Label gameRulesLabel = createEnhancedLabel("Game Rules", 470.0, 90.0, bgRect2, hoverGradient, normalGradient,GameRules);
-        Label exitLabel = createEnhancedLabel("Exit", 540.0, 130.0, bgRect3, hoverGradient, normalGradient,exitButton);
+        Label newGameLabel = createEnhancedLabel("New Game", 400.0, 90.0, bgRect1, hoverGradient, normalGradient,
+                NewGame);
+        Label gameRulesLabel = createEnhancedLabel("Game Rules", 470.0, 90.0, bgRect2, hoverGradient, normalGradient,
+                GameRules);
+        Label exitLabel = createEnhancedLabel("Exit", 540.0, 130.0, bgRect3, hoverGradient, normalGradient, exitButton);
 
         // Add elements to root
         root.getChildren().addAll(
-            mediaView, labelImage,
-            bgRect1, bgRect2, bgRect3,
-            newGameLabel, gameRulesLabel, exitLabel, soundButton, volumeSlider,NewGame, GameRules, exitButton
-        );
+                mediaView, labelImage,
+                bgRect1, bgRect2, bgRect3,
+                newGameLabel, gameRulesLabel, exitLabel, soundButton, volumeSlider, NewGame, GameRules, exitButton);
     }
 
     // Helper method to convert LinearGradient to CSS string
@@ -240,11 +234,11 @@ public class MainMenuView {
         StringBuilder sb = new StringBuilder("linear-gradient(to right, ");
         for (Stop stop : gradient.getStops()) {
             sb.append(String.format("rgba(%d, %d, %d, %.2f) %.2f%%, ",
-                (int)(stop.getColor().getRed() * 255),
-                (int)(stop.getColor().getGreen() * 255),
-                (int)(stop.getColor().getBlue() * 255),
-                stop.getColor().getOpacity(),
-                stop.getOffset() * 100));
+                    (int) (stop.getColor().getRed() * 255),
+                    (int) (stop.getColor().getGreen() * 255),
+                    (int) (stop.getColor().getBlue() * 255),
+                    stop.getColor().getOpacity(),
+                    stop.getOffset() * 100));
         }
         sb.setLength(sb.length() - 2); // Remove last comma and space
         sb.append(")");
@@ -266,8 +260,8 @@ public class MainMenuView {
     }
 
     // Helper method to create enhanced labels with background rectangle
-    private Label createEnhancedLabel(String text, double topAnchor, double leftAnchor, Rectangle bgRect, 
-                                      LinearGradient hoverGradient, LinearGradient normalGradient,Button button) {
+    private Label createEnhancedLabel(String text, double topAnchor, double leftAnchor, Rectangle bgRect,
+            LinearGradient hoverGradient, LinearGradient normalGradient, Button button) {
         Label label = new Label(text);
         label.setFont(new Font("Chiller", 40));
         label.setTextFill(Color.WHITE);
@@ -309,8 +303,47 @@ public class MainMenuView {
         return label;
     }
 
-    public static Button getNewGameButton() { return NewGame; }
-    public static Button getGameRulesButton() { return GameRules; }
-    public static Button getExitButton() { return exitButton; }
-    public AnchorPane getRoot() { return root; }
+    public static Button getNewGameButton() {
+        return NewGame;
+    }
+
+    public static Button getGameRulesButton() {
+        return GameRules;
+    }
+
+    public static Button getExitButton() {
+        return exitButton;
+    }
+
+    public AnchorPane getRoot() {
+        return root;
+    }
+
+    // Method to stop background music
+    public void stopBackgroundMusic() {
+        if (backgroundMusic != null) {
+            backgroundMusic.stop();
+        }
+    }
+
+    // Method to start startup music
+    public void startStartupMusic() {
+        try {
+            String startupMusicPath = getClass().getResource("/StartupMusic.mp3").toExternalForm();
+            Media startupMedia = new Media(startupMusicPath);
+            startupMusic = new MediaPlayer(startupMedia);
+            startupMusic.setCycleCount(MediaPlayer.INDEFINITE);
+            startupMusic.setVolume(volumeLevel);
+            startupMusic.play();
+        } catch (Exception e) {
+            System.err.println("Error loading startup music: " + e.getMessage());
+        }
+    }
+
+    // Method to stop startup music
+    public static void stopStartupMusic() {
+        if (startupMusic != null) {
+            startupMusic.stop();
+        }
+    }
 }

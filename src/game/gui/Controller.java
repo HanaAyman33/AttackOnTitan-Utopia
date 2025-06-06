@@ -48,7 +48,7 @@ public class Controller extends Application {
 	private int weaponCode;
 	private static int LaneChoosen;
 	boolean close = false;
-	private static boolean waitingForPlayerChoice = false;	
+	private static boolean waitingForPlayerChoice = false;
 	private static boolean autoPassMode = true; // Game runs automatically
 	private Timeline autoPassTimer;
 	private Timeline delayTimer; // Track the delay timer for proper cleanup
@@ -129,6 +129,7 @@ public class Controller extends Application {
 		stage.setResizable(false);
 		stage.show();
 	}
+
 	private void handleExitButton() {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		alert.setContentText("Are you sure you want to exit the game?");
@@ -187,6 +188,12 @@ public class Controller extends Application {
 	public void handleButtonStart(Event event) {
 		ChoosenMode = ModeView.getSelectedMode();
 
+		// Stop background music and start startup music
+		if (view != null && view.getMainMenuView() != null) {
+			view.getMainMenuView().stopBackgroundMusic();
+			view.getMainMenuView().startStartupMusic();
+		}
+
 		if (ChoosenMode.equals("Hard")) {
 			root = view.loadHardScene();
 			Stage stage = MainStage;
@@ -236,8 +243,9 @@ public class Controller extends Application {
 			}
 		}));
 		autoPassTimer.setCycleCount(Timeline.INDEFINITE);
-		autoPassTimer.play();	}
-	
+		autoPassTimer.play();
+	}
+
 	private void stopAutoPassMode() {
 		autoPassMode = false;
 		delayedResumeScheduled = false;
@@ -261,13 +269,13 @@ public class Controller extends Application {
 		if (delayedResumeScheduled) {
 			return;
 		}
-		
+
 		// Stop any existing delay timer first
 		if (delayTimer != null) {
 			delayTimer.stop();
 			delayTimer = null;
 		}
-		
+
 		// For immediate resume, just restart auto-pass
 		if (delaySeconds <= 0) {
 			autoPassMode = true;
@@ -276,10 +284,10 @@ public class Controller extends Application {
 			}
 			return;
 		}
-		
+
 		// Mark that a delayed resume is scheduled
 		delayedResumeScheduled = true;
-		
+
 		// Create a single-use timeline for delayed resumption
 		delayTimer = new Timeline(new KeyFrame(Duration.seconds(delaySeconds), e -> {
 			autoPassMode = true;

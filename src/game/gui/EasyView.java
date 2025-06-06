@@ -8,7 +8,7 @@ import javafx.scene.control.ProgressBar;
 import java.util.ArrayList;
 
 public class EasyView extends BaseGameView {
-    
+
     private static EasyView instance;
 
     public EasyView() {
@@ -32,11 +32,11 @@ public class EasyView extends BaseGameView {
                 30, // padding
                 100, // width
                 320, // height
-                80, // vgap
-                3, // rows
+                10, // vgap (reduced to fit 2 rows per lane)
+                6, // rows (doubled to 6 for 2 rows per 3 lanes)
                 0.0, // leftAnchor
                 850.0, // rightAnchor
-                200.0, // topAnchor
+                180.0, // topAnchor
                 180.0 // bottomAnchor
         );
     }
@@ -45,9 +45,9 @@ public class EasyView extends BaseGameView {
     protected WallConfig getWallConfig() {
         return new WallConfig(
                 100, // progressBarWidth
-                250.0, // baseTopOffset
+                200.0, // baseTopOffset
                 150.0, // spacing
-                90.0, // progressBarLeftAnchor
+                180.0, // progressBarLeftAnchor
                 45.0, // progressBarTopOffset
                 150.0 // labelLeftAnchor
         );
@@ -64,7 +64,8 @@ public class EasyView extends BaseGameView {
 
     public ArrayList<Label> getWallDangerLevelEasy() {
         return wallDangerLevels;
-    }    // Static weapon card accessor methods for Controller compatibility
+    } // Static weapon card accessor methods for Controller compatibility
+
     public static Button getAntiTitanShellCard() {
         return instance != null ? instance.antiTitanShellCard : null;
     }

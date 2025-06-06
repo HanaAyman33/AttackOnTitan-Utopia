@@ -1,11 +1,15 @@
 package game.gui;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.ScaleTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Glow;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -31,6 +35,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 
@@ -51,6 +56,12 @@ public abstract class BaseGameView {
     protected ArrayList<ProgressBar> wallHealthBars;
     protected HBox infoContainer;
 
+    // Phase change notification components
+    protected Label phaseChangeLabel;
+    protected StackPane phaseChangeContainer;
+    protected String currentPhase = "Initial";
+    protected MediaPlayer phaseChangeSound;
+
     public BaseGameView() {
         root = new AnchorPane();
         root.setPrefSize(1200, 700);
@@ -68,6 +79,7 @@ public abstract class BaseGameView {
         setupInfoDisplays();
         setupWallHealthDisplays();
         createWeaponCards();
+        initializePhaseChangeNotification();
     }
 
     private void setupBackgroundVideo() {
@@ -108,22 +120,23 @@ public abstract class BaseGameView {
     private void setupGameGrid() {
         gameGrid = new GridPane();
         gameGrid.setStyle("-fx-background-color: transparent;");
-        gameGrid.setHgap(0);
+        gameGrid.setHgap(2); // Small gap between columns for better visual separation
 
         GridConfig config = getGridConfig();
         gameGrid.setPadding(new Insets(config.padding));
         gameGrid.setPrefSize(config.width, config.height);
         gameGrid.setVgap(config.vgap);
-
         for (int i = 0; i < config.rows; i++) {
             RowConstraints row = new RowConstraints();
             row.setPrefHeight(50);
             row.setPercentHeight(-1);
             gameGrid.getRowConstraints().add(row);
         }
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) { // 5 columns for 5 weapons per row
             ColumnConstraints column = new ColumnConstraints();
-            column.setPercentWidth(10);
+            column.setPrefWidth(40); // Fixed width for tighter spacing
+            column.setMinWidth(35);
+            column.setMaxWidth(45);
             gameGrid.getColumnConstraints().add(column);
         }
 
@@ -394,13 +407,13 @@ public abstract class BaseGameView {
     }
 
     protected void setupGridDropHandling() {
+        // Set up drag handling on the game grid
         gameGrid.setOnDragOver(event -> {
             if (event.getGestureSource() != gameGrid && event.getDragboard().hasString()) {
                 event.acceptTransferModes(TransferMode.COPY);
             }
             event.consume();
         });
-
         gameGrid.setOnDragDropped(event -> {
             Dragboard dragboard = event.getDragboard();
             boolean success = false;
@@ -410,6 +423,55 @@ public abstract class BaseGameView {
                     int weaponCode = Integer.parseInt(dragboard.getString());
                     double yPosition = event.getY();
                     int laneIndex = calculateLaneFromPosition(yPosition);
+
+                    if (laneIndex > 0) {
+                        Controller.getInstance().handleWeaponDropOnLane(weaponCode, laneIndex);
+                        success = true;
+                    }
+                } catch (NumberFormatException e) {
+                    System.err.println("Invalid weapon code in drag data");
+                }
+            }
+
+            event.setDropCompleted(success);
+            event.consume();
+        });// Set up expanded drag handling on the root pane for wider horizontal drag area
+        root.setOnDragOver(event -> {
+            if (event.getGestureSource() != root && event.getDragboard().hasString()) {
+                // Only accept drops in the horizontal area that includes the game grid and some
+                // buffer space
+                double xPosition = event.getX();
+                double yPosition = event.getY();
+
+                // Calculate the bounds of the expanded drop area with better precision
+                GridConfig config = getGridConfig();
+                double gridLeft = config.leftAnchor - 50; // 50px buffer to the left
+                double gridRight = config.leftAnchor + gameGrid.getPrefWidth() + 100; // 100px buffer to the right
+                double gridTop = config.topAnchor;
+                double gridBottom = config.topAnchor + gameGrid.getPrefHeight();
+
+                if (xPosition >= gridLeft && xPosition <= gridRight &&
+                        yPosition >= gridTop && yPosition <= gridBottom) {
+                    event.acceptTransferModes(TransferMode.COPY);
+                }
+            }
+            event.consume();
+        });
+        root.setOnDragDropped(event -> {
+            Dragboard dragboard = event.getDragboard();
+            boolean success = false;
+
+            if (dragboard.hasString()) {
+                try {
+                    int weaponCode = Integer.parseInt(dragboard.getString());
+
+                    // Convert root coordinates to grid-relative coordinates more accurately
+                    GridConfig config = getGridConfig();
+                    double yPositionInGrid = event.getY() - config.topAnchor;
+                    int laneIndex = calculateLaneFromPosition(yPositionInGrid);
+
+                    System.out.println("Root Drop - Root Y: " + event.getY() + ", Grid Y: " + yPositionInGrid
+                            + ", Calculated Lane: " + laneIndex);
 
                     if (laneIndex > 0) {
                         Controller.getInstance().handleWeaponDropOnLane(weaponCode, laneIndex);
@@ -458,9 +520,13 @@ public abstract class BaseGameView {
     }
 
     public void updatePhase(String newPhase) {
+        // Update the UI display
         StackPane container = (StackPane) ((Label) phase).getGraphic();
         Label label = (Label) container.getChildren().get(2);
         label.setText("PHASE\n" + newPhase);
+
+        // Show the big pulsing phase change notification
+        showPhaseChange(newPhase);
     }
 
     public void updateResources(int newResources) {
@@ -469,6 +535,123 @@ public abstract class BaseGameView {
         HBox valueContent = (HBox) completeText.getChildren().get(1);
         Label valueLabel = (Label) valueContent.getChildren().get(1);
         valueLabel.setText(String.valueOf(newResources));
+    }
+
+    private void initializePhaseChangeNotification() {
+        // Create the phase change notification container
+        phaseChangeContainer = new StackPane();
+        phaseChangeContainer.setPrefSize(600, 150);
+        phaseChangeContainer.setVisible(false);
+        phaseChangeContainer.setMouseTransparent(true);
+
+        // Position it in the center of the screen (centered for 600px width)
+        AnchorPane.setLeftAnchor(phaseChangeContainer, 300.0);
+        AnchorPane.setTopAnchor(phaseChangeContainer, 275.0);
+
+        // Create background with brownish/orangish theme
+        Rectangle background = new Rectangle(600, 150);
+        background.setArcWidth(20);
+        background.setArcHeight(20);
+        background.setFill(new RadialGradient(
+                0, 0, 0.5, 0.5, 0.8, true, CycleMethod.NO_CYCLE,
+                new Stop(0, Color.rgb(255, 140, 0, 0.9)), // Bright orange center
+                new Stop(0.5, Color.rgb(205, 92, 92, 0.8)), // Indian red middle
+                new Stop(1, Color.rgb(139, 69, 19, 0.9)) // Saddle brown edge
+        ));
+        background.setStroke(Color.rgb(255, 165, 0)); // Orange stroke
+        background.setStrokeWidth(3);
+        background.setEffect(new DropShadow(15, Color.rgb(255, 140, 0)));
+
+        // Create the phase text label matching GameOverView style
+        phaseChangeLabel = new Label();
+        phaseChangeLabel.setFont(Font.font("Chiller", FontWeight.BOLD, 100));
+        phaseChangeLabel.setTextFill(Color.WHITE);
+        phaseChangeLabel.setAlignment(Pos.CENTER);
+        phaseChangeLabel.setTextAlignment(TextAlignment.CENTER);
+
+        // Apply same drop shadow effect as GameOverView
+        DropShadow shadow = new DropShadow();
+        shadow.setColor(Color.BLACK);
+        shadow.setRadius(10);
+        shadow.setSpread(0.6);
+        phaseChangeLabel.setEffect(shadow);
+
+        phaseChangeContainer.getChildren().addAll(background, phaseChangeLabel);
+        root.getChildren().add(phaseChangeContainer);
+    }
+
+    public void showPhaseChange(String newPhase) {
+        // Only show notification if phase actually changed
+        if (!newPhase.equals(currentPhase)) {
+            currentPhase = newPhase;
+
+            // Update the label text
+            phaseChangeLabel.setText("PHASE: " + newPhase.toUpperCase());
+
+            // Play phase change sound (placeholder for now - you can add the actual sound
+            // file later)
+            playPhaseChangeSound();
+
+            // Bring notification to front
+            phaseChangeContainer.toFront();
+
+            // Show the notification
+            phaseChangeContainer.setVisible(true);
+            phaseChangeContainer.setOpacity(0);
+            phaseChangeContainer.setScaleX(0.5);
+            phaseChangeContainer.setScaleY(0.5);
+
+            // Create pulsing animation
+            ScaleTransition scaleIn = new ScaleTransition(Duration.millis(500), phaseChangeContainer);
+            scaleIn.setFromX(0.5);
+            scaleIn.setFromY(0.5);
+            scaleIn.setToX(1.2);
+            scaleIn.setToY(1.2);
+
+            ScaleTransition scaleOut = new ScaleTransition(Duration.millis(300), phaseChangeContainer);
+            scaleOut.setFromX(1.2);
+            scaleOut.setFromY(1.2);
+            scaleOut.setToX(1.0);
+            scaleOut.setToY(1.0);
+
+            // Create fade in animation
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(500), phaseChangeContainer);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+
+            // Create glow effect that pulses
+            Glow glow = new Glow(0.8);
+            phaseChangeLabel.setEffect(glow);
+
+            // Create fade out animation (delayed)
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(1000), phaseChangeContainer);
+            fadeOut.setFromValue(1);
+            fadeOut.setToValue(0);
+            fadeOut.setDelay(Duration.millis(2000));
+
+            // Combine animations
+            ParallelTransition showAnimation = new ParallelTransition(fadeIn, scaleIn);
+            showAnimation.setOnFinished(e -> scaleOut.play());
+
+            scaleOut.setOnFinished(e -> fadeOut.play());
+            fadeOut.setOnFinished(e -> {
+                phaseChangeContainer.setVisible(false);
+                // Reset effect to match GameOverView drop shadow
+                DropShadow shadow = new DropShadow();
+                shadow.setColor(Color.BLACK);
+                shadow.setRadius(10);
+                shadow.setSpread(0.6);
+                phaseChangeLabel.setEffect(shadow);
+            });
+
+            // Start the animation sequence
+            showAnimation.play();
+        }
+    }
+
+    private void playPhaseChangeSound() {
+        // Sound disabled - phase change will be visual only
+        System.out.println("Phase change notification (sound disabled)");
     }
 
     private int getWeaponCodeFromImagePath(String imagePath) {
@@ -485,9 +668,18 @@ public abstract class BaseGameView {
 
     private int calculateLaneFromPosition(double yPosition) {
         int numLanes = getNumberOfLanes();
-        double laneHeight = gameGrid.getPrefHeight() / numLanes;
-        int laneIndex = (int) (yPosition / laneHeight) + 1;
 
+        // Calculate row height - each row has a fixed height of 50px plus vgap
+        GridConfig config = getGridConfig();
+        double rowHeight = 50.0 + config.vgap; // Row height + vertical gap
+
+        // Calculate which row we're in (0-based)
+        int rowIndex = Math.max(0, (int) (yPosition / rowHeight));
+
+        // Each lane spans 2 rows, so divide by 2 to get lane index
+        int laneIndex = (rowIndex / 2) + 1;
+
+        // Clamp to valid lane range
         if (laneIndex < 1)
             laneIndex = 1;
         if (laneIndex > numLanes)
