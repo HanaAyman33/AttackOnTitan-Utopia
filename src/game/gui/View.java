@@ -175,7 +175,7 @@ public class View {
 
 	public void setScore(String score) {
 		this.Score = score;
-		gameOverView.setScore(score); // Update GameOverView when Score changes
+		gameOverView.setScore(score);
 	}
 
 	public String getTurn() {
