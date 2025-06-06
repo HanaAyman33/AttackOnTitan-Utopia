@@ -537,16 +537,16 @@ public abstract class BaseGameView {
     private void initializePhaseChangeNotification() {
         // Create the phase change notification container
         phaseChangeContainer = new StackPane();
-        phaseChangeContainer.setPrefSize(600, 150);
+        phaseChangeContainer.setPrefSize(700, 150);
         phaseChangeContainer.setVisible(false);
         phaseChangeContainer.setMouseTransparent(true);
 
-        // Position it in the center of the screen (centered for 600px width)
-        AnchorPane.setLeftAnchor(phaseChangeContainer, 300.0);
-        AnchorPane.setTopAnchor(phaseChangeContainer, 275.0);
+        // Position it in the center of the screen (centered for 800px width)
+        AnchorPane.setLeftAnchor(phaseChangeContainer, 240.0);
+        AnchorPane.setTopAnchor(phaseChangeContainer, 260.0);
 
         // Create background with brownish/orangish theme
-        Rectangle background = new Rectangle(600, 150);
+        Rectangle background = new Rectangle(700, 150);
         background.setArcWidth(20);
         background.setArcHeight(20);
         background.setFill(new RadialGradient(
@@ -641,7 +641,6 @@ public abstract class BaseGameView {
             showAnimation.play();
         }
     }
-
 
     private int getWeaponCodeFromImagePath(String imagePath) {
         if (imagePath.contains("AntiTitanShellCard"))
