@@ -346,4 +346,18 @@ public class MainMenuView {
             startupMusic.stop();
         }
     }
+
+    // Method to pause startup music
+    public static void pauseStartupMusic() {
+        if (startupMusic != null && startupMusic.getStatus() == MediaPlayer.Status.PLAYING) {
+            startupMusic.pause();
+        }
+    }
+
+    // Method to resume startup music
+    public static void resumeStartupMusic() {
+        if (startupMusic != null && startupMusic.getStatus() == MediaPlayer.Status.PAUSED) {
+            startupMusic.play();
+        }
+    }
 }
