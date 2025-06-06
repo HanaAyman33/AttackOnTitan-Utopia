@@ -101,7 +101,7 @@ The game progresses through three battle phases—Early, Intense, and Grumbling:
 
 Check out some exciting moments from _Attack on Titan: Utopia_ below!
 
-[Video Link](https://github.com/user-attachments/assets/b6b6e8eb-7d3a-4fc5-82b2-d100563c33ad)
+[Video Link](https://github.com/user-attachments/assets/5ab61407-7566-4f78-87d1-2293a17fdcbd)
 
 ## Technologies Used
 
