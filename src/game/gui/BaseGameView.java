@@ -540,16 +540,16 @@ public abstract class BaseGameView {
     private void initializePhaseChangeNotification() {
         // Create the phase change notification container
         phaseChangeContainer = new StackPane();
-        phaseChangeContainer.setPrefSize(600, 150);
+        phaseChangeContainer.setPrefSize(750, 150);
         phaseChangeContainer.setVisible(false);
         phaseChangeContainer.setMouseTransparent(true);
 
         // Position it in the center of the screen (centered for 600px width)
-        AnchorPane.setLeftAnchor(phaseChangeContainer, 300.0);
-        AnchorPane.setTopAnchor(phaseChangeContainer, 275.0);
+        AnchorPane.setLeftAnchor(phaseChangeContainer, 250.0);
+        AnchorPane.setTopAnchor(phaseChangeContainer, 255.0);
 
         // Create background with brownish/orangish theme
-        Rectangle background = new Rectangle(600, 150);
+        Rectangle background = new Rectangle(750, 150);
         background.setArcWidth(20);
         background.setArcHeight(20);
         background.setFill(new RadialGradient(
@@ -587,10 +587,6 @@ public abstract class BaseGameView {
 
             // Update the label text
             phaseChangeLabel.setText("PHASE: " + newPhase.toUpperCase());
-
-            // Play phase change sound (placeholder for now - you can add the actual sound
-            // file later)
-            playPhaseChangeSound();
 
             // Bring notification to front
             phaseChangeContainer.toFront();
@@ -649,30 +645,6 @@ public abstract class BaseGameView {
         }
     }
 
-    private void playPhaseChangeSound() {
-        try {
-            // Pause the startup music
-            MainMenuView.pauseStartupMusic();
-
-            // Play the phase change sound
-            String phaseChangeSoundPath = getClass().getResource("/phaseChange.mp3").toExternalForm();
-            Media phaseChangeMedia = new Media(phaseChangeSoundPath);
-            phaseChangeSound = new MediaPlayer(phaseChangeMedia);
-            phaseChangeSound.setVolume(0.8);
-
-            // Resume startup music when phase change sound finishes
-            phaseChangeSound.setOnEndOfMedia(() -> {
-                MainMenuView.resumeStartupMusic();
-            });
-
-            phaseChangeSound.play();
-            System.out.println("Phase change sound playing");
-        } catch (Exception e) {
-            System.err.println("Error playing phase change sound: " + e.getMessage());
-            // If there's an error, make sure to resume startup music
-            MainMenuView.resumeStartupMusic();
-        }
-    }
 
     private int getWeaponCodeFromImagePath(String imagePath) {
         if (imagePath.contains("AntiTitanShellCard"))
