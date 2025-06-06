@@ -4,154 +4,268 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 
 public class ModeView {
     private AnchorPane root;
-    private static Button startButton;
-    private ToggleGroup modeToggleGroup;
-    private static RadioButton easyModeRadio;
-    private static RadioButton hardModeRadio;
+    private static String selectedMode = "Easy"; // Default selection
+    private Button easyModeCard;
+    private Button hardModeCard;
+    private Label accessTokensLabel;
+    private static Button startButton; // Add a static start button
 
     public ModeView() {
         root = new AnchorPane();
         root.setPrefSize(1200, 700);
 
         // Background Image
-        Image backgroundImage = new Image("GameRulesBG.jpg"); // Reusing same BG as GameRulesView
+        Image backgroundImage = new Image("GameRulesBG.jpg");
         ImageView background = new ImageView(backgroundImage);
         background.setFitHeight(700);
         background.setFitWidth(1200);
-        background.setOpacity(0.7);
+        background.setOpacity(0.8);
 
-        // Gradient Overlay for Contrast
-        Stop[] gradientStops = new Stop[] {
-            new Stop(0, Color.rgb(0, 0, 0, 0.6)),
-            new Stop(1, Color.rgb(0, 0, 0, 0.4))
-        };
-        LinearGradient gradient = new LinearGradient(0, 0, 0, 1, true, null, gradientStops);
-        Background overlayBackground = new Background(
-            new BackgroundFill(gradient, CornerRadii.EMPTY, Insets.EMPTY)
-        );
+        // Dark overlay for better contrast
+        Rectangle overlay = new Rectangle(1200, 700);
+        overlay.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
+                new Stop(0, Color.rgb(0, 0, 0, 0.7)),
+                new Stop(1, Color.rgb(0, 0, 0, 0.5)))); // Title
+        Label title = new Label("SELECT MODE");
+        title.setFont(Font.font("Chiller", FontWeight.BOLD, 48));
+        title.setTextFill(Color.WHITE);
+        title.setEffect(new DropShadow(10, Color.BLACK));
+        AnchorPane.setTopAnchor(title, 30.0);
+        AnchorPane.setLeftAnchor(title, 475.0); // Cards Container
+        HBox cardsContainer = new HBox(50);
+        cardsContainer.setAlignment(Pos.CENTER);
+        cardsContainer.setPrefWidth(800);
+        AnchorPane.setTopAnchor(cardsContainer, 100.0);
+        AnchorPane.setLeftAnchor(cardsContainer, 200.0);// Easy Mode Card
+        easyModeCard = createModeCard("EASY MODE",
+                "Can you overcome all Titans with normal difficulty?\nLet's find out.",
+                "Initial Lanes: 3\nInitial Resources: 250 per lane",
+                "3lanes.png", true);
 
-        // Content Container
-        VBox contentBox = new VBox(20);
-        contentBox.setPrefSize(800, 550);
-        contentBox.setPadding(new Insets(20));
-        contentBox.setBackground(new Background(
-            new BackgroundFill(Color.rgb(20, 20, 20, 0.3), new CornerRadii(15), Insets.EMPTY)
-        ));
-        contentBox.setAlignment(Pos.CENTER);
-        AnchorPane.setTopAnchor(contentBox, 75.0);
-        AnchorPane.setLeftAnchor(contentBox, 200.0);
-
-        // Title
-        Label title = new Label("Choose Your Mode");
-        title.setFont(Font.font("Chiller", FontWeight.BOLD, 50));
-        title.setTextFill(Color.rgb(255, 255, 150));
-        DropShadow titleShadow = new DropShadow();
-        titleShadow.setColor(Color.BLACK);
-        titleShadow.setRadius(10);
-        titleShadow.setSpread(0.6);
-        title.setEffect(titleShadow);
-
-        // Mode Selection Toggle Group
-        modeToggleGroup = new ToggleGroup();
-
-        // Easy Mode
-        RadioButton easyModeRadio = new RadioButton("Easy Mode");
-        easyModeRadio.setToggleGroup(modeToggleGroup);
-        easyModeRadio.setFont(Font.font("Chiller", FontWeight.BOLD, 30));
-        easyModeRadio.setTextFill(Color.WHITE);
-        easyModeRadio.setSelected(true); // Default selection
-        Label easyDetails = new Label("Initial Number of Lanes: 3\nInitial Resources per Lane: 250");
-        easyDetails.setFont(Font.font("Chiller", FontWeight.NORMAL, 24));
-        easyDetails.setTextFill(Color.WHITE);
-        easyDetails.setAlignment(Pos.CENTER);
-
-        // Hard Mode
-        RadioButton hardModeRadio = new RadioButton("Hard Mode");
-        hardModeRadio.setToggleGroup(modeToggleGroup);
-        hardModeRadio.setFont(Font.font("Chiller", FontWeight.BOLD, 30));
-        hardModeRadio.setTextFill(Color.WHITE);
-        Label hardDetails = new Label("Initial Number of Lanes: 5\nInitial Resources per Lane: 125");
-        hardDetails.setFont(Font.font("Chiller", FontWeight.NORMAL, 24));
-        hardDetails.setTextFill(Color.WHITE);
-        hardDetails.setAlignment(Pos.CENTER);
-
-        // Start Button
-        startButton = new Button("Start Game");
-        startButton.setPrefSize(200, 50);
-        startButton.setFont(Font.font("Chiller", FontWeight.BOLD, 24));
-        startButton.setTextFill(Color.WHITE);
-        startButton.setBackground(new Background(
-            new BackgroundFill(Color.rgb(50, 50, 50), new CornerRadii(10), null)
-        ));
-        startButton.setAlignment(Pos.CENTER);
-        applyButtonHoverEffect(startButton);
-        AnchorPane.setBottomAnchor(startButton, 50.0);
+        // Hard Mode Card
+        hardModeCard = createModeCard("HARD MODE",
+                "Face the ultimate challenge with increased difficulty.\nAre you ready?",
+                "Initial Lanes: 5\nInitial Resources: 125 per lane",
+                "lane5.png", false);
+        cardsContainer.getChildren().addAll(easyModeCard, hardModeCard); // Create and add start button
+        startButton = createStartButton();
+        AnchorPane.setBottomAnchor(startButton, 10.0);
         AnchorPane.setLeftAnchor(startButton, 500.0);
 
-        // Assemble Content
-        contentBox.getChildren().addAll(
-            title,
-            easyModeRadio,
-            easyDetails,
-            hardModeRadio,
-            hardDetails
-        );
-        root.getChildren().addAll(background, contentBox, startButton);
-        root.setBackground(overlayBackground);
-
-        // Store radio buttons for later access
-        ModeView.easyModeRadio = easyModeRadio;
-        ModeView.hardModeRadio = hardModeRadio;
+        root.getChildren().addAll(background, overlay, title, cardsContainer, startButton);
     }
 
-    // Hover Effect for Buttons
-    private void applyButtonHoverEffect(Button button) {
-        DropShadow shadow = new DropShadow();
-        shadow.setColor(Color.BLACK);
-        shadow.setRadius(10);
-        shadow.setSpread(0.6);
+    private Button createModeCard(String title, String description, String details, String imagePath,
+            boolean isSelected) {
+        VBox cardContent = new VBox(12);
+        cardContent.setPrefSize(350, 500);
+        cardContent.setPadding(new Insets(20));
+        cardContent.setAlignment(Pos.TOP_CENTER); // Card Background
+        Rectangle cardBg = new Rectangle(350, 500);
+        cardBg.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
+                new Stop(0, Color.rgb(45, 45, 45, 0.7)),
+                new Stop(1, Color.rgb(25, 25, 25, 0.7))));
+        cardBg.setStroke(isSelected ? Color.ORANGE : Color.rgb(80, 80, 80));
+        cardBg.setStrokeWidth(isSelected ? 4 : 2);
+        cardBg.setArcWidth(15);
+        cardBg.setArcHeight(15);
 
-        Glow glow = new Glow();
-        glow.setLevel(0.7);
+        // Mode Image
+        try {
+            Image modeImage = new Image(imagePath);
+            ImageView imageView = new ImageView(modeImage);
+            imageView.setFitWidth(310);
+            imageView.setFitHeight(200);
+            imageView.setPreserveRatio(true);
 
-        button.setOnMouseEntered(event -> {
-            button.setScaleX(1.1);
-            button.setScaleY(1.1);
-            button.setTextFill(Color.rgb(255, 255, 150));
-            button.setBackground(new Background(
-                new BackgroundFill(Color.rgb(80, 80, 80), new CornerRadii(10), null)
-            ));
-            button.setEffect(glow);
+            // Add orange border to image
+            Rectangle imageBorder = new Rectangle(310, 200);
+            imageBorder.setFill(Color.TRANSPARENT);
+            imageBorder.setStroke(Color.ORANGE);
+            imageBorder.setStrokeWidth(3);
+            imageBorder.setArcWidth(10);
+            imageBorder.setArcHeight(10);
+
+            StackPane imageContainer = new StackPane();
+            imageContainer.getChildren().addAll(imageView, imageBorder);
+            cardContent.getChildren().add(imageContainer);
+        } catch (Exception e) {
+            // Fallback if image not found
+            Rectangle placeholder = new Rectangle(310, 200);
+            placeholder.setFill(Color.rgb(60, 60, 60));
+            placeholder.setStroke(Color.ORANGE);
+            placeholder.setStrokeWidth(3);
+            cardContent.getChildren().add(placeholder);
+        }
+
+        // Orange strip with mode indicator
+        Rectangle orangeStrip = new Rectangle(25, 15);
+        orangeStrip.setFill(Color.ORANGE);
+        HBox stripContainer = new HBox();
+        stripContainer.getChildren().add(orangeStrip);
+        stripContainer.setAlignment(Pos.CENTER_LEFT);
+        cardContent.getChildren().add(stripContainer); // Title
+        Label titleLabel = new Label(title);
+        titleLabel.setFont(Font.font("Chiller", FontWeight.BOLD, 26));
+        titleLabel.setTextFill(Color.WHITE);
+        titleLabel.setEffect(new DropShadow(5, Color.BLACK));
+        cardContent.getChildren().add(titleLabel); // Description
+        Label descLabel = new Label(description);
+        descLabel.setFont(Font.font("Chiller", FontWeight.NORMAL, 18));
+        descLabel.setTextFill(Color.rgb(200, 200, 200));
+        descLabel.setWrapText(true);
+        descLabel.setTextAlignment(TextAlignment.CENTER);
+        descLabel.setAlignment(Pos.CENTER);
+        descLabel.setPrefWidth(300);
+        descLabel.setPrefHeight(100);
+        cardContent.getChildren().add(descLabel);
+
+        // Details
+        Label detailsLabel = new Label(details);
+        detailsLabel.setFont(Font.font("Chiller", FontWeight.BOLD, 18));
+        detailsLabel.setTextFill(Color.WHITE);
+        detailsLabel.setTextAlignment(TextAlignment.CENTER);
+        detailsLabel.setAlignment(Pos.CENTER);
+        cardContent.getChildren().add(detailsLabel);
+
+        // Stack card background and content
+        StackPane cardStack = new StackPane();
+        cardStack.getChildren().addAll(cardBg, cardContent);
+
+        Button finalCard = new Button();
+        finalCard.setGraphic(cardStack);
+        finalCard.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+
+        setupCardEffects(finalCard, cardBg, title.equals("EASY MODE"));
+
+        return finalCard;
+    }
+
+    private Button createStartButton() { // Create start button background
+        Rectangle startBg = new Rectangle(200, 60);
+        startBg.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
+                new Stop(0, Color.rgb(200, 120, 50, 0.8)),
+                new Stop(1, Color.rgb(180, 100, 30, 0.8))));
+        startBg.setStroke(Color.rgb(200, 120, 50));
+        startBg.setStrokeWidth(2);
+        startBg.setArcWidth(30);
+        startBg.setArcHeight(30);
+
+        // Start button text
+        Label startLabel = new Label("START GAME");
+        startLabel.setFont(Font.font("Chiller", FontWeight.BOLD, 24));
+        startLabel.setTextFill(Color.WHITE);
+        startLabel.setEffect(new DropShadow(5, Color.BLACK));
+
+        StackPane startStack = new StackPane();
+        startStack.getChildren().addAll(startBg, startLabel);
+
+        Button startButton = new Button();
+        startButton.setGraphic(startStack);
+        startButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+
+        // Add hover effects
+        startButton.setOnMouseEntered(event -> {
+            startButton.setScaleX(1.1);
+            startButton.setScaleY(1.1);
+            startBg.setEffect(new DropShadow(15, Color.ORANGE));
         });
 
-        button.setOnMouseExited(event -> {
-            button.setScaleX(1.0);
-            button.setScaleY(1.0);
-            button.setTextFill(Color.WHITE);
-            button.setBackground(new Background(
-                new BackgroundFill(Color.rgb(50, 50, 50), new CornerRadii(10), null)
-            ));
-            button.setEffect(shadow);
+        startButton.setOnMouseExited(event -> {
+            startButton.setScaleX(1.0);
+            startButton.setScaleY(1.0);
+            startBg.setEffect(null);
         });
+
+        return startButton;
+    }
+
+    private void setupCardEffects(Button card, Rectangle cardBg, boolean isEasy) {
+        String mode = isEasy ? "Easy" : "Hard";
+
+        // Glow effect for hover
+        Glow glow = new Glow(0.3);
+
+        card.setOnMouseEntered(event -> {
+            card.setScaleX(1.05);
+            card.setScaleY(1.05);
+            card.setEffect(glow);
+            if (!selectedMode.equals(mode)) {
+                cardBg.setStroke(Color.ORANGE);
+                cardBg.setStrokeWidth(4);
+            }
+        });
+
+        card.setOnMouseExited(event -> {
+            card.setScaleX(1.0);
+            card.setScaleY(1.0);
+            if (!selectedMode.equals(mode)) {
+                card.setEffect(null);
+                cardBg.setStroke(Color.rgb(80, 80, 80));
+                cardBg.setStrokeWidth(2);
+            } else {
+                card.setEffect(null);
+            }
+        });
+
+        card.setOnMouseClicked(event -> {
+            selectedMode = mode;
+            updateCardSelection();
+            event.consume(); // Prevent event bubbling
+        });
+
+        // Set initial selection state - only border, no effects
+        if (isEasy && selectedMode.equals("Easy")) {
+            cardBg.setStroke(Color.ORANGE);
+            cardBg.setStrokeWidth(4);
+        }
+    }
+
+    private void updateCardSelection() {
+        // Update Easy card
+        StackPane easyStack = (StackPane) easyModeCard.getGraphic();
+        Rectangle easyBg = (Rectangle) easyStack.getChildren().get(0);
+
+        // Update Hard card
+        StackPane hardStack = (StackPane) hardModeCard.getGraphic();
+        Rectangle hardBg = (Rectangle) hardStack.getChildren().get(0);
+
+        if (selectedMode.equals("Easy")) {
+            // Select Easy card - only change border
+            easyBg.setStroke(Color.ORANGE);
+            easyBg.setStrokeWidth(4);
+
+            // Deselect Hard card - reset border
+            hardBg.setStroke(Color.rgb(80, 80, 80));
+            hardBg.setStrokeWidth(2);
+        } else {
+            // Select Hard card - only change border
+            hardBg.setStroke(Color.ORANGE);
+            hardBg.setStrokeWidth(4);
+
+            // Deselect Easy card - reset border
+            easyBg.setStroke(Color.rgb(80, 80, 80));
+            easyBg.setStrokeWidth(2);
+        }
     }
 
     public AnchorPane getRoot() {
@@ -159,15 +273,21 @@ public class ModeView {
     }
 
     public static Button getStartButton() {
+        // Return the start button that was created in createPlayButton
         return startButton;
     }
 
     public static String getSelectedMode() {
-        if (easyModeRadio.isSelected()) {
-            return "Easy";
-        } else if (hardModeRadio.isSelected()) {
-            return "Hard";
-        }
-        return "Easy"; // Default to Easy if somehow no selection
+        return selectedMode;
+    }
+
+    // Method to get the Easy mode card for external access if needed
+    public Button getEasyModeCard() {
+        return easyModeCard;
+    }
+
+    // Method to get the Hard mode card for external access if needed
+    public Button getHardModeCard() {
+        return hardModeCard;
     }
 }

@@ -146,7 +146,7 @@ public abstract class BaseGameView {
         infoContainer.setPrefHeight(80); // Create info displays
         score = createInfoDisplay("SCORE", "0", Color.GOLD);
         phase = createInfoDisplay("PHASE", "Initial", Color.GOLD);
-        resources = createInfoDisplay("RESOURCES", "0", Color.GOLD);
+        resources = createResourcesDisplay("RESOURCES", "0", Color.GOLD);
         infoContainer.getChildren().addAll(score, phase, resources);
         root.getChildren().add(infoContainer);
         infoContainer.toFront();
@@ -186,8 +186,74 @@ public abstract class BaseGameView {
         label.setPrefWidth(160);
         StackPane.setAlignment(label, Pos.CENTER);
         StackPane.setMargin(label, new Insets(0, 10, 0, 20));
-
         container.getChildren().addAll(bg, accentBar, label);
+        Label wrapper = new Label();
+        wrapper.setGraphic(container);
+        wrapper.setPrefSize(50, 60);
+        return wrapper;
+    }
+
+    private Label createResourcesDisplay(String title, String value, Color accentColor) {
+        StackPane container = new StackPane();
+        container.setPrefSize(110, 60);
+        container.setMaxSize(110, 60);
+        container.setMinSize(110, 60);
+
+        // Create background with radial gradient
+        Rectangle bg = new Rectangle(110, 60);
+        bg.setArcHeight(15);
+        bg.setArcWidth(15);
+        bg.setFill(new RadialGradient(
+                0, 0, 0.5, 0.5, 0.8, true, CycleMethod.NO_CYCLE,
+                new Stop(0, Color.rgb(60, 60, 60, 0.9)),
+                new Stop(1, Color.rgb(30, 30, 30, 0.9))));
+        bg.setStroke(Color.rgb(100, 100, 100, 0.5));
+        bg.setStrokeWidth(1);
+
+        // Create accent bar with glow effect
+        Rectangle accentBar = new Rectangle(5, 50);
+        accentBar.setFill(accentColor);
+        accentBar.setEffect(new DropShadow(5, accentColor));
+        StackPane.setAlignment(accentBar, Pos.CENTER_LEFT);
+        StackPane.setMargin(accentBar, new Insets(0, 0, 0, 5));
+
+        // Create coin icon
+        ImageView coinIcon = new ImageView(new Image(getClass().getResource("/coin.png").toExternalForm()));
+        coinIcon.setFitWidth(16);
+        coinIcon.setFitHeight(16);
+        coinIcon.setPreserveRatio(true);
+
+        // Create text content with coin icon
+        HBox textContent = new HBox(3);
+        textContent.setAlignment(Pos.CENTER);
+
+        Label titleLabel = new Label(title);
+        titleLabel.setTextFill(Color.WHITE);
+        titleLabel.setFont(Font.font("Arial Narrow", FontWeight.BOLD, 14));
+        titleLabel.setAlignment(Pos.CENTER);
+        titleLabel.setTextAlignment(TextAlignment.CENTER);
+        titleLabel.setEffect(new InnerShadow(2, Color.BLACK));
+
+        HBox valueContent = new HBox(3);
+        valueContent.setAlignment(Pos.CENTER);
+
+        Label valueLabel = new Label(value);
+        valueLabel.setTextFill(Color.WHITE);
+        valueLabel.setFont(Font.font("Arial Narrow", FontWeight.BOLD, 14));
+        valueLabel.setAlignment(Pos.CENTER);
+        valueLabel.setTextAlignment(TextAlignment.CENTER);
+        valueLabel.setEffect(new InnerShadow(2, Color.BLACK));
+
+        valueContent.getChildren().addAll(coinIcon, valueLabel);
+
+        VBox completeText = new VBox(2);
+        completeText.setAlignment(Pos.CENTER);
+        completeText.getChildren().addAll(titleLabel, valueContent);
+
+        StackPane.setAlignment(completeText, Pos.CENTER);
+        StackPane.setMargin(completeText, new Insets(0, 10, 0, 20));
+
+        container.getChildren().addAll(bg, accentBar, completeText);
         Label wrapper = new Label();
         wrapper.setGraphic(container);
         wrapper.setPrefSize(50, 60);
@@ -399,8 +465,10 @@ public abstract class BaseGameView {
 
     public void updateResources(int newResources) {
         StackPane container = (StackPane) ((Label) resources).getGraphic();
-        Label label = (Label) container.getChildren().get(2);
-        label.setText("RESOURCES\n" + newResources);
+        VBox completeText = (VBox) container.getChildren().get(2);
+        HBox valueContent = (HBox) completeText.getChildren().get(1);
+        Label valueLabel = (Label) valueContent.getChildren().get(1);
+        valueLabel.setText(String.valueOf(newResources));
     }
 
     private int getWeaponCodeFromImagePath(String imagePath) {
