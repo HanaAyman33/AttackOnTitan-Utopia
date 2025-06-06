@@ -44,6 +44,7 @@ public class Controller extends Application{
 	private int weaponCode;
 	private static int LaneChoosen;
 	boolean close=false;
+	private static boolean waitingForPlayerChoice = false;
 	private ChoiceDialog<String> d1;
 	private ChoiceDialog<String> d2;
 	private ChoiceDialog<String> d3;
@@ -85,10 +86,10 @@ public class Controller extends Application{
         Exit.setOnMouseClicked(event->this.handleExitButton());
         Start.setOnMouseClicked(event->this.handleButtonStart(event));
 	    BackToMainMenu.setOnMouseClicked(event->handleButtonBackToMainMenu(event));
-	    returntoStart.setOnMouseClicked(event->handleReturnButton(event));
-	    WeaponShop1.setOnMouseClicked(event->this.OpenWeaponShop());
+	    returntoStart.setOnMouseClicked(event->handleReturnButton(event));	    WeaponShop1.setOnMouseClicked(event->this.OpenWeaponShop());
 	    WeaponShop2.setOnMouseClicked(event->this.OpenWeaponShop());
 		icon = new Image("icon.png");
+		
 		stage.setOnCloseRequest(event -> {
             event.consume();
             handleExitButton(); // Reuse the same exit logic
@@ -202,82 +203,71 @@ public class Controller extends Application{
 		 battle.refillApproachingTitans();
 		 String Lane=ChoosenMode=="Hard"?"1,2,3,4,5":"1,2,3";
 		 view.updateInfo(""+battle.getBattlePhase(), ""+battle.getResourcesGathered()
-		 ,Lane, ""+battle.getNumberOfTurns(), ""+battle.getScore(),ChoosenMode,battle.getOriginalLanes());
-		 view.setApproachingTitans(approachingTitansImages(battle.getApproachingTitans()));
+		 ,Lane, ""+battle.getNumberOfTurns(), ""+battle.getScore(),ChoosenMode,battle.getOriginalLanes());		 view.setApproachingTitans(approachingTitansImages(battle.getApproachingTitans()));
 		 view.setApproachingTitansHealth(approachingTitansHealth(battle.getApproachingTitans()));
 		 view.setNumberOfTitansPerTurn(battle.getNumberOfTitansPerTurn());
 		 view.setLaneCode(lanes(battle.getLanes(),battle.getOriginalLanes()));
 		 view.setAllLanes(ImgIntializer(battle.getLanes()));
+		 
+		 // Setup button handlers now that the scene is loaded
+		 setupButtonHandlers();
+		 
 		 Controller.passOrBuy="Pass";
-			 while(!battle.isGameOver()){
-				 if(this.close==true)
-					 break;
-				 PassOrBuy();
-				 if(Controller.passOrBuy.equals("Pass")){
-					 battle.passTurn();
-					 view.AddTurnTitans();
-					 view.performTurnTitans();
-					 this.updateViewInfo();
-				 }
-				 else{
-					 try {
-						this.OpenWeaponShop();
-						this.handleSelectedLane();
-						battle.purchaseWeapon(weaponCode,battle.getOriginalLanes().get(Controller.LaneChoosen-1));
-						deployWeapon();
-						view.AddTurnTitans();
-						view.performTurnTitans();
-					    this.updateViewInfo();
-					  } 
-					 catch (InsufficientResourcesException e) {
-						    alert2 = new Alert(Alert.AlertType.INFORMATION);
-						    alert2.setContentText("You do not have enough resources to buy this weapon");
-				            alert2.setTitle("NO RESOURCES");
-				            alert2.setHeaderText(null);
-				            alert2.initOwner(MainStage); 
-				            alert2.showAndWait();
-					 }
-					 catch( InvalidLaneException e){
-						    alert1 = new Alert(Alert.AlertType.INFORMATION);
-				            alert1.setContentText("You cannot by a Weapon in this Lane");
-				            alert1.setTitle("INVALID LANE");
-				            alert1.setHeaderText(null);
-				            alert1.initOwner(MainStage); 
-				            alert1.showAndWait();
-					 }
-				 }
-				 Controller.passOrBuy="Pass";
-			 }
-			 view.getScorefinal().setText("Your Score is: "+battle.getScore());
-			 root=view.loadGameOverScene();
-			 Stage stage=MainStage;
-		     scene=new Scene(root,1200,700);
-		     stage.setScene(scene);
-		     stage.show();
+		 waitingForPlayerChoice = true;
+		 // The game loop is now handled by button clicks instead of blocking while loop
 		 }
     
     
-    public void PassOrBuy(){
-    	if(this.close==true)return;
-             d1 = new ChoiceDialog<>("Pass", "Pass", "Buy");
-             d1.setTitle("Decision");
-             d1.setHeaderText("Please select an option:");
-             d1.setContentText("Pass or Buy?");
-             d1.setX(100);
-             d1.setY(550);
-             d1.initOwner(MainStage);
-             d1.initModality(Modality.NONE);
-             Optional<String> result = d1.showAndWait();
-             result.ifPresent(choice -> {
-                 if (choice.equals("Pass")) {
-                     Controller.passOrBuy="Pass";
-                 } else if (choice.equals("Buy")) {
-                    Controller.passOrBuy="Buy";
-                 }
-             });
-    }
-    
-    
+    public void processPlayerChoice(){
+    	if(battle.isGameOver()){
+    		view.getScorefinal().setText("Your Score is: "+battle.getScore());
+			root=view.loadGameOverScene();
+			Stage stage=MainStage;
+		    scene=new Scene(root,1200,700);
+		    stage.setScene(scene);
+		    stage.show();
+		    return;
+    	}
+    	
+    	if(this.close==true)
+    		return;
+    		
+		if(Controller.passOrBuy.equals("Pass")){
+			 battle.passTurn();
+			 view.AddTurnTitans();
+			 view.performTurnTitans();
+			 this.updateViewInfo();
+		 }
+		 else{
+			 try {
+				this.OpenWeaponShop();
+				this.handleSelectedLane();
+				battle.purchaseWeapon(weaponCode,battle.getOriginalLanes().get(Controller.LaneChoosen-1));
+				deployWeapon();
+				view.AddTurnTitans();
+				view.performTurnTitans();
+			    this.updateViewInfo();
+			  } 
+			 catch (InsufficientResourcesException e) {
+				    alert2 = new Alert(Alert.AlertType.INFORMATION);
+				    alert2.setContentText("You do not have enough resources to buy this weapon");
+		            alert2.setTitle("NO RESOURCES");
+		            alert2.setHeaderText(null);
+		            alert2.initOwner(MainStage); 
+		            alert2.showAndWait();
+			 }
+			 catch( InvalidLaneException e){
+				    alert1 = new Alert(Alert.AlertType.INFORMATION);
+		            alert1.setContentText("You cannot by a Weapon in this Lane");
+		            alert1.setTitle("INVALID LANE");
+		            alert1.setHeaderText(null);
+		            alert1.initOwner(MainStage); 
+		            alert1.showAndWait();
+			 }
+		 }
+		 Controller.passOrBuy="Pass";
+		 waitingForPlayerChoice = true;
+		 }    
     public void OpenWeaponShop() {
     	if(this.close==true)return;
     	 d2 = new ChoiceDialog<>("Weapon", "Anti-Titan Shell"+"\n"+"Price: 25"+"\n"+"Damage: 10",
@@ -358,6 +348,44 @@ public class Controller extends Application{
 	                 }
 	             });
     	 }
+    }
+      public void handlePassButton() {
+        if (waitingForPlayerChoice) {
+            Controller.passOrBuy = "Pass";
+            waitingForPlayerChoice = false;
+            processPlayerChoice();
+        }
+    }
+    
+    public void handleBuyButton() {
+        if (waitingForPlayerChoice) {
+            Controller.passOrBuy = "Buy";
+            waitingForPlayerChoice = false;
+            processPlayerChoice();
+        }
+    }
+      public void setupButtonHandlers() {
+        if (ChoosenMode != null) {
+            if (ChoosenMode.equals("Hard")) {
+                Button passButtonHard = HardView.getPassButton();
+                Button buyButtonHard = HardView.getBuyButton();
+                if (passButtonHard != null) {
+                    passButtonHard.setOnMouseClicked(event -> handlePassButton());
+                }
+                if (buyButtonHard != null) {
+                    buyButtonHard.setOnMouseClicked(event -> handleBuyButton());
+                }
+            } else {
+                Button passButtonEasy = EasyView.getPassButton();
+                Button buyButtonEasy = EasyView.getBuyButton();
+                if (passButtonEasy != null) {
+                    passButtonEasy.setOnMouseClicked(event -> handlePassButton());
+                }
+                if (buyButtonEasy != null) {
+                    buyButtonEasy.setOnMouseClicked(event -> handleBuyButton());
+                }
+            }
+        }
     }
     
     public ArrayList<TitanImageView> getImg(PriorityQueue<Titan> titans, ArrayList<TitanImageView> titanImages) {

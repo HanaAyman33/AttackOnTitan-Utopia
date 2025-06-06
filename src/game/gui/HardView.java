@@ -31,6 +31,8 @@ public class HardView {
 
     private final AnchorPane root;
     private static Button weaponShopButtonHard;
+    private static Button passButton;
+    private static Button buyButton;
     private GridPane hardGrid;
     private Label score;
     private Label turn;
@@ -69,11 +71,10 @@ public class HardView {
         backGround.setLayoutY(80);
         Rectangle clip = new Rectangle(backGround.getFitWidth(), backGround.getFitHeight());
         clip.setFill(new LinearGradient(
-            0, 35 / backGround.getFitHeight(), 0, 0,
-            true, null,
-            new Stop(0.0, Color.WHITE),
-            new Stop(1.0, Color.TRANSPARENT)
-        ));
+                0, 35 / backGround.getFitHeight(), 0, 0,
+                true, null,
+                new Stop(0.0, Color.WHITE),
+                new Stop(1.0, Color.TRANSPARENT)));
         backGround.setClip(clip);
         root.getChildren().add(backGround);
         backGround.toFront();
@@ -81,7 +82,7 @@ public class HardView {
         hardGrid = new GridPane();
         hardGrid.setPadding(new Insets(10));
         hardGrid.setStyle("-fx-background-color: transparent;");
-        hardGrid.setPrefSize(100, 550); 
+        hardGrid.setPrefSize(100, 550);
         hardGrid.setVgap(40);
         hardGrid.setHgap(0);
         for (int i = 0; i < 5; i++) {
@@ -97,13 +98,13 @@ public class HardView {
         }
         AnchorPane.setLeftAnchor(hardGrid, 0.0);
         AnchorPane.setRightAnchor(hardGrid, 1050.0);
-        AnchorPane.setTopAnchor(hardGrid, 130.0); 
-        AnchorPane.setBottomAnchor(hardGrid, 85.0); 
+        AnchorPane.setTopAnchor(hardGrid, 130.0);
+        AnchorPane.setBottomAnchor(hardGrid, 85.0);
         root.getChildren().add(hardGrid);
         hardGrid.toFront();
         hardGrid.setVisible(true);
         // Info Circles (Closer Together)
-        double[] xOffsets = {50, 150, 250, 350, 450}; // Reduced spacing
+        double[] xOffsets = { 50, 150, 250, 350, 450 }; // Reduced spacing
         score = createInfoCircle("Score: 0", xOffsets[0], Color.SADDLEBROWN);
         turn = createInfoCircle("Turn: 1", xOffsets[1], Color.SIENNA);
         phase = createInfoCircle("Phase: Initial", xOffsets[2], Color.PERU);
@@ -116,13 +117,13 @@ public class HardView {
         resources.toFront();
         lanes.toFront();
 
-      // Wall Health (Vertical ProgressBar) and Danger Level (Label)
+        // Wall Health (Vertical ProgressBar) and Danger Level (Label)
         wallHealthHard = new ArrayList<>();
         wallDangerLevelHard = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             // Vertical Health ProgressBar
             ProgressBar wallHealth = new ProgressBar(1.0); // Full health
-            wallHealth.setPrefWidth(150); 
+            wallHealth.setPrefWidth(150);
             wallHealth.setStyle("-fx-accent: green;");
             wallHealthHard.add(wallHealth); // Add only once
 
@@ -172,7 +173,109 @@ public class HardView {
         AnchorPane.setTopAnchor(weaponShopButtonHard, 10.0);
         AnchorPane.setLeftAnchor(weaponShopButtonHard, 900.0);
         root.getChildren().add(weaponShopButtonHard);
-        weaponShopButtonHard.toFront();
+        weaponShopButtonHard.toFront(); // Pass and Buy Buttons (Bottom Left Corner) - Golden Game Style
+        passButton = new Button("PASS");
+        passButton.setPrefSize(140, 60);
+        passButton.setFont(Font.font("Chiller", FontWeight.BOLD, 20));
+        passButton.setTextFill(Color.rgb(255, 248, 220)); // Cornsilk color for luxury feel
+        passButton.setAlignment(Pos.CENTER);
+
+        // Golden gradient background with border for Pass button
+        String passStyle = "-fx-background-color: linear-gradient(to bottom, #FFD700 0%, #DAA520 50%, #B8860B 100%);" +
+                "-fx-background-radius: 15;" +
+                "-fx-border-color: #8B7355;" +
+                "-fx-border-width: 3;" +
+                "-fx-border-radius: 15;" +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 10, 0.3, 2, 2);";
+        passButton.setStyle(passStyle);
+
+        buyButton = new Button("BUY");
+        buyButton.setPrefSize(140, 60);
+        buyButton.setFont(Font.font("Chiller", FontWeight.BOLD, 20));
+        buyButton.setTextFill(Color.rgb(255, 248, 220)); // Cornsilk color for luxury feel
+        buyButton.setAlignment(Pos.CENTER);
+
+        // Red-golden gradient background with border for Buy button
+        String buyStyle = "-fx-background-color: linear-gradient(to bottom, #CD5C5C 0%, #B22222 50%, #8B0000 100%);" +
+                "-fx-background-radius: 15;" +
+                "-fx-border-color: #654321;" +
+                "-fx-border-width: 3;" +
+                "-fx-border-radius: 15;" +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 10, 0.3, 2, 2);";
+        buyButton.setStyle(buyStyle);
+
+        // Enhanced Pass Button Effects
+        DropShadow passShadow = new DropShadow();
+        passShadow.setColor(Color.BLACK);
+        passShadow.setRadius(15);
+        passShadow.setSpread(0.4);
+        passShadow.setOffsetX(3);
+        passShadow.setOffsetY(3);
+
+        Glow passGlow = new Glow();
+        passGlow.setLevel(0.8);
+
+        passButton.setOnMouseEntered(event -> {
+            passButton.setScaleX(1.1);
+            passButton.setScaleY(1.1);
+            passButton.setTextFill(Color.rgb(255, 255, 255));
+            String hoverPassStyle = "-fx-background-color: linear-gradient(to bottom, #FFFF00 0%, #FFD700 50%, #DAA520 100%);"
+                    +
+                    "-fx-background-radius: 15;" +
+                    "-fx-border-color: #DAA520;" +
+                    "-fx-border-width: 4;" +
+                    "-fx-border-radius: 15;";
+            passButton.setStyle(hoverPassStyle);
+            passButton.setEffect(passGlow);
+        });
+        passButton.setOnMouseExited(event -> {
+            passButton.setScaleX(1.0);
+            passButton.setScaleY(1.0);
+            passButton.setTextFill(Color.rgb(255, 248, 220));
+            passButton.setStyle(passStyle);
+            passButton.setEffect(passShadow);
+        });
+
+        // Enhanced Buy Button Effects
+        DropShadow buyShadow = new DropShadow();
+        buyShadow.setColor(Color.BLACK);
+        buyShadow.setRadius(15);
+        buyShadow.setSpread(0.4);
+        buyShadow.setOffsetX(3);
+        buyShadow.setOffsetY(3);
+
+        Glow buyGlow = new Glow();
+        buyGlow.setLevel(0.8);
+
+        buyButton.setOnMouseEntered(event -> {
+            buyButton.setScaleX(1.1);
+            buyButton.setScaleY(1.1);
+            buyButton.setTextFill(Color.rgb(255, 255, 255));
+            String hoverBuyStyle = "-fx-background-color: linear-gradient(to bottom, #FF6347 0%, #DC143C 50%, #B22222 100%);"
+                    +
+                    "-fx-background-radius: 15;" +
+                    "-fx-border-color: #8B0000;" +
+                    "-fx-border-width: 4;" +
+                    "-fx-border-radius: 15;";
+            buyButton.setStyle(hoverBuyStyle);
+            buyButton.setEffect(buyGlow);
+        });
+        buyButton.setOnMouseExited(event -> {
+            buyButton.setScaleX(1.0);
+            buyButton.setScaleY(1.0);
+            buyButton.setTextFill(Color.rgb(255, 248, 220));
+            buyButton.setStyle(buyStyle);
+            buyButton.setEffect(buyShadow);
+        }); // Position buttons in bottom left corner with increased spacing for larger
+            // buttons
+        AnchorPane.setBottomAnchor(passButton, 20.0);
+        AnchorPane.setLeftAnchor(passButton, 20.0);
+        AnchorPane.setBottomAnchor(buyButton, 20.0);
+        AnchorPane.setLeftAnchor(buyButton, 180.0); // Increased spacing for larger buttons
+
+        root.getChildren().addAll(passButton, buyButton);
+        passButton.toFront();
+        buyButton.toFront();
     }
 
     // Helper method to create circular info badges
@@ -238,7 +341,15 @@ public class HardView {
         return wallHealthHard;
     }
 
-    public ArrayList<Label> getWallDangerLevelHard() { 
+    public ArrayList<Label> getWallDangerLevelHard() {
         return wallDangerLevelHard;
+    }
+
+    public static Button getPassButton() {
+        return passButton;
+    }
+
+    public static Button getBuyButton() {
+        return buyButton;
     }
 }

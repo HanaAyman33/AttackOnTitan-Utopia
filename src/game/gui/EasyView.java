@@ -31,6 +31,8 @@ public class EasyView {
 
     private final AnchorPane root;
     private static Button weaponShopButtonEasy;
+    private static Button passButton;
+    private static Button buyButton;
     private GridPane easyGrid;
     private Label score;
     private Label turn;
@@ -38,7 +40,7 @@ public class EasyView {
     private Label resources;
     private Label lanes;
     private ArrayList<ProgressBar> wallHealthEasy;
-    private ArrayList<Label> wallDangerLevelEasy; 
+    private ArrayList<Label> wallDangerLevelEasy;
 
     public EasyView() {
         root = new AnchorPane();
@@ -69,11 +71,10 @@ public class EasyView {
         backGround3.setLayoutY(80);
         Rectangle clip = new Rectangle(backGround3.getFitWidth(), backGround3.getFitHeight());
         clip.setFill(new LinearGradient(
-            0, 35 / backGround3.getFitHeight(), 0, 0,
-            true, null,
-            new Stop(0.0, Color.WHITE),
-            new Stop(1.0, Color.TRANSPARENT)
-        ));
+                0, 35 / backGround3.getFitHeight(), 0, 0,
+                true, null,
+                new Stop(0.0, Color.WHITE),
+                new Stop(1.0, Color.TRANSPARENT)));
         backGround3.setClip(clip);
         root.getChildren().add(backGround3);
         backGround3.toFront();
@@ -82,12 +83,12 @@ public class EasyView {
         easyGrid = new GridPane();
         easyGrid.setPadding(new Insets(30));
         easyGrid.setStyle("-fx-background-color: transparent;");
-        easyGrid.setPrefSize(100, 320); 
-        easyGrid.setVgap(80); 
+        easyGrid.setPrefSize(100, 320);
+        easyGrid.setVgap(80);
         easyGrid.setHgap(0);
         for (int i = 0; i < 3; i++) {
             RowConstraints row = new RowConstraints();
-            row.setPrefHeight(50); 
+            row.setPrefHeight(50);
             row.setPercentHeight(-1);
             easyGrid.getRowConstraints().add(row);
         }
@@ -103,10 +104,9 @@ public class EasyView {
         root.getChildren().add(easyGrid);
         easyGrid.toFront();
         easyGrid.setVisible(true);
-       
 
         // Info Circles (Closer Together)
-        double[] xOffsets = {50, 150, 250, 350, 450}; // Reduced spacing
+        double[] xOffsets = { 50, 150, 250, 350, 450 }; // Reduced spacing
         score = createInfoCircle("Score: 0", xOffsets[0], Color.SADDLEBROWN);
         turn = createInfoCircle("Turn: 1", xOffsets[1], Color.SIENNA);
         phase = createInfoCircle("Phase: Initial", xOffsets[2], Color.PERU);
@@ -119,12 +119,11 @@ public class EasyView {
         resources.toFront();
         lanes.toFront();
 
-        
         wallHealthEasy = new ArrayList<>();
         wallDangerLevelEasy = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            ProgressBar wallHealth = new ProgressBar(1.0); 
-            wallHealth.setPrefWidth(200); 
+            ProgressBar wallHealth = new ProgressBar(1.0);
+            wallHealth.setPrefWidth(200);
             wallHealth.setStyle("-fx-accent: green;");
             wallHealthEasy.add(wallHealth);
 
@@ -134,11 +133,11 @@ public class EasyView {
             dangerLevel.setTextFill(Color.ORANGE);
             wallDangerLevelEasy.add(dangerLevel);
 
-            double topOffset = 250 + i * 150; 
+            double topOffset = 250 + i * 150;
             root.getChildren().addAll(wallHealth, dangerLevel);
-            AnchorPane.setLeftAnchor(wallHealth, 90.0); 
-            AnchorPane.setTopAnchor(wallHealth, topOffset - 45); 
-            AnchorPane.setLeftAnchor(dangerLevel, 150.0); 
+            AnchorPane.setLeftAnchor(wallHealth, 90.0);
+            AnchorPane.setTopAnchor(wallHealth, topOffset - 45);
+            AnchorPane.setLeftAnchor(dangerLevel, 150.0);
             AnchorPane.setTopAnchor(dangerLevel, topOffset);
             wallHealth.toFront();
             dangerLevel.toFront();
@@ -174,7 +173,109 @@ public class EasyView {
         AnchorPane.setTopAnchor(weaponShopButtonEasy, 10.0);
         AnchorPane.setLeftAnchor(weaponShopButtonEasy, 900.0);
         root.getChildren().add(weaponShopButtonEasy);
-        weaponShopButtonEasy.toFront();
+        weaponShopButtonEasy.toFront(); // Pass and Buy Buttons (Bottom Left Corner) - Golden Game Style
+        passButton = new Button("PASS");
+        passButton.setPrefSize(140, 60);
+        passButton.setFont(Font.font("Chiller", FontWeight.BOLD, 20));
+        passButton.setTextFill(Color.rgb(255, 248, 220)); // Cornsilk color for luxury feel
+        passButton.setAlignment(Pos.CENTER);
+
+        // Golden gradient background with border for Pass button
+        String passStyle = "-fx-background-color: linear-gradient(to bottom, #FFD700 0%, #DAA520 50%, #B8860B 100%);" +
+                "-fx-background-radius: 15;" +
+                "-fx-border-color: #8B7355;" +
+                "-fx-border-width: 3;" +
+                "-fx-border-radius: 15;" +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 10, 0.3, 2, 2);";
+        passButton.setStyle(passStyle);
+
+        buyButton = new Button("BUY");
+        buyButton.setPrefSize(140, 60);
+        buyButton.setFont(Font.font("Chiller", FontWeight.BOLD, 20));
+        buyButton.setTextFill(Color.rgb(255, 248, 220)); // Cornsilk color for luxury feel
+        buyButton.setAlignment(Pos.CENTER);
+
+        // Red-golden gradient background with border for Buy button
+        String buyStyle = "-fx-background-color: linear-gradient(to bottom, #CD5C5C 0%, #B22222 50%, #8B0000 100%);" +
+                "-fx-background-radius: 15;" +
+                "-fx-border-color: #654321;" +
+                "-fx-border-width: 3;" +
+                "-fx-border-radius: 15;" +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 10, 0.3, 2, 2);";
+        buyButton.setStyle(buyStyle);
+
+        // Enhanced Pass Button Effects
+        DropShadow passShadow = new DropShadow();
+        passShadow.setColor(Color.BLACK);
+        passShadow.setRadius(15);
+        passShadow.setSpread(0.4);
+        passShadow.setOffsetX(3);
+        passShadow.setOffsetY(3);
+
+        Glow passGlow = new Glow();
+        passGlow.setLevel(0.8);
+
+        passButton.setOnMouseEntered(event -> {
+            passButton.setScaleX(1.1);
+            passButton.setScaleY(1.1);
+            passButton.setTextFill(Color.rgb(255, 255, 255));
+            String hoverPassStyle = "-fx-background-color: linear-gradient(to bottom, #FFFF00 0%, #FFD700 50%, #DAA520 100%);"
+                    +
+                    "-fx-background-radius: 15;" +
+                    "-fx-border-color: #DAA520;" +
+                    "-fx-border-width: 4;" +
+                    "-fx-border-radius: 15;";
+            passButton.setStyle(hoverPassStyle);
+            passButton.setEffect(passGlow);
+        });
+        passButton.setOnMouseExited(event -> {
+            passButton.setScaleX(1.0);
+            passButton.setScaleY(1.0);
+            passButton.setTextFill(Color.rgb(255, 248, 220));
+            passButton.setStyle(passStyle);
+            passButton.setEffect(passShadow);
+        });
+
+        // Enhanced Buy Button Effects
+        DropShadow buyShadow = new DropShadow();
+        buyShadow.setColor(Color.BLACK);
+        buyShadow.setRadius(15);
+        buyShadow.setSpread(0.4);
+        buyShadow.setOffsetX(3);
+        buyShadow.setOffsetY(3);
+
+        Glow buyGlow = new Glow();
+        buyGlow.setLevel(0.8);
+
+        buyButton.setOnMouseEntered(event -> {
+            buyButton.setScaleX(1.1);
+            buyButton.setScaleY(1.1);
+            buyButton.setTextFill(Color.rgb(255, 255, 255));
+            String hoverBuyStyle = "-fx-background-color: linear-gradient(to bottom, #FF6347 0%, #DC143C 50%, #B22222 100%);"
+                    +
+                    "-fx-background-radius: 15;" +
+                    "-fx-border-color: #8B0000;" +
+                    "-fx-border-width: 4;" +
+                    "-fx-border-radius: 15;";
+            buyButton.setStyle(hoverBuyStyle);
+            buyButton.setEffect(buyGlow);
+        });
+        buyButton.setOnMouseExited(event -> {
+            buyButton.setScaleX(1.0);
+            buyButton.setScaleY(1.0);
+            buyButton.setTextFill(Color.rgb(255, 248, 220));
+            buyButton.setStyle(buyStyle);
+            buyButton.setEffect(buyShadow);
+        }); // Position buttons in bottom left corner with increased spacing for larger
+            // buttons
+        AnchorPane.setBottomAnchor(passButton, 20.0);
+        AnchorPane.setLeftAnchor(passButton, 20.0);
+        AnchorPane.setBottomAnchor(buyButton, 20.0);
+        AnchorPane.setLeftAnchor(buyButton, 180.0); // Increased spacing for larger buttons
+
+        root.getChildren().addAll(passButton, buyButton);
+        passButton.toFront();
+        buyButton.toFront();
     }
 
     // Helper method to create circular info badges
@@ -212,6 +313,14 @@ public class EasyView {
         return weaponShopButtonEasy;
     }
 
+    public static Button getPassButton() {
+        return passButton;
+    }
+
+    public static Button getBuyButton() {
+        return buyButton;
+    }
+
     public GridPane getEasyGrid() {
         return easyGrid;
     }
@@ -240,7 +349,7 @@ public class EasyView {
         return wallHealthEasy;
     }
 
-    public ArrayList<Label> getWallDangerLevelEasy() { 
+    public ArrayList<Label> getWallDangerLevelEasy() {
         return wallDangerLevelEasy;
     }
 }
