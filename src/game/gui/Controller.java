@@ -34,6 +34,7 @@ import javafx.stage.Stage;
 import javafx.stage.Modality;
 
 public class Controller extends Application {
+	private static Controller instance;
 	private static Battle battle;
 	private static View view;
 	private static Group root;
@@ -50,6 +51,8 @@ public class Controller extends Application {
 	private static boolean waitingForPlayerChoice = false;
 	private static boolean autoPassMode = true; // Game runs automatically
 	private Timeline autoPassTimer;
+	private Timeline delayTimer; // Track the delay timer for proper cleanup
+	private boolean delayedResumeScheduled = false; // Prevent multiple delay timers
 	private ChoiceDialog<String> d1;
 	private ChoiceDialog<String> d2;
 	private ChoiceDialog<String> d3;
@@ -64,7 +67,12 @@ public class Controller extends Application {
 		return view;
 	}
 
+	public static Controller getInstance() {
+		return instance;
+	}
+
 	public void start(Stage stage) throws IOException {
+		instance = this; // Set the static instance
 		MainStage = stage;
 		view = new View();
 		view.addAllComponents();
@@ -131,6 +139,8 @@ public class Controller extends Application {
 		alert.showAndWait().ifPresent(response -> {
 			if (response == javafx.scene.control.ButtonType.OK) {
 				close = true;
+				// Properly stop all timers before exit
+				stopAutoPassMode();
 				if (d1 != null)
 					d1.close();
 				if (d2 != null)
@@ -217,8 +227,8 @@ public class Controller extends Application {
 
 	private void startAutoPassMode() {
 		autoPassMode = true;
-		autoPassTimer = new Timeline(new KeyFrame(Duration.seconds(2), e -> {
-			if (autoPassMode && !battle.isGameOver() && !close) {
+		autoPassTimer = new Timeline(new KeyFrame(Duration.seconds(1.5), e -> {
+			if (autoPassMode && !close) {
 				// Automatically pass turn
 				Platform.runLater(() -> {
 					Controller.passOrBuy = "Pass";
@@ -232,16 +242,57 @@ public class Controller extends Application {
 
 	private void stopAutoPassMode() {
 		autoPassMode = false;
+		delayedResumeScheduled = false;
 		if (autoPassTimer != null) {
 			autoPassTimer.stop();
+		}
+		// Also stop any pending delay timer
+		if (delayTimer != null) {
+			delayTimer.stop();
+			delayTimer = null;
 		}
 	}
 
 	private void resumeAutoPassMode() {
-		autoPassMode = true;
-		if (autoPassTimer != null) {
-			autoPassTimer.play();
+		// Resume immediately for regular cases
+		resumeAutoPassModeWithDelay(0);
+	}
+
+	private void resumeAutoPassModeWithDelay(double delaySeconds) {
+		// Prevent multiple delay timers from being created
+		if (delayedResumeScheduled) {
+			return;
 		}
+
+		// Stop any existing delay timer first
+		if (delayTimer != null) {
+			delayTimer.stop();
+			delayTimer = null;
+		}
+
+		// For immediate resume, just restart auto-pass
+		if (delaySeconds <= 0) {
+			autoPassMode = true;
+			if (autoPassTimer != null) {
+				autoPassTimer.play();
+			}
+			return;
+		}
+
+		// Mark that a delayed resume is scheduled
+		delayedResumeScheduled = true;
+
+		// Create a single-use timeline for delayed resumption
+		delayTimer = new Timeline(new KeyFrame(Duration.seconds(delaySeconds), e -> {
+			autoPassMode = true;
+			delayedResumeScheduled = false;
+			if (autoPassTimer != null) {
+				autoPassTimer.play();
+			}
+			// Clean up the delay timer after use
+			delayTimer = null;
+		}));
+		delayTimer.play();
 	}
 
 	public void processPlayerChoice() {
@@ -258,7 +309,6 @@ public class Controller extends Application {
 
 		if (this.close == true)
 			return;
-
 		if (Controller.passOrBuy.equals("Pass")) {
 			battle.passTurn();
 			view.AddTurnTitans();
@@ -266,17 +316,17 @@ public class Controller extends Application {
 			this.updateViewInfo();
 		} else {
 			try {
-				// Note: weaponCode is already set by weapon card click, no need for
-				// OpenWeaponShop()
-				this.handleSelectedLane();
+				// Note: weaponCode and lane are set by drag and drop, no need for dialog
+				// handleSelectedLane is now called from handleWeaponDropOnLane
 				battle.purchaseWeapon(weaponCode, battle.getOriginalLanes().get(Controller.LaneChoosen - 1));
 				deployWeapon();
 				view.AddTurnTitans();
 				view.performTurnTitans();
 				this.updateViewInfo();
-				// Resume auto-pass after weapon deployment
+				// Resume auto-pass after weapon deployment with delay to allow animations to
+				// complete
 				Controller.passOrBuy = "Pass";
-				resumeAutoPassMode();
+				resumeAutoPassModeWithDelay(1.3); // Wait 1.3 seconds for titan animations to complete
 			} catch (InsufficientResourcesException e) {
 				alert2 = new Alert(Alert.AlertType.INFORMATION);
 				alert2.setContentText("You do not have enough resources to buy this weapon");
@@ -284,7 +334,8 @@ public class Controller extends Application {
 				alert2.setHeaderText(null);
 				alert2.initOwner(MainStage);
 				alert2.showAndWait();
-				// Resume auto-pass after error
+				// Resume auto-pass after error - no delay needed since no animations were
+				// triggered
 				Controller.passOrBuy = "Pass";
 				resumeAutoPassMode();
 			} catch (InvalidLaneException e) {
@@ -293,8 +344,8 @@ public class Controller extends Application {
 				alert1.setTitle("INVALID LANE");
 				alert1.setHeaderText(null);
 				alert1.initOwner(MainStage);
-				alert1.showAndWait();
-				// Resume auto-pass after error
+				alert1.showAndWait(); // Resume auto-pass after error - no delay needed since no animations were
+										// triggered
 				Controller.passOrBuy = "Pass";
 				resumeAutoPassMode();
 			}
@@ -334,48 +385,12 @@ public class Controller extends Application {
 		view.deployWeapon(weaponCode, LaneChoosen);
 	}
 
-	public void handleSelectedLane() {
+	public void handleSelectedLane(int laneIndex) {
 		if (this.close == true)
 			return;
-		if (Controller.ChoosenMode == "Hard") {
-			d3 = new ChoiceDialog<>("1", "1", "2", "3", "4", "5");
-			d3.setTitle("Lanes");
-			d3.setHeaderText("Please select a Lane:");
-			d3.setContentText("Choose a lane");
-			d3.initOwner(MainStage);
-			d3.initModality(Modality.NONE);
-			Optional<String> result = d3.showAndWait();
-			result.ifPresent(choice -> {
-				if (choice.equals("1")) {
-					Controller.LaneChoosen = 1;
-				} else if (choice.equals("2")) {
-					Controller.LaneChoosen = 2;
-				} else if (choice.equals("3")) {
-					Controller.LaneChoosen = 3;
-				} else if (choice.equals("4")) {
-					Controller.LaneChoosen = 4;
-				} else if (choice.equals("5")) {
-					Controller.LaneChoosen = 5;
-				}
-			});
-		}
 
-		else {
-			d3 = new ChoiceDialog<>("1", "2", "3");
-			d3.setTitle("Lanes");
-			d3.setHeaderText("Please select a Lane:");
-			d3.setContentText("Choose a lane");
-			Optional<String> result = d3.showAndWait();
-			result.ifPresent(choice -> {
-				if (choice.equals("1")) {
-					Controller.LaneChoosen = 1;
-				} else if (choice.equals("2")) {
-					Controller.LaneChoosen = 2;
-				} else if (choice.equals("3")) {
-					Controller.LaneChoosen = 3;
-				}
-			});
-		}
+		// Direct lane selection without dialog
+		Controller.LaneChoosen = laneIndex;
 	}
 
 	public void handlePassButton() {
@@ -435,6 +450,16 @@ public class Controller extends Application {
 		stopAutoPassMode();
 
 		this.weaponCode = weaponCode;
+		// Don't automatically trigger buy - wait for drag and drop
+		System.out.println("Weapon card selected: " + weaponCode + ". Drag to a lane to deploy.");
+	}
+
+	public void handleWeaponDropOnLane(int weaponCode, int laneIndex) {
+		// Stop auto-pass when player interacts with weapon drop
+		stopAutoPassMode();
+
+		this.weaponCode = weaponCode;
+		Controller.LaneChoosen = laneIndex;
 		Controller.passOrBuy = "Buy";
 		processPlayerChoice();
 	}

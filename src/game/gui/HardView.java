@@ -44,7 +44,7 @@ public class HardView extends BaseGameView {
     @Override
     protected WallConfig getWallConfig() {
         return new WallConfig(
-                150, // progressBarWidth
+                100, // progressBarWidth
                 165.0, // baseTopOffset
                 100.0, // spacing
                 90.0, // progressBarLeftAnchor

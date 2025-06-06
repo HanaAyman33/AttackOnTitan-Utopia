@@ -464,17 +464,13 @@ public class View {
 	private void updateLabels(String choosenMode, String score, String turn, String phase, String resources,
 			String lanes) {
 		if ("Hard".equals(choosenMode)) {
-			hardView.getScore().setText("Score: " + score);
-			hardView.getTurn().setText("Turn: " + turn);
-			hardView.getPhase().setText("Phase: " + phase);
-			hardView.getResources().setText("Resources: " + resources);
-			hardView.getLanes().setText("Lanes: " + lanes);
+			hardView.updateScore(Integer.parseInt(score));
+			hardView.updatePhase(phase);
+			hardView.updateResources(Integer.parseInt(resources));
 		} else {
-			easyView.getScore().setText("Score: " + score);
-			easyView.getTurn().setText("Turn: " + turn);
-			easyView.getPhase().setText("Phase: " + phase);
-			easyView.getResources().setText("Resources: " + resources);
-			easyView.getLanes().setText("Lanes: " + lanes);
+			easyView.updateScore(Integer.parseInt(score));
+			easyView.updatePhase(phase);
+			easyView.updateResources(Integer.parseInt(resources));
 		}
 	}
 

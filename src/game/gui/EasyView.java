@@ -44,7 +44,7 @@ public class EasyView extends BaseGameView {
     @Override
     protected WallConfig getWallConfig() {
         return new WallConfig(
-                200, // progressBarWidth
+                100, // progressBarWidth
                 250.0, // baseTopOffset
                 150.0, // spacing
                 90.0, // progressBarLeftAnchor
