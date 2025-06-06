@@ -470,9 +470,6 @@ public abstract class BaseGameView {
                     double yPositionInGrid = event.getY() - config.topAnchor;
                     int laneIndex = calculateLaneFromPosition(yPositionInGrid);
 
-                    System.out.println("Root Drop - Root Y: " + event.getY() + ", Grid Y: " + yPositionInGrid
-                            + ", Calculated Lane: " + laneIndex);
-
                     if (laneIndex > 0) {
                         Controller.getInstance().handleWeaponDropOnLane(weaponCode, laneIndex);
                         success = true;
@@ -588,10 +585,6 @@ public abstract class BaseGameView {
             // Update the label text
             phaseChangeLabel.setText("PHASE: " + newPhase.toUpperCase());
 
-            // Play phase change sound (placeholder for now - you can add the actual sound
-            // file later)
-            playPhaseChangeSound();
-
             // Bring notification to front
             phaseChangeContainer.toFront();
 
@@ -649,10 +642,6 @@ public abstract class BaseGameView {
         }
     }
 
-    private void playPhaseChangeSound() {
-        // Sound disabled - phase change will be visual only
-        System.out.println("Phase change notification (sound disabled)");
-    }
 
     private int getWeaponCodeFromImagePath(String imagePath) {
         if (imagePath.contains("AntiTitanShellCard"))

@@ -457,7 +457,6 @@ public class Controller extends Application {
 
 		this.weaponCode = weaponCode;
 		// Don't automatically trigger buy - wait for drag and drop
-		System.out.println("Weapon card selected: " + weaponCode + ". Drag to a lane to deploy.");
 	}
 
 	public void handleWeaponDropOnLane(int weaponCode, int laneIndex) {
